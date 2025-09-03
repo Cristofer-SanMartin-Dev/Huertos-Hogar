@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - HuertoHogar</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1><a href="index.html">HuertoHogar</a></h1>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="carrito.html">Carrito (<span id="cart-count">0</span>)</a></li>
+                    <li><a href="login.html" id="login-link">Iniciar Sesión</a></li>
+                    <li><a href="perfil.html" id="profile-link" class="hidden">Mi Perfil</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content container" id="profile-content">
+        <h2>Mi Perfil</h2>
+        <div class="profile-info">
+            <p><strong>Nombre:</strong> Juan Pérez (simulado)</p>
+            <p><strong>Email:</strong> juan.perez@example.com</p>
+            <p><strong>Dirección de Entrega:</strong> Av. Siempre Viva 123, Santiago</p>
+            <p><strong>Puntos de Fidelización:</strong> 150 Puntos</p>
+        </div>
+
+        <h3>Historial de Compras</h3>
+        <div class="order-history">
+            <div class="order">
+                <p><strong>Pedido #12345</strong> - 25/08/2025 - <strong>Estado:</strong> Entregado</p>
+            </div>
+            <div class="order">
+                <p><strong>Pedido #12348</strong> - 01/09/2025 - <strong>Estado:</strong> En preparación</p>
+                <p>Puedes rastrear tu pedido <a href="#">aquí</a>.</p>
+            </div>
+        </div>
+        <button id="logout-btn" class="btn">Cerrar Sesión</button>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 HuertoHogar. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/cart.js"></script>
+</body>
+</html>
