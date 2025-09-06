@@ -19,15 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Simulación simple: cualquier dato es válido
-            localStorage.setItem('isLoggedIn', 'true');
-            window.location.href = 'perfil.html';
-        });
-    }
 
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
@@ -97,3 +88,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     checkLoginStatus();
 });
+

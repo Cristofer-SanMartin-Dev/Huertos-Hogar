@@ -267,3 +267,19 @@ h1, h2, h3 {
     padding: 1.5rem 0;
     margin-top: 2rem;
 }
+
+/* --- Estilos de Validación --- */
+.error-message {
+    color: #c0392b; /* Rojo para errores */
+    font-size: 0.85rem;
+    margin-top: 4px;
+    min-height: 1em; /* Evita que el layout salte al aparecer el mensaje */
+}
+
+.input-error {
+    border: 2px solid #c0392b; /* Borde rojo */
+}
+
+.input-success {
+    border: 2px solid #2E8B57; /* Borde verde */
+}
