@@ -273,13 +273,21 @@ h1, h2, h3 {
     color: #c0392b; /* Rojo para errores */
     font-size: 0.85rem;
     margin-top: 4px;
-    min-height: 1em; /* Evita que el layout salte al aparecer el mensaje */
+    min-height: 1em; 
 }
 
-.input-error {
+/* Reglas más específicas para los inputs con error */
+.login-container input.input-error,
+.login-container input.input-error:focus {
     border: 2px solid #c0392b; /* Borde rojo */
+    box-shadow: none; /* Opcional: quita el brillo azul al hacer clic */
+    background-color: #ffe6e6; /* Fondo ligeramente rojo */
 }
 
-.input-success {
+/* Reglas más específicas para los inputs correctos */
+.login-container input.input-success,
+.login-container input.input-success:focus {
     border: 2px solid #2E8B57; /* Borde verde */
+    box-shadow: none; /* Opcional: quita el brillo azul al hacer clic */
+    background-color: #e6ffe6; /* Fondo ligeramente verde */
 }
