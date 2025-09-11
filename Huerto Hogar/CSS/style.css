@@ -455,3 +455,25 @@ h1, h2, h3 {
         max-width: 100%;
     }
 }
+
+/* --- Estilos para el Stock de Productos --- */
+.product-stock {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-medium);
+    margin-bottom: 0.5rem !important; /* Usamos !important para asegurar que sobreescriba otras reglas */
+}
+
+.product-stock.out-of-stock {
+    color: #c0392b; /* Rojo para "sin stock" */
+}
+
+/* Estilo para botones deshabilitados */
+.btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+    background-color: #cccccc;
+}

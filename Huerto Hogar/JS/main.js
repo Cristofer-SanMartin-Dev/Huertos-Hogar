@@ -47,21 +47,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return `<div class="stars">${stars} <span>${rating.toFixed(1)}</span></div>`;
     };
 
+    // FUNCIÓN MODIFICADA PARA MOSTRAR STOCK Y DESHABILITAR BOTÓN
     const renderProducts = (productsToRender, container) => {
         if (!container) return;
         container.innerHTML = '';
         productsToRender.forEach(product => {
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
+
+            // Determina si hay stock para cambiar estilos y textos
+            const outOfStock = product.stock === 0;
+            const stockClass = outOfStock ? 'out-of-stock' : '';
+            const buttonDisabled = outOfStock ? 'disabled' : '';
+            const buttonText = outOfStock ? 'Agotado' : 'Agregar';
+
             productCard.innerHTML = `
                 <div class="product-image" style="background-image: url('${product.imageUrl}');"></div>
                 <div class="product-info">
                     <h4>${product.name}</h4>
                     ${renderStars(product.rating)}
                     <p class="price">$${product.price.toLocaleString('es-CL')}</p>
+                    <p class="product-stock ${stockClass}">Disponibles: ${product.stock}</p>
                     <p>${product.description}</p>
                     <div class="product-buttons">
-                        <button class="btn add-to-cart-btn" data-id="${product.id}">Agregar</button>
+                        <button class="btn add-to-cart-btn" data-id="${product.id}" ${buttonDisabled}>${buttonText}</button>
                         <button class="btn-secondary view-reviews-btn" data-id="${product.id}">Reseñas</button>
                     </div>
                 </div>
@@ -74,17 +83,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!productGrid) return;
         const searchTerm = searchBar.value.toLowerCase();
         const selectedCategory = categoryFilter.value;
-
         let filteredProducts = products;
-
         if (selectedCategory !== 'all') {
             filteredProducts = filteredProducts.filter(p => p.category === selectedCategory);
         }
-
         if (searchTerm) {
             filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(searchTerm));
         }
-
         renderProducts(filteredProducts, productGrid);
     };
 
@@ -111,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentProductId = productId;
         const product = products.find(p => p.id === productId);
         modalProductName.textContent = product.name;
-        
         modalReviewsList.innerHTML = '';
         if (product.reviews.length > 0) {
             product.reviews.forEach(review => {
@@ -126,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             modalReviewsList.innerHTML = '<p>Este producto aún no tiene reseñas. ¡Sé el primero!</p>';
         }
-        
         modal.classList.remove('hidden');
     };
 
@@ -152,11 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         submitReviewBtn.addEventListener('click', () => {
             const comment = reviewTextarea.value.trim();
             if (comment) {
-                const newReview = {
-                    user: 'Tú (simulado)',
-                    date: new Date().toLocaleDateString('es-CL'),
-                    comment: comment
-                };
+                const newReview = { user: 'Tú (simulado)', date: new Date().toLocaleDateString('es-CL'), comment: comment };
                 const reviewElement = document.createElement('div');
                 reviewElement.className = 'review';
                 reviewElement.innerHTML = `
