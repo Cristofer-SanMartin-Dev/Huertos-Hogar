@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - HuertoHogar</title>
+    <title>HuertoHogar - Del Campo a tu Hogar</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -32,11 +32,12 @@
                 <a href="productos.html" class="btn">Ver Productos</a>
             </div>
         </section>
-        <section class="container featured-products">
+        <section class="featured-products container">
             <h3>Productos Destacados</h3>
-            <div id="featured-products-grid" class="product-grid"></div>
+            <div class="product-grid" id="featured-products-grid">
+                </div>
         </section>
-
+        
         <section class="about-us container">
             <h3>¿Quiénes Somos?</h3>
             <p><strong>HuertoHogar</strong> es una tienda online dedicada a llevar la frescura y calidad de los productos del campo directamente a la puerta de nuestros clientes en Chile. Con más de 6 años de experiencia, operamos en más de 9 puntos a lo largo del país, incluyendo ciudades clave como Santiago, Puerto Montt, Villarica, Nacimiento, Viña del Mar, Valparaíso, y Concepción. Nuestra misión es conectar a las familias chilenas con el campo, promoviendo un estilo de vida saludable y sostenible.</p>
@@ -53,14 +54,32 @@
             </div>
         </section>
 
+
     </main>
+
+    <div id="reviews-modal" class="modal hidden">
+        <div class="modal-content">
+            <button class="close-modal-btn">&times;</button>
+            <h3 id="modal-product-name">Nombre del Producto</h3>
+            <div id="modal-reviews-list">
+                </div>
+            <div class="add-review-form">
+                <h4>Deja tu reseña</h4>
+                <textarea id="review-textarea" placeholder="Escribe tu opinión aquí..."></textarea>
+                <button id="submit-review-btn" class="btn">Enviar Reseña</button>
+            </div>
+        </div>
+    </div>
 
     <footer class="footer">
         <div class="container">
             <p>&copy; 2025 HuertoHogar. Todos los derechos reservados.</p>
+            <div class="social-links">
+                <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Twitter</a>
+            </div>
         </div>
     </footer>
-    
+
     <script src="../js/data.js"></script>
     <script src="../js/main.js"></script>
     <script src="../js/cart.js"></script>

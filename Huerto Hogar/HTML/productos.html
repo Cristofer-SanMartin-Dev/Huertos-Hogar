@@ -36,6 +36,73 @@
                 <option value="Productos Lácteos">Productos Lácteos</option>
             </select>
         </div>
+        <div class="product-grid" id="product-grid">
+            </div>
+    </main>
+
+    <div id="reviews-modal" class="modal hidden">
+        <div class="modal-content">
+            <button class="close-modal-btn">&times;</button>
+            <h3 id="modal-product-name">Nombre del Producto</h3>
+            <div id="modal-reviews-list">
+                </div>
+            <div class="add-review-form">
+                <h4>Deja tu reseña</h4>
+                <textarea id="review-textarea" placeholder="Escribe tu opinión aquí..."></textarea>
+                <button id="submit-review-btn" class="btn">Enviar Reseña</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 HuertoHogar. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/cart.js"></script>
+</body>
+</html>
+<!-- <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Productos - HuertoHogar</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1><a href="index.html">HuertoHogar</a></h1>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="carrito.html">Carrito (<span id="cart-count">0</span>)</a></li>
+                    <li><a href="login.html" id="login-link">Iniciar Sesión</a></li>
+                    <li><a href="perfil.html" id="profile-link" class="hidden">Mi Perfil</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content container">
+        <h2>Nuestro Catálogo</h2>
+        <div class="filters">
+            <input type="text" id="search-bar" placeholder="Buscar productos...">
+            <select id="category-filter">
+                <option value="all">Todas las categorías</option>
+                <option value="Frutas Frescas">Frutas Frescas</option>
+                <option value="Verduras Orgánicas">Verduras Orgánicas</option>
+                <option value="Productos Orgánicos">Productos Orgánicos</option>
+                <option value="Productos Lácteos">Productos Lácteos</option>
+            </select>
+        </div>
         <div class="product-grid" id="product-grid"></div>
     </main>
 
@@ -49,4 +116,4 @@
     <script src="../js/main.js"></script>
     <script src="../js/cart.js"></script>
 </body>
-</html>
+</html> -->
