@@ -268,7 +268,7 @@ h1, h2, h3 {
     margin-top: 2rem;
 }
 
-/* --- Estilos de Validación --- */
+/* --- Estilos de Validación (Versión Corregida) --- */
 .error-message {
     color: #c0392b; /* Rojo para errores */
     font-size: 0.85rem;
@@ -280,14 +280,79 @@ h1, h2, h3 {
 .login-container input.input-error,
 .login-container input.input-error:focus {
     border: 2px solid #c0392b; /* Borde rojo */
-    box-shadow: none; /* Opcional: quita el brillo azul al hacer clic */
-    background-color: #ffe6e6; /* Fondo ligeramente rojo */
+    box-shadow: none; 
 }
-
-/* Reglas más específicas para los inputs correctos */
 .login-container input.input-success,
 .login-container input.input-success:focus {
     border: 2px solid #2E8B57; /* Borde verde */
-    box-shadow: none; /* Opcional: quita el brillo azul al hacer clic */
-    background-color: #e6ffe6; /* Fondo ligeramente verde */
+    box-shadow: none; 
+}
+
+
+/* --- NUEVOS ESTILOS PARA LA SECCIÓN "SOBRE NOSOTROS" --- */
+.about-us {
+    background-color: #fff;
+    padding: 2rem;
+    margin-top: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.about-us h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--accent-green); /* Cambiamos el color para destacar */
+    font-size: 2.2rem;
+}
+
+.about-us p {
+    text-align: justify;
+    margin-bottom: 1rem;
+    color: var(--text-medium);
+}
+
+.about-us p strong {
+    color: var(--accent-brown); /* Destacamos el nombre de la empresa */
+}
+
+.mission-vision-grid {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las tarjetas se envuelvan en pantallas pequeñas */
+    gap: 1.5rem;
+    margin-top: 2rem;
+    justify-content: center; /* Centra las tarjetas */
+}
+
+.mission-vision-card {
+    background-color: var(--bg-main); /* Fondo más claro para las tarjetas */
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    flex: 1 1 calc(50% - 1.5rem); /* Ocupa casi la mitad del ancho, con un pequeño espacio */
+    max-width: 480px; /* Ancho máximo para que no se extienda demasiado */
+}
+
+.mission-vision-card h4 {
+    color: var(--accent-green);
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+    text-align: center;
+}
+
+.mission-vision-card p {
+    font-size: 0.95rem;
+    text-align: justify;
+}
+
+/* Adaptación para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .mission-vision-grid {
+        flex-direction: column; /* Apila las tarjetas verticalmente */
+        align-items: center; /* Centra las tarjetas apiladas */
+    }
+    .mission-vision-card {
+        flex: 1 1 90%; /* Ocupa casi todo el ancho disponible */
+        max-width: 100%; /* Elimina el ancho máximo para móviles */
+    }
 }
