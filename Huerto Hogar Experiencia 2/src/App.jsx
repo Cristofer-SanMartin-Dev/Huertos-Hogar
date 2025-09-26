@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { HomePage } from './pages/HomePage';
-import { ProductsPage } from './pages/ProductsPage'; // Importamos la nueva página
+import { ProductsPage } from './pages/ProductsPage';
 import { CartPage } from './pages/CartPage';
+import { OrderSuccessPage } from './pages/OrderSuccessPage';
 
 function App() {
   return (
@@ -10,14 +11,10 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        {/* Rutas para la nueva página de productos */}
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/products/:categoryId" element={<ProductsPage />} />
         <Route path="/cart" element={<CartPage />} />
-        
-        {/* Rutas para el futuro (no creadas aún) */}
-        {/* <Route path="/blog" element={<BlogPage />} /> */}
-        {/* <Route path="/login" element={<LoginPage />} /> */}
+        <Route path="/order-success" element={<OrderSuccessPage />} />
       </Routes>
     </BrowserRouter>
   );
