@@ -1,152 +1,23 @@
-<<<<<<< HEAD
 /* src/index.css */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap');
 
+/**
+ * TUTOR: He adaptado tus variables y estilos base de tu CSS original.
+ * Al importarlo en main.jsx, estos estilos se aplicarán a toda la aplicación,
+ * complementando a Bootstrap.
+ */
 :root {
-  --accent-green: #2E8B57;
-   --accent-brown: #8B4513;
-   --font-header: 'Playfair Display', serif;
-   --font-main: 'Montserrat', sans-serif;
+    --accent-green: #2E8B57;
+    --accent-brown: #8B4513;
+    --font-header: 'Playfair Display', serif;
+    --font-main: 'Montserrat', sans-serif;
 }
 
 body {
-   font-family: var(--font-main, sans-serif);
-   background-color: #F7F7F7;
-   color: #333333;
+  font-family: var(--font-main, sans-serif);
 }
 
-/* ... (Estilos de nav, botones, login, etc. se mantienen igual) ... */
-.nav-pills .nav-link { color: #333333; font-weight: 600; }
-.nav-pills .nav-link.active { background-color: var(--accent-green); color: white !important; }
-.btn-primary, .btn-success { background-color: var(--accent-green); border-color: var(--accent-green); }
-.btn-primary:hover, .btn-success:hover { background-color: #256d44; border-color: #256d44; }
-.btn-outline-secondary { color: var(--accent-green); border-color: var(--accent-green); }
-.btn-outline-secondary:hover { background-color: var(--accent-green); color: white; }
-.btn-danger, .btn-outline-danger { --bs-btn-color: #fff; --bs-btn-bg: #dc3545; --bs-btn-border-color: #dc3545; }
-.title-green { color: var(--accent-green) !important; }
-.product-title { font-family: var(--font-header); color: var(--accent-brown); }
-.login-container { max-width: 400px; margin: 2rem auto; padding: 2rem; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
-.login-container h2 { margin-bottom: 2rem; color: var(--accent-brown); }
-.login-container .form-group { text-align: left; margin-bottom: 1.5rem; }
-.login-container .form-group label { display: block; font-weight: bold; margin-bottom: 0.5rem; }
-.login-container .form-group .form-control { border-radius: 4px; }
-.login-container .d-grid .btn { padding: 0.75rem; }
-.login-container p a { color: var(--accent-green); font-weight: bold; text-decoration: none; }
-.login-container p a:hover { text-decoration: underline; }
-.layout-container { min-height: 100vh; }
-.logo-img { height: 50px; }
-.hero-section { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1974"); background-size: cover; background-position: center; }
-.section-title { font-family: var(--font-header); color: var(--accent-brown); }
-.product-card-img { height: 225px; object-fit: cover; }
-.cart-item-img { max-height: 100px; width: auto; }
-.map-container { height: 450px; }
-.modal-overlay { background-color: rgba(0,0,0,0.5); }
-
-
-/* --- NUEVOS ESTILOS PARA EL PANEL DE ADMIN --- */
-
-.admin-layout {
-  display: flex;
-  min-height: 100vh;
+/* Estilo para que el NavLink activo se vea más prominente */
+.nav-pills .nav-link.active {
+    background-color: var(--accent-green);
+    color: white !important;
 }
-
-.sidebar {
-  width: 250px; /* Ancho fijo para el menú lateral */
-  background-color: #343a40; /* Color oscuro para el sidebar */
-  padding: 1.5rem;
-  color: white;
-}
-
-.sidebar .nav-link {
-  color: #cdaaa0; /* Color de texto claro para enlaces */
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 0.25rem;
-}
-
-.sidebar .nav-link:hover {
-  background-color: #495057; /* Fondo al pasar el mouse */
-}
-
-/* Estilo para el enlace activo */
-.sidebar .nav-link.active {
-  background-color: var(--accent-green); /* Verde de la marca */
-  color: white;
-  font-weight: bold;
-}
-
-.admin-content {
-  flex-grow: 1; /* Ocupa el resto del espacio */
-  padding: 2rem;
-  background-color: #f8f9fa; /* Fondo gris claro para el contenido */
-}
-=======
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
->>>>>>> af2fc13 (Extructura base)
