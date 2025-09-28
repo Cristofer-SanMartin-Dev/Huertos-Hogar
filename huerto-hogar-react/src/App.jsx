@@ -60,9 +60,26 @@ const Layout = () => (
     </div>
 );
 
-function App() {
-  const [count, setCount] = useState(0)
+// TUTOR: Creamos un componente "Layout" para no repetir el Header y Footer en cada página.
+// <Outlet /> es un marcador de posición de react-router-dom donde se renderizará
+// el componente de la página actual (HomePage, ProductsPage, etc.).
+const Layout = () => (
+  <div className="d-flex flex-column" style={{ minHeight: "100vh" }}>
+    <Header />
+    <main className="flex-grow-1">
+      <Outlet />
+    </main>
+    <Footer />
+  </div>
+);
 
+/**
+ * TUTOR: Este es el corazón de la aplicación.
+ * Aquí definimos la estructura de las rutas.
+ * Todas nuestras páginas se renderizarán dentro del Layout principal.
+ * Por ahora, las páginas son solo placeholders simples.
+ */
+function App() {
   return (
     <Routes>
       {/* --- RUTAS PÚBLICAS (usando el Layout con Header/Footer) --- */}

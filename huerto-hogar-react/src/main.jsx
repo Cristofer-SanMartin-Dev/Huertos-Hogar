@@ -1,7 +1,4 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+// src/main.jsx
 
 // Importamos los Contextos (Estado global)
 import { CartProvider } from './context/CartContext';
