@@ -1,6 +1,11 @@
 /* src/index.css */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap');
 
+/**
+ * TUTOR: He adaptado tus variables y estilos base de tu CSS original.
+ * Al importarlo en main.jsx, estos estilos se aplicarán a toda la aplicación,
+ * complementando a Bootstrap.
+ */
 :root {
   --accent-green: #2E8B57;
   --accent-brown: #8B4513;
