@@ -13,10 +13,33 @@ body {
   background-color: #F7F7F7;
   color: #333333;
   margin: 0;
+}
+
+/* --- Tipografía y Utilidades --- */
+h1 {
+  font-family: var(--font-header);
+  /* font-size: 3.2em;  <-- Opcional: Ajusta si los títulos son muy grandes */
+  line-height: 1.1;
+}
+
+.title-green {
+  color: var(--accent-green) !important;
+}
+
+.section-title, .product-title {
+  font-family: var(--font-header);
+  color: var(--accent-brown);
+}
+
+.layout-container {
   min-height: 100vh;
 }
 
-/* --- Overrides de Bootstrap y Botones --- */
+.modal-overlay {
+  background-color: rgba(0,0,0,0.5);
+}
+
+/* --- Overrides de Bootstrap --- */
 .nav-pills .nav-link {
   color: #333333;
   font-weight: 600;
@@ -27,6 +50,7 @@ body {
   color: white !important;
 }
 
+/* Botones personalizados */
 .btn-primary, .btn-success {
   background-color: var(--accent-green);
   border-color: var(--accent-green);
@@ -51,28 +75,6 @@ body {
   --bs-btn-color: #fff;
   --bs-btn-bg: #dc3545;
   --bs-btn-border-color: #dc3545;
-}
-
-/* --- Tipografía y Utilidades --- */
-h1 {
-  font-family: var(--font-header);
-}
-
-.title-green {
-  color: var(--accent-green) !important;
-}
-
-.section-title, .product-title {
-  font-family: var(--font-header);
-  color: var(--accent-brown);
-}
-
-.modal-overlay {
-  background-color: rgba(0,0,0,0.5);
-}
-
-.layout-container {
-  min-height: 100vh;
 }
 
 /* --- Componentes Específicos --- */
@@ -128,7 +130,7 @@ h1 {
   text-decoration: underline;
 }
 
-/* Productos y Carrito */
+/* Productos, Carrito y Mapas */
 .product-card-img {
   height: 225px;
   object-fit: cover;
@@ -139,7 +141,6 @@ h1 {
   width: auto;
 }
 
-/* Mapas */
 .map-container {
   height: 450px;
 }
