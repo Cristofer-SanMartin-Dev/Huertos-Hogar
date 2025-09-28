@@ -2,19 +2,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap');
 
 :root {
-    --accent-green: #2E8B57;
-    --accent-brown: #8B4513;
-    --font-header: 'Playfair Display', serif;
-    --font-main: 'Montserrat', sans-serif;
+  --accent-green: #2E8B57;
+  --accent-brown: #8B4513;
+  --font-header: 'Playfair Display', serif;
+  --font-main: 'Montserrat', sans-serif;
 }
 
 body {
   font-family: var(--font-main, sans-serif);
   background-color: #F7F7F7;
   color: #333333;
+  margin: 0;
+  min-height: 100vh;
 }
 
-/* --- Estilos Generales y Overrides de Bootstrap --- */
+/* --- Overrides de Bootstrap y Botones --- */
 .nav-pills .nav-link {
   color: #333333;
   font-weight: 600;
@@ -25,7 +27,6 @@ body {
   color: white !important;
 }
 
-/* Botones personalizados para coincidir con el tema */
 .btn-primary, .btn-success {
   background-color: var(--accent-green);
   border-color: var(--accent-green);
@@ -52,7 +53,11 @@ body {
   --bs-btn-border-color: #dc3545;
 }
 
-/* Tipografía y Utilidades */
+/* --- Tipografía y Utilidades --- */
+h1 {
+  font-family: var(--font-header);
+}
+
 .title-green {
   color: var(--accent-green) !important;
 }
@@ -62,22 +67,12 @@ body {
   color: var(--accent-brown);
 }
 
-/* --- NUEVOS ESTILOS PARA EL PANEL DE ADMIN --- */
-
-.admin-layout {
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
 .modal-overlay {
   background-color: rgba(0,0,0,0.5);
+}
+
+.layout-container {
+  min-height: 100vh;
 }
 
 /* --- Componentes Específicos --- */
