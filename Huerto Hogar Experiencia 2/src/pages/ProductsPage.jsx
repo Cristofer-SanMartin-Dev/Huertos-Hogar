@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { ProductCard } from '../components/ProductCard';
 import { useParams, Link } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
+import ProductReviewsModal from '../components/ProductReviewsModal';
 
 // Datos de productos (puedes mover esto a un archivo aparte si lo prefieres)
 const products = [
@@ -34,9 +35,12 @@ export const ProductsPage = () => {
   const { addToCart } = useContext(CartContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState('all');
+  const [modalProduct, setModalProduct] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [productsState, setProductsState] = useState(products);
 
   // Lógica de filtrado combinada
-  const filteredProducts = products
+  const filteredProducts = productsState
     .filter(product => {
       // Filtro por categoría (de la URL)
       if (categoryId) {
@@ -53,6 +57,33 @@ export const ProductsPage = () => {
       const matchesCategory = category === 'all' || product.category === category;
       return matchesSearch && matchesCategory;
     });
+
+  // Abrir modal de reseñas
+  const handleOpenModal = (product) => {
+    setModalProduct(product);
+    setShowModal(true);
+  };
+
+  // Agregar reseña
+  const handleAddReview = (reviewText) => {
+    setProductsState(prevProducts =>
+      prevProducts.map(p =>
+        p.id === modalProduct.id
+          ? {
+              ...p,
+              reviews: [
+                ...p.reviews,
+                {
+                  user: 'Usuario',
+                  date: new Date().toISOString().slice(0, 10),
+                  comment: reviewText
+                }
+              ]
+            }
+          : p
+      )
+    );
+  };
 
   return (
     <div className="container py-4">
@@ -110,12 +141,16 @@ export const ProductsPage = () => {
                     <p className="card-text">{product.description}</p>
                     <p className="card-text"><strong>${product.price.toLocaleString('es-CL')}</strong></p>
                     <button
-                      className="btn btn-success w-100"
+                      className="btn btn-success w-100 mb-2"
                       onClick={() => addToCart(product)}
                       disabled={product.stock === 0}
                     >
                       {product.stock === 0 ? 'Sin stock' : 'Agregar al carrito'}
                     </button>
+                    <button
+                      className="btn btn-outline-primary w-100"
+                      onClick={() => handleOpenModal(product)}
+                    >Ver Reseñas</button>
                   </div>
                 </div>
               </div>
@@ -123,10 +158,12 @@ export const ProductsPage = () => {
           )}
         </div>
       </main>
-
-      {/* Modal de Reseñas (puede implementarse con Bootstrap Modal en el futuro) */}
-      {/* ... */}
-
+      <ProductReviewsModal
+        product={modalProduct}
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onAddReview={handleAddReview}
+      />
       {/* Footer */}
       <footer className="footer mt-auto py-3 bg-dark text-white">
         <div className="container text-center">
