@@ -1,11 +1,7 @@
-// src/main.jsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
-import { BrowserRouter } from 'react-router-dom';
-import { CartProvider } from './context/CartContext';
-// 1. Importa el AuthProvider
-import { AuthProvider } from './context/AuthContext';
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.jsx'
 
 // Importamos los Contextos (Estado global)
 import { CartProvider } from './context/CartContext';

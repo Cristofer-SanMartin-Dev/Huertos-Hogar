@@ -61,6 +61,8 @@ const Layout = () => (
 );
 
 function App() {
+  const [count, setCount] = useState(0)
+
   return (
     <Routes>
       {/* --- RUTAS PÚBLICAS (usando el Layout con Header/Footer) --- */}
