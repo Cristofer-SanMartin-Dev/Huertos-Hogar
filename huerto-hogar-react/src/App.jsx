@@ -51,6 +51,7 @@ const Layout = () => (
     </div>
 );
 
+// Componente principal de la aplicación con las rutas
 function App() {
   return (
     <Routes>
