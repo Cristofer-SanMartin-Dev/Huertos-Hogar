@@ -1,18 +1,13 @@
 // src/components/ProductCard.jsx
 import React from 'react';
+import { useCart } from '../context/CartContext';
 
-/**
- * TUTOR: Este es uno de los componentes más importantes y reutilizables.
- * Representa una única "tarjeta" de producto.
- * - Recibe un objeto `product` como "prop" y muestra sus datos.
- * - La lógica para deshabilitar el botón si no hay stock se maneja aquí dentro.
- * - Es completamente independiente, por lo que podemos usarlo tanto en la página
- * de inicio como en la de catálogo de productos.
- */
 const ProductCard = ({ product }) => {
-  // Desestructuramos el objeto producto para un acceso más fácil
   const { name, price, description, stock, imageUrl } = product;
   const isOutOfStock = stock === 0;
+
+  // Usa el hook para acceder a la función addToCart del contexto
+  const { addToCart } = useCart();
 
   return (
     <div className="col">
@@ -27,9 +22,11 @@ const ProductCard = ({ product }) => {
               {isOutOfStock ? 'Agotado' : `Stock: ${stock}`}
             </p>
             <div className="d-grid gap-2">
+              {/* El botón ahora usa la función del contexto global */}
               <button
                 className="btn btn-primary"
                 disabled={isOutOfStock}
+                onClick={() => addToCart(product)}
               >
                 {isOutOfStock ? 'No disponible' : 'Agregar al carrito'}
               </button>
