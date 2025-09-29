@@ -15,9 +15,37 @@ const cartReducer = (state, action) => {
             item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
           );
         }
-        return state;
-      }
-      return [...state, { ...product, quantity: 1 }];
+        return [...state, { ...product, quantity: 1 }];
+    }
+    case 'INCREMENT_QUANTITY': {
+        return state.map(item => {
+            if (item.id === action.payload) {
+                // Solo incrementa si la cantidad es menor que el stock
+                if(item.quantity < item.stock) {
+                    return { ...item, quantity: item.quantity + 1 };
+                }
+            }
+            return item;
+        });
+    }
+    case 'DECREMENT_QUANTITY': {
+        return state.map(item => {
+            if (item.id === action.payload) {
+                // Si la cantidad es mayor que 1, la decrementamos
+                if (item.quantity > 1) {
+                    return { ...item, quantity: item.quantity - 1 };
+                }
+            }
+            return item;
+        }).filter(item => item.quantity > 0); // Opcional: si la cantidad llega a 0 se podría eliminar
+    }
+    case 'REMOVE_FROM_CART': {
+        // Filtramos el array para devolver todos los items excepto el que queremos eliminar
+        return state.filter(item => item.id !== action.payload);
+    }
+    case 'CLEAR_CART': {
+        // Simplemente devolvemos un array vacío para limpiar el carrito
+        return [];
     }
     case 'INCREMENT_QUANTITY': {
       return state.map(item => {
