@@ -38,17 +38,11 @@ const Layout = () => (
     </div>
 );
 
-/**
- * TUTOR: Este es el corazón de la aplicación.
- * Aquí definimos la estructura de las rutas.
- * Todas nuestras páginas se renderizarán dentro del Layout principal.
- * Por ahora, las páginas son solo placeholders simples.
- */
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        {/* Aquí irán las rutas anidadas que usarán el Layout */}
+        {/* 2. Reemplaza el placeholder con el componente importado */}
         <Route index element={<HomePage />} />
         <Route path="productos" element={<ProductsPage />} />
         <Route path="categorias" element={<CategoriasPage />} />
@@ -105,9 +99,7 @@ function App() {
   );
 }
 
-// --- Componentes Placeholder para las Páginas ---
-// (Los moveremos a sus propios archivos en los siguientes commits)
-const HomePage = () => <div className="container text-center py-5"><h1>Página de Inicio</h1></div>;
+// 3. Elimina el placeholder de HomePage que estaba aquí
 const ProductsPage = () => <div className="container py-5"><h1>Catálogo de Productos</h1></div>;
 
 export default App;

@@ -8,12 +8,7 @@ import ReviewsModal from '../components/ReviewsModal.jsx';
 import { getFeaturedProducts } from '../services/productService.js';
 
 const HomePage = () => {
-  // Estado para guardar los productos destacados
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  
-  // Estados para controlar el modal de reseñas
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     // Cargar productos destacados al montar el componente
@@ -59,9 +54,8 @@ const HomePage = () => {
       {/* --- PRODUCTOS DESTACADOS --- */}
       <div className="album py-5 bg-light">
         <div className="container">
-          <h2 className="text-center mb-4 section-title">Productos Destacados</h2>
+          <h2 className="text-center mb-4" style={{fontFamily: 'var(--font-header)', color: 'var(--accent-brown)'}}>Productos Destacados</h2>
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {/* Mapea los productos destacados del estado */}
             {featuredProducts.map(product => (
               <ProductCard 
                 key={product.id} 
@@ -77,6 +71,7 @@ const HomePage = () => {
         </div>
       </div>
 
+      {/* SECCIÓN QUIÉNES SOMOS */}
       <section className="container py-5">
         <div className="row">
           <div className="col-lg-8 mx-auto text-center">
@@ -123,13 +118,6 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
-      {/* --- MODAL DE RESEÑAS --- */}
-      <ReviewsModal 
-        product={selectedProduct} 
-        show={isModalVisible} 
-        onClose={handleCloseModal} 
-      />
     </>
   );
 };
