@@ -1,50 +1,35 @@
 // src/pages/ProductsPage.jsx
 import React, { useState, useEffect } from 'react';
-import { getProducts } from '../services/productService';
-import ProductCard from '../components/ProductCard';
-import SearchBar from '../components/SearchBar';
+import { getProducts } from '../services/productService.js';
+import ProductCard from '../components/ProductCard.jsx';
+import SearchBar from '../components/SearchBar.jsx';
 
-/**
- * TUTOR: Esta es la página del catálogo, ahora con lógica de estado y efectos.
- * - useState: Manejamos 4 piezas de estado:
- * 1. `products`: La lista original y completa de productos que no cambia.
- * 2. `filteredProducts`: La lista que se muestra en pantalla y que cambia con los filtros.
- * 3. `searchTerm`: El texto actual en la barra de búsqueda.
- * 4. `selectedCategory`: La categoría seleccionada en el dropdown.
- *
- * - useEffect: Usamos dos efectos.
- * 1. El primer `useEffect` (con `[]`) se ejecuta solo una vez para cargar todos los productos
- * del servicio y guardarlos en el estado `products`.
- * 2. El segundo `useEffect` es la clave de la reactividad. Se ejecuta CADA VEZ que
- * `searchTerm` o `selectedCategory` cambian. Dentro, filtra la lista original de `products`
- * y actualiza el estado `filteredProducts`, lo que causa que la UI se vuelva a renderizar
- * mostrando solo los productos correctos.
- */
+// TUTOR: Página del catálogo con lógica de estado para búsqueda y filtrado.
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Efecto para cargar los productos una sola vez al montar el componente
+  // Efecto para cargar los productos una sola vez.
   useEffect(() => {
     const allProducts = getProducts();
     setProducts(allProducts);
     setFilteredProducts(allProducts);
   }, []);
 
-  // Efecto para aplicar los filtros cada vez que el término de búsqueda o la categoría cambian
+  // Efecto que se ejecuta cada vez que cambia el término de búsqueda o la categoría.
   useEffect(() => {
     let result = products;
 
-    // 1. Filtrar por término de búsqueda (insensible a mayúsculas/minúsculas)
+    // Filtrar por término de búsqueda
     if (searchTerm) {
       result = result.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // 2. Filtrar por categoría
+    // Filtrar por categoría
     if (selectedCategory !== 'all') {
       result = result.filter(product => product.category === selectedCategory);
     }
@@ -52,7 +37,7 @@ const ProductsPage = () => {
     setFilteredProducts(result);
   }, [searchTerm, selectedCategory, products]);
   
-  // Extraemos las categorías únicas de la lista de productos para pasarlas al SearchBar
+  // Extraemos las categorías únicas para el dropdown del filtro.
   const categories = [...new Set(products.map(p => p.category))];
 
   return (
