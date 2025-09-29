@@ -60,11 +60,13 @@ import './App.css'
 import { Routes, Route, Outlet } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
+<<<<<<< HEAD
 >>>>>>> f624ce9 (Configuración Inicial, Estructura y Layout Principal)
+=======
+// 1. Importa el componente real de la página de inicio
+import HomePage from './pages/HomePage';
+>>>>>>> 5473e38 (Construcción de la Página de Inicio (HomePage))
 
-// TUTOR: Creamos un componente "Layout" para no repetir el Header y Footer en cada página.
-// <Outlet /> es un marcador de posición de react-router-dom donde se renderizará
-// el componente de la página actual (HomePage, ProductsPage, etc.).
 const Layout = () => (
   <div className="d-flex flex-column" style={{ minHeight: "100vh" }}>
     <Header />
@@ -75,20 +77,13 @@ const Layout = () => (
   </div>
 );
 
-/**
- * TUTOR: Este es el corazón de la aplicación.
- * Aquí definimos la estructura de las rutas.
- * Todas nuestras páginas se renderizarán dentro del Layout principal.
- * Por ahora, las páginas son solo placeholders simples.
- */
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        {/* Aquí irán las rutas anidadas que usarán el Layout */}
+        {/* 2. Reemplaza el placeholder con el componente importado */}
         <Route index element={<HomePage />} />
         <Route path="productos" element={<ProductsPage />} />
-        {/* Añadimos placeholders para las rutas futuras */}
         <Route path="carrito" element={<div>Página del Carrito</div>} />
         <Route path="login" element={<div>Página de Login</div>} />
         <Route path="register" element={<div>Página de Registro</div>} />
@@ -100,12 +95,16 @@ function App() {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export default App
 >>>>>>> af2fc13 (Extructura base)
 =======
 // --- Componentes Placeholder para las Páginas ---
 // (Los moveremos a sus propios archivos en los siguientes commits)
 const HomePage = () => <div className="container text-center py-5"><h1>Página de Inicio</h1></div>;
+=======
+// 3. Elimina el placeholder de HomePage que estaba aquí
+>>>>>>> 5473e38 (Construcción de la Página de Inicio (HomePage))
 const ProductsPage = () => <div className="container py-5"><h1>Catálogo de Productos</h1></div>;
 
 export default App;
