@@ -38,6 +38,7 @@ const Layout = () => (
     </div>
 );
 
+// Componente principal de la aplicación con las rutas
 function App() {
   return (
     <Routes>
@@ -99,5 +100,4 @@ function App() {
   );
 }
 
-// 3. Elimina el placeholder de ProductsPage que estaba aquí
 export default App;
