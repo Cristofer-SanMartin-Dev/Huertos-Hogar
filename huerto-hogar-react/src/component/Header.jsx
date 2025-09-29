@@ -1,14 +1,14 @@
 // src/components/Header.jsx
 import { NavLink } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
-/**
- * TUTOR: Componente para el encabezado de la página.
- * - Usamos `NavLink` de react-router-dom en lugar de `<a>`.
- * Esto permite que el enlace de la página activa reciba una clase "active"
- * automáticamente, lo que facilita darle un estilo diferente.
- * - `cartCount` será una "prop" que recibiremos más adelante desde un estado global.
- */
-const Header = ({ cartCount = 0 }) => {
+const Header = () => {
+  // Usa el hook para acceder al estado del carrito
+  const { cart } = useCart();
+
+  // Calcula el número total de items en el carrito
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+
   return (
     <header className="py-3 mb-4 border-bottom bg-white shadow-sm sticky-top">
       <div className="container d-flex flex-wrap justify-content-center align-items-center">
