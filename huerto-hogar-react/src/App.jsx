@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 // src/App.jsx
 import { Routes, Route, Outlet } from 'react-router-dom';
 import Header from './components/Header.jsx';
@@ -50,25 +49,22 @@ function App() {
 }
 
 export default App;
-=======
+
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-=======
+
 // src/App.jsx
+
 import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> f624ce9 (Configuración Inicial, Estructura y Layout Principal)
-=======
+
 // 1. Importa el componente real de la página de inicio
 import HomePage from './pages/HomePage';
->>>>>>> 5473e38 (Construcción de la Página de Inicio (HomePage))
-=======
+
 import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
 import CartPage from './pages/CartPage';
@@ -87,12 +83,23 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-<<<<<<< HEAD
->>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
 
-=======
 // Componente Layout para la estructura principal de la página
->>>>>>> 147913b (Estado Global del Carrito con Context API)
+
+import { Routes, Route, Outlet } from 'react-router-dom';
+import Header from './components/Header.jsx';
+import Footer from './components/Footer.jsx';
+import HomePage from './pages/HomePage.jsx';
+import ProductsPage from './pages/ProductsPage.jsx';
+import CartPage from './pages/CartPage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import RegisterPage from './pages/RegisterPage.jsx';
+import ProfilePage from './pages/ProfilePage.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+
+// TUTOR: Componente Layout para la estructura principal de la página (Header y Footer).
+// <Outlet /> de react-router-dom renderizará aquí el componente de la página activa.
+>>>>>>> 45ddfb7 ( Página de Perfil de Usuario (ProfilePage))
 const Layout = () => (
     <div className="d-flex flex-column" style={{ minHeight: "100vh" }}>
         <Header />
@@ -103,6 +110,7 @@ const Layout = () => (
     </div>
 );
 
+// TUTOR: Componente principal de la aplicación que define todas las rutas.
 function App() {
   return (
     <Routes>
@@ -110,42 +118,39 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="productos" element={<ProductsPage />} />
         <Route path="carrito" element={<CartPage />} />
-        {/* 2. Reemplazamos los placeholders con los componentes reales */}
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
-        {/* 3. Protegemos la ruta del perfil */}
-        <Route 
-          path="perfil" 
+        
+        {/* Ruta protegida para el perfil de usuario */}
+        <Route
+          path="perfil"
           element={
             <ProtectedRoute>
-              <div>Página de Perfil (Protegida)</div>
+              <ProfilePage />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route path="*" element={<div>Página no encontrada</div>} />
+        
+        {/* Ruta para manejar páginas no encontradas */}
+        <Route path="*" element={<div className="container text-center py-5"><h2>404: Página no encontrada</h2></div>} />
       </Route>
     </Routes>
   );
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 export default App
->>>>>>> af2fc13 (Extructura base)
-=======
+
 // --- Componentes Placeholder para las Páginas ---
 // (Los moveremos a sus propios archivos en los siguientes commits)
 const HomePage = () => <div className="container text-center py-5"><h1>Página de Inicio</h1></div>;
-=======
+
 // 3. Elimina el placeholder de HomePage que estaba aquí
->>>>>>> 5473e38 (Construcción de la Página de Inicio (HomePage))
+
 const ProductsPage = () => <div className="container py-5"><h1>Catálogo de Productos</h1></div>;
 
 export default App;
->>>>>>> f624ce9 (Configuración Inicial, Estructura y Layout Principal)
-=======
+
 // 3. Elimina el placeholder de ProductsPage que estaba aquí
 export default App;
 >>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
