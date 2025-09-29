@@ -1,8 +1,16 @@
 // src/pages/LoginPage.jsx
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 
+/**
+ * TUTOR: Esta es la página de inicio de sesión con un formulario controlado.
+ * - `useState`: Mantenemos el estado para 'email', 'password' y 'error'.
+ * - `useAuth`: Obtenemos la función `login` de nuestro contexto.
+ * - `useNavigate`: Un hook de React Router que nos permite redirigir al usuario programáticamente.
+ * - `handleSubmit`: Esta función se ejecuta al enviar el formulario. Llama a la función
+ * `login` del contexto. Si tiene éxito, redirige al perfil; si no, muestra un error.
+ */
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,7 +20,7 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
+    setError(''); // Limpiamos errores previos
 
     // Llama a la función login del contexto. Devuelve una Promesa.
     login(email, password)
