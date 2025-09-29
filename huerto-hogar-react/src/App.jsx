@@ -99,7 +99,5 @@ function App() {
   );
 }
 
-// 3. Elimina el placeholder de HomePage que estaba aquí
-const ProductsPage = () => <div className="container py-5"><h1>Catálogo de Productos</h1></div>;
-
+// 3. Elimina el placeholder de ProductsPage que estaba aquí
 export default App;

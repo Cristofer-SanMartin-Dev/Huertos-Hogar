@@ -1,6 +1,7 @@
 // src/pages/ProductsPage.jsx
 import React, { useState, useEffect } from 'react';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { getProducts } from '../services/productService.js';
 import ProductCard from '../components/ProductCard.jsx';
 import SearchBar from '../components/SearchBar.jsx';
@@ -8,6 +9,8 @@ import ReviewsModal from '../components/ReviewsModal.jsx'; // 1. Importa el moda
 
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
 import { getProducts } from '../services/productService';
 import ProductCard from '../components/ProductCard';
 import SearchBar from '../components/SearchBar';
@@ -28,15 +31,19 @@ import SearchBar from '../components/SearchBar';
  * y actualiza el estado `filteredProducts`, lo que causa que la UI se vuelva a renderizar
  * mostrando solo los productos correctos.
  */
+<<<<<<< HEAD
 >>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
 =======
 >>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
+=======
+>>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -51,12 +58,16 @@ const ProductsPage = () => {
 >>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
 =======
 >>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
+=======
+  // Efecto para cargar los productos una sola vez al montar el componente
+>>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
   useEffect(() => {
     const allProducts = getProducts();
     setProducts(allProducts);
     setFilteredProducts(allProducts);
   }, []);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   useEffect(() => {
@@ -113,6 +124,29 @@ const ProductsPage = () => {
     setSelectedProduct(null);
   };
 >>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
+=======
+  // Efecto para aplicar los filtros cada vez que el término de búsqueda o la categoría cambian
+  useEffect(() => {
+    let result = products;
+
+    // 1. Filtrar por término de búsqueda (insensible a mayúsculas/minúsculas)
+    if (searchTerm) {
+      result = result.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // 2. Filtrar por categoría
+    if (selectedCategory !== 'all') {
+      result = result.filter(product => product.category === selectedCategory);
+    }
+
+    setFilteredProducts(result);
+  }, [searchTerm, selectedCategory, products]);
+  
+  // Extraemos las categorías únicas de la lista de productos para pasarlas al SearchBar
+  const categories = [...new Set(products.map(p => p.category))];
+>>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
 
   return (
     <div className="container py-5">
@@ -133,6 +167,7 @@ const ProductsPage = () => {
           filteredProducts.map(product => (
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             // 4. Pasamos la función a cada ProductCard
             <ProductCard key={product.id} product={product} onViewReviews={handleViewReviews} />
 =======
@@ -142,11 +177,15 @@ const ProductsPage = () => {
             // 4. Pasamos la función a cada ProductCard
             <ProductCard key={product.id} product={product} onViewReviews={handleViewReviews} />
 >>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
+=======
+            <ProductCard key={product.id} product={product} />
+>>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
           ))
         ) : (
           <p className="col-12 text-center text-muted">No se encontraron productos que coincidan con tu búsqueda.</p>
         )}
       </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -163,6 +202,8 @@ const ProductsPage = () => {
 >>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
 =======
 >>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
+=======
+>>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
     </div>
   );
 };
