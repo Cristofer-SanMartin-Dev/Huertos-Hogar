@@ -57,7 +57,8 @@ import viteLogo from '/vite.svg'
 import './App.css'
 =======
 // src/App.jsx
-import { Routes, Route, Outlet } from 'react-router-dom';
+import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 <<<<<<< HEAD
@@ -70,8 +71,21 @@ import HomePage from './pages/HomePage';
 =======
 import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
-// 1. Importa el nuevo componente de la página del carrito
 import CartPage from './pages/CartPage';
+// 1. Importamos las nuevas páginas
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+
+// TUTOR: Creamos un componente para proteger rutas.
+// Si el usuario no está autenticado, lo redirige a la página de login.
+// Si lo está, renderiza la página solicitada (el `children`).
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
 
 <<<<<<< HEAD
 >>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
@@ -95,11 +109,19 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="productos" element={<ProductsPage />} />
-        {/* 2. Reemplaza el placeholder con el componente real CartPage */}
         <Route path="carrito" element={<CartPage />} />
-        <Route path="login" element={<div>Página de Login</div>} />
-        <Route path="register" element={<div>Página de Registro</div>} />
-        <Route path="perfil" element={<div>Página de Perfil</div>} />
+        {/* 2. Reemplazamos los placeholders con los componentes reales */}
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
+        {/* 3. Protegemos la ruta del perfil */}
+        <Route 
+          path="perfil" 
+          element={
+            <ProtectedRoute>
+              <div>Página de Perfil (Protegida)</div>
+            </ProtectedRoute>
+          } 
+        />
         <Route path="*" element={<div>Página no encontrada</div>} />
       </Route>
     </Routes>
