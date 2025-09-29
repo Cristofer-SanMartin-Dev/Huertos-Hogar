@@ -77,14 +77,14 @@ const ProductsPage = () => {
   useEffect(() => {
     let result = products;
 
-    // 1. Filtrar por término de búsqueda (insensible a mayúsculas/minúsculas)
+    // Filtrar por término de búsqueda
     if (searchTerm) {
       result = result.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // 2. Filtrar por categoría
+    // Filtrar por categoría
     if (selectedCategory !== 'all') {
       result = result.filter(product => product.category === selectedCategory);
     }
@@ -92,7 +92,7 @@ const ProductsPage = () => {
     setFilteredProducts(result);
   }, [searchTerm, selectedCategory, products]);
   
-  // Extraemos las categorías únicas de la lista de productos para pasarlas al SearchBar
+  // Extraemos las categorías únicas para el dropdown del filtro.
   const categories = [...new Set(products.map(p => p.category))];
 >>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
 
