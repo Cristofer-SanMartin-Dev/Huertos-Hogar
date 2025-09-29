@@ -12,5 +12,13 @@
  */
 const BASE_URL = 'http://localhost:8080/api/products';
 
-export const getProducts = () => products;
-export const getFeaturedProducts = () => products.slice(0, 3);
+
+// Función para obtener todos los productos
+export const getProducts = () => {
+    return products;
+}
+
+// Función para obtener solo los productos destacados (los 3 primeros)
+export const getFeaturedProducts = () => {
+    return products.slice(0, 3);
+}
