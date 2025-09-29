@@ -1,13 +1,21 @@
 // src/components/Header.jsx
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+// 1. Importamos el hook de autenticación
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
-  // Usa el hook para acceder al estado del carrito
   const { cart } = useCart();
+  // 2. Obtenemos el estado de autenticación y la función de logout
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
-  // Calcula el número total de items en el carrito
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/'); // Redirigir al inicio después de cerrar sesión
+  };
 
   return (
     <header className="py-3 mb-4 border-bottom bg-white shadow-sm sticky-top">
@@ -19,8 +27,18 @@ const Header = () => {
           <li className="nav-item"><NavLink to="/" className="nav-link">Inicio</NavLink></li>
           <li className="nav-item"><NavLink to="/productos" className="nav-link">Productos</NavLink></li>
           <li className="nav-item"><NavLink to="/carrito" className="nav-link">Carrito ({cartCount})</NavLink></li>
-          <li className="nav-item"><NavLink to="/login" className="nav-link">Iniciar Sesión</NavLink></li>
-          <li className="nav-item"><NavLink to="/perfil" className="nav-link d-none">Mi Perfil</NavLink></li>
+          
+          {/* 3. Renderizado Condicional: Mostramos unos enlaces u otros si el usuario está autenticado */}
+          {isAuthenticated ? (
+            <>
+              <li className="nav-item"><NavLink to="/perfil" className="nav-link">Mi Perfil</NavLink></li>
+              <li className="nav-item">
+                <button onClick={handleLogout} className="btn btn-link nav-link text-danger">Cerrar Sesión</button>
+              </li>
+            </>
+          ) : (
+            <li className="nav-item"><NavLink to="/login" className="nav-link">Iniciar Sesión</NavLink></li>
+          )}
         </ul>
       </div>
     </header>
