@@ -9,7 +9,6 @@ import { getFeaturedProducts } from '../services/productService.js';
 
 const HomePage = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  // 2. Estados para controlar el modal
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -46,6 +45,7 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* --- SECCIÓN PRODUCTOS DESTACADOS --- */}
       <div className="album py-5 bg-light">
         <div className="container">
           <h2 className="text-center mb-4 section-title">Productos Destacados</h2>
