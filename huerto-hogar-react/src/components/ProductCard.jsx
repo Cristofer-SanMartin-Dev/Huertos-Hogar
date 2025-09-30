@@ -13,7 +13,7 @@ const ProductCard = ({ product, onViewReviews }) => {
       <div className="card shadow-sm h-100">
         <img src={imageUrl} className="card-img-top" alt={name} style={{ height: '225px', objectFit: 'cover' }} />
         <div className="card-body d-flex flex-column">
-          <h5 className="card-title" style={{fontFamily: 'var(--font-header)', color: 'var(--accent-brown)'}}>{name}</h5>
+          <h5 className="card-title" style={{fontFamily: 'var(--font-header)'}}>{name}</h5>
           <StarRating rating={rating} />
           
           <p className="card-text text-success fw-bold fs-5 mb-2">
