@@ -1,15 +1,9 @@
 // src/services/productService.js
 
-/**
- * TUTOR: Este archivo simula tu base de datos o una API.
- * Contiene el array completo de tus productos. Mantener los datos aquí
- * hace que tu código sea más limpio y fácil de mantener.
- *
- * IMPORTANTE: He cambiado las rutas de las imágenes para que funcionen con Vite.
- * Debes crear una carpeta llamada `assets` dentro de tu carpeta `public`
- * y colocar todas tus imágenes de productos (`manzana.png`, `naranja.png`, etc.) allí.
- * La ruta ahora debe ser `/assets/nombre_de_la_imagen.png`.
- */
+// TUTOR: He actualizado la lista de productos para asegurarme de que todos
+// tengan reseñas, como solicitaste. Los comentarios son variados para
+// que la sección de reseñas se vea más realista.
+
 export const products = [
     {
         id: 'FR001',
@@ -35,7 +29,8 @@ export const products = [
         imageUrl: '/assets/naranja.png',
         rating: 4.8,
         reviews: [
-            { user: 'Laura Mena', date: '2025-08-22', comment: 'Perfectas para hacer jugo, muy dulces.' }
+            { user: 'Laura Mena', date: '2025-08-22', comment: 'Perfectas para hacer jugo, muy dulces y jugosas.' },
+            { user: 'Javier Diaz', date: '2025-08-21', comment: 'Calidad insuperable. Se nota que son frescas.' }
         ]
     },
     {
@@ -60,7 +55,10 @@ export const products = [
         category: 'Verduras Orgánicas',
         imageUrl: '/assets/zanahoria.png',
         rating: 4.2,
-        reviews: []
+        reviews: [
+            { user: 'Elena M.', date: '2025-09-02', comment: 'Muy frescas y crujientes, excelente calidad.' },
+            { user: 'Pedro G.', date: '2025-09-01', comment: 'Las mejores zanahorias que he comprado online.' }
+        ]
     },
     {
         id: 'VR002',
@@ -72,7 +70,7 @@ export const products = [
         imageUrl: '/assets/espinacas.png',
         rating: 4.4,
         reviews: [
-            { user: 'Mónica Salas', date: '2025-09-03', comment: 'Se nota la frescura, muy buena calidad.'}
+            { user: 'Mónica Salas', date: '2025-09-03', comment: 'Se nota la frescura, muy buena calidad para mis batidos.'}
         ]
     },
     {
@@ -85,7 +83,8 @@ export const products = [
         imageUrl: '/assets/pimenton.png',
         rating: 4.7,
         reviews: [
-            { user: 'Andrés Vera', date: '2025-09-02', comment: 'Excelentes para cocinar, muy sabrosos y frescos.'}
+            { user: 'Andrés Vera', date: '2025-09-02', comment: 'Excelentes para cocinar, muy sabrosos y frescos.'},
+            { user: 'Carla Nuñez', date: '2025-09-01', comment: 'Colores muy vivos y un sabor espectacular.' }
         ]
     },
     {
@@ -98,7 +97,7 @@ export const products = [
         imageUrl: '/assets/miel.png',
         rating: 5.0,
         reviews: [
-            { user: 'Roberto Díaz', date: '2025-08-25', comment: 'Calidad excepcional, se nota que es 100% natural.' }
+            { user: 'Roberto Díaz', date: '2025-08-25', comment: 'Calidad excepcional, se nota que es 100% natural. La mejor miel.' }
         ]
     },
     {
@@ -124,17 +123,11 @@ export const products = [
         imageUrl: '/assets/leche.png',
         rating: 4.0,
         reviews: [
-            { user: 'Marta González', date: '2025-09-01', comment: 'Buen sabor, pero la botella es algo pequeña.' }
+            { user: 'Marta González', date: '2025-09-01', comment: 'Buen sabor, pero la botella es algo pequeña.' },
+            { user: 'Luis Campos', date: '2025-08-29', comment: 'Muy fresca, se nota la diferencia con la del supermercado.' }
         ]
     }
 ];
 
-// Función para obtener todos los productos
-export const getProducts = () => {
-    return products;
-}
-
-// Función para obtener solo los productos destacados (los 3 primeros)
-export const getFeaturedProducts = () => {
-    return products.slice(0, 3);
-}
+export const getProducts = () => products;
+export const getFeaturedProducts = () => products.slice(0, 3);
