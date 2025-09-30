@@ -1,19 +1,10 @@
 // src/pages/CartPage.jsx
 import React from 'react';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../context/CartContext.jsx';
 import { Link } from 'react-router-dom';
+// 1. Importa el nuevo componente
+import ImpactoAmbiental from '../components/ImpactoAmbiental.jsx';
 
-/**
- * TUTOR: Este componente construye la página del carrito.
- * - `useCart()`: Obtenemos todo lo que necesitamos del contexto global:
- * - `cart`: El array de productos en el carrito.
- * - `removeFromCart`, `incrementQuantity`, `decrementQuantity`, `clearCart`: Las funciones para modificar el carrito.
- * - Renderizado Condicional: Mostramos un mensaje si el carrito está vacío, o la tabla de productos si tiene items.
- * - `reduce()`: Usamos este método para calcular el `cartTotal`, sumando el precio por la cantidad de cada item.
- * - Funcionalidad: Los botones de "+", "-", y "Eliminar" están conectados directamente a las funciones del contexto.
- * Cualquier cambio que se haga aquí se reflejará inmediatamente en el Header y en cualquier otro
- * componente que consuma el `useCart` hook.
- */
 const CartPage = () => {
     // Obtenemos todo lo necesario del contexto del carrito
     const { cart, removeFromCart, incrementQuantity, decrementQuantity, clearCart } = useCart();
@@ -107,13 +98,11 @@ const CartPage = () => {
     );
   }
 
-  // Si hay productos, muestra la tabla y el resumen
   return (
     <div className="container py-5">
       <h2 className="mb-4" style={{ fontFamily: 'var(--font-header)', color: 'var(--accent-brown)' }}>Tu Carrito de Compras</h2>
       <div className="row">
         <div className="col-lg-8">
-          {/* Lista de productos en el carrito */}
           {cart.map(item => (
             <div key={item.id} className="card mb-3">
               <div className="row g-0">
@@ -144,7 +133,6 @@ const CartPage = () => {
           ))}
         </div>
 
-        {/* Resumen del pedido */}
         <div className="col-lg-4">
           <div className="card">
             <div className="card-body">
@@ -159,6 +147,10 @@ const CartPage = () => {
                   <span>${cartTotal.toLocaleString('es-CL')}</span>
                 </li>
               </ul>
+
+              {/* 2. Añadimos el componente de impacto ambiental aquí */}
+              <ImpactoAmbiental cart={cart} />
+
               <div className="d-grid gap-2 mt-3">
                 <button onClick={clearCart} className="btn btn-success">
                   Finalizar Compra
