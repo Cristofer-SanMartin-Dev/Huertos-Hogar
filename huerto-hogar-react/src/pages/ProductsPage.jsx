@@ -6,6 +6,7 @@ import ProductCard from '../components/ProductCard.jsx';
 import SearchBar from '../components/SearchBar.jsx';
 import ReviewsModal from '../components/ReviewsModal.jsx'; // 1. Importa el modal
 
+<<<<<<< HEAD
 =======
 import { getProducts } from '../services/productService';
 import ProductCard from '../components/ProductCard';
@@ -28,6 +29,8 @@ import SearchBar from '../components/SearchBar';
  * mostrando solo los productos correctos.
  */
 >>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
+=======
+>>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -35,19 +38,26 @@ const ProductsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
   // 2. Estados para controlar el modal
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+<<<<<<< HEAD
 =======
   // Efecto para cargar los productos una sola vez al montar el componente
 >>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
+=======
+>>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
   useEffect(() => {
     const allProducts = getProducts();
     setProducts(allProducts);
     setFilteredProducts(allProducts);
   }, []);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   useEffect(() => {
     let result = products;
@@ -74,27 +84,35 @@ const ProductsPage = () => {
   };
 =======
   // Efecto para aplicar los filtros cada vez que el término de búsqueda o la categoría cambian
+=======
+>>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
   useEffect(() => {
     let result = products;
-
-    // Filtrar por término de búsqueda
     if (searchTerm) {
-      result = result.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      result = result.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
     }
-
-    // Filtrar por categoría
     if (selectedCategory !== 'all') {
-      result = result.filter(product => product.category === selectedCategory);
+      result = result.filter(p => p.category === selectedCategory);
     }
-
     setFilteredProducts(result);
   }, [searchTerm, selectedCategory, products]);
   
-  // Extraemos las categorías únicas para el dropdown del filtro.
   const categories = [...new Set(products.map(p => p.category))];
+<<<<<<< HEAD
 >>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
+=======
+  
+  // 3. Funciones para abrir y cerrar el modal
+  const handleViewReviews = (product) => {
+    setSelectedProduct(product);
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    setSelectedProduct(null);
+  };
+>>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
 
   return (
     <div className="container py-5">
@@ -114,17 +132,25 @@ const ProductsPage = () => {
         {filteredProducts.length > 0 ? (
           filteredProducts.map(product => (
 <<<<<<< HEAD
+<<<<<<< HEAD
             // 4. Pasamos la función a cada ProductCard
             <ProductCard key={product.id} product={product} onViewReviews={handleViewReviews} />
 =======
             <ProductCard key={product.id} product={product} />
 >>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
+=======
+            // 4. Pasamos la función a cada ProductCard
+            <ProductCard key={product.id} product={product} onViewReviews={handleViewReviews} />
+>>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
           ))
         ) : (
           <p className="col-12 text-center text-muted">No se encontraron productos que coincidan con tu búsqueda.</p>
         )}
       </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
 
       {/* 5. Renderizamos el modal */}
       <ReviewsModal 
@@ -132,8 +158,11 @@ const ProductsPage = () => {
         show={isModalVisible} 
         onClose={handleCloseModal} 
       />
+<<<<<<< HEAD
 =======
 >>>>>>> 11a3261 (Catálogo de Productos con Filtros (ProductsPage))
+=======
+>>>>>>> 3a8df33 (Implementación del Modal de Reseñas)
     </div>
   );
 };
