@@ -1,12 +1,13 @@
 // src/components/ProductCard.jsx
 import React from 'react';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../context/CartContext.jsx';
 
-const ProductCard = ({ product }) => {
+// TUTOR: Añadimos una nueva prop `onViewReviews`
+// Esta será una función que el componente padre (la página) nos pasará.
+// Al hacer clic en "Ver Reseñas", llamaremos a esa función.
+const ProductCard = ({ product, onViewReviews }) => {
   const { name, price, description, stock, imageUrl } = product;
   const isOutOfStock = stock === 0;
-
-  // Usa el hook para acceder a la función addToCart del contexto
   const { addToCart } = useCart();
 
   return (
@@ -22,7 +23,6 @@ const ProductCard = ({ product }) => {
               {isOutOfStock ? 'Agotado' : `Stock: ${stock}`}
             </p>
             <div className="d-grid gap-2">
-              {/* El botón ahora usa la función del contexto global */}
               <button
                 className="btn btn-primary"
                 disabled={isOutOfStock}
@@ -30,7 +30,8 @@ const ProductCard = ({ product }) => {
               >
                 {isOutOfStock ? 'No disponible' : 'Agregar al carrito'}
               </button>
-              <button className="btn btn-outline-secondary">
+              {/* Este botón ahora llama a la función que recibe por props */}
+              <button onClick={() => onViewReviews(product)} className="btn btn-outline-secondary">
                 Ver Reseñas
               </button>
             </div>

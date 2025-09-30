@@ -7,17 +7,12 @@ import ReviewsModal from '../components/ReviewsModal.jsx';
 // TUTOR: 1. Esta importación ahora SÍ coincide con el productService.js
 import { getFeaturedProducts } from '../services/productService.js';
 
-/**
- * TUTOR: Este componente representa la página de inicio completa.
- * - `useEffect` se usa para cargar los productos destacados cuando el componente se muestra por primera vez.
- * - `useState` almacena esos productos en el estado `featuredProducts`.
- * - Reutilizamos el componente `ProductCard` para mostrar los productos.
- * - Las secciones (Hero, About Us) están separadas lógicamente.
- */
 const HomePage = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  // 2. Estados para controlar el modal
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Este efecto se ejecuta solo una vez al montar el componente
   useEffect(() => {
     // 2. Llama a la función simulada
     setFeaturedProducts(getFeaturedProducts());
@@ -51,7 +46,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* SECCIÓN PRODUCTOS DESTACADOS */}
       <div className="album py-5 bg-light">
         <div className="container">
           <h2 className="text-center mb-4 section-title">Productos Destacados</h2>
