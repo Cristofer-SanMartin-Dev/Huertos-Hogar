@@ -17,6 +17,7 @@ const HomePage = () => {
     setFeaturedProducts(getFeaturedProducts());
   }, []);
 
+  // Funciones para abrir y cerrar el modal de reseñas
   const handleViewReviews = (product) => {
     setSelectedProduct(product);
     setIsModalVisible(true);
@@ -27,7 +28,7 @@ const HomePage = () => {
     setSelectedProduct(null);
   };
 
-  // Función simulada para 'onDelete' (solo visual en HomePage)
+  // Función simulada para 'onDelete' (solo visual en HomePage, lógica real en Admin)
   const handleDeleteProduct = (id) => {
     console.warn("Función de eliminar solo disponible en el panel de admin.");
   };
@@ -35,13 +36,13 @@ const HomePage = () => {
   return (
     <>
       {/* --- SECCIÓN HERO --- */}
-      <section className="text-center container-fluid py-5 text-white hero-section">
+      <section className="text-center container-fluid py-5 text-white hero-section" style={{ backgroundColor: '#2c3e50' }}>
         <div className="row py-lg-5">
           <div className="col-lg-6 col-md-8 mx-auto">
             <h1 className="fw-light section-title" style={{ color: 'white', textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>
               Frescura del Campo a tu Hogar
             </h1>
-            <p className="lead" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.7)' }}>
+            <p className="lead" style={{ color: '#ecf0f1', textShadow: '1px 1px 2px rgba(0,0,0,0.7)' }}>
               Descubre la calidad de los productos de HuertoHogar. ¡Directo de la tierra a tu mesa!
             </p>
             <p>
@@ -103,9 +104,9 @@ const HomePage = () => {
             <p className="text-muted">Encuéntranos en nuestros puntos de distribución.</p>
           </div>
           <div className="col-12">
-            <div className="map-container rounded shadow overflow-hidden">
+            <div className="map-container rounded shadow overflow-hidden" style={{ height: '400px' }}>
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.605858270261!2d-70.65045022346292!3d-33.43691969665177!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c5a368757a1b%3A0x7a056c7296e43f7e!2sPlaza%20de%20Armas%20de%20Santiago!5e0!3m2!1ses!2scl!4v1710360000000!5m2!1ses!2scl"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.461554759736!2d-70.61608368480096!3d-33.43725898077751!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662cf700074041b%3A0x17433098152d97c2!2sProvidencia%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses!2scl!4v1635789452134!5m2!1ses!2scl"
                 width="100%" 
                 height="100%" 
                 style={{ border: 0 }} 
