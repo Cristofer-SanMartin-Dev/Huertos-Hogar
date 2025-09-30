@@ -9,7 +9,6 @@ import { getFeaturedProducts } from '../services/productService.js';
 
 const HomePage = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  // 2. Estados para controlar el modal
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -35,7 +34,6 @@ const HomePage = () => {
     console.warn("Función de eliminar solo disponible en el panel de admin.");
   };
 
-  // 3. Funciones para abrir y cerrar el modal
   const handleViewReviews = (product) => {
     setSelectedProduct(product);
     setIsModalVisible(true);
