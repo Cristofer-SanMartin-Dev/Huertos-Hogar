@@ -136,11 +136,13 @@ h1 {
   object-fit: cover;
 }
 
+/* Para las imágenes en la lista del carrito */
 .cart-item-img {
   max-height: 100px;
   width: auto;
 }
 
+/* Para el contenedor del mapa en HomePage.jsx */
 .map-container {
   height: 450px;
 }
