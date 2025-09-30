@@ -2,10 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap');
 
 :root {
-    --accent-green: #2E8B57;
-    --accent-brown: #8B4513;
-    --font-header: 'Playfair Display', serif;
-    --font-main: 'Montserrat', sans-serif;
+  --accent-green: #2E8B57;
+  --accent-brown: #8B4513;
+  --font-header: 'Playfair Display', serif;
+  --font-main: 'Montserrat', sans-serif;
 }
 
 /* Estilos base del cuerpo de la página */
