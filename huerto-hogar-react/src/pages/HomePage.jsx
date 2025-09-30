@@ -8,14 +8,17 @@ import ReviewsModal from '../components/ReviewsModal.jsx';
 import { getFeaturedProducts } from '../services/productService.js';
 
 const HomePage = () => {
+  // Estado para guardar los productos destacados
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  
+  // Estados para controlar el modal de reseñas
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     // Cargar productos destacados al montar el componente
     setFeaturedProducts(getFeaturedProducts());
-  }, []);
+  }, []); // El array vacío `[]` asegura que se ejecute solo una vez.
 
   // Funciones para abrir y cerrar el modal de reseñas
   const handleViewReviews = (product) => {
@@ -23,6 +26,7 @@ const HomePage = () => {
     setIsModalVisible(true);
   };
 
+  // Función para cerrar el modal (pasa al ReviewsModal)
   const handleCloseModal = () => {
     setIsModalVisible(false);
     setSelectedProduct(null);
@@ -57,6 +61,7 @@ const HomePage = () => {
         <div className="container">
           <h2 className="text-center mb-4 section-title">Productos Destacados</h2>
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {/* Mapea los productos destacados del estado */}
             {featuredProducts.map(product => (
               <ProductCard 
                 key={product.id} 
