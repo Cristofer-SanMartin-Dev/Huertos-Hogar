@@ -9,9 +9,10 @@ import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import BlogPage from './pages/BlogPage.jsx';
+import ArticlePage from './pages/ArticlePage.jsx';
 
-// TUTOR: Componente Layout para la estructura principal de la página (Header y Footer).
-// <Outlet /> de react-router-dom renderizará aquí el componente de la página activa.
+
 const Layout = () => (
     <div className="d-flex flex-column" style={{ minHeight: "100vh" }}>
         <Header />
@@ -22,7 +23,6 @@ const Layout = () => (
     </div>
 );
 
-// TUTOR: Componente principal de la aplicación que define todas las rutas.
 function App() {
   return (
     <Routes>
@@ -32,8 +32,9 @@ function App() {
         <Route path="carrito" element={<CartPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="blog" element={<BlogPage />} />
+        <Route path="blog/:articleId" element={<ArticlePage />} />
         
-        {/* Ruta protegida para el perfil de usuario */}
         <Route
           path="perfil"
           element={
@@ -43,8 +44,9 @@ function App() {
           }
         />
         
-        {/* Ruta para manejar páginas no encontradas */}
         <Route path="*" element={<div className="container text-center py-5"><h2>404: Página no encontrada</h2></div>} />
+      
+      {/* CORRECCIÓN: La etiqueta de cierre debe ser <Route> con 'R' mayúscula */}
       </Route>
     </Routes>
   );
