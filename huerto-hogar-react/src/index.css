@@ -1,25 +1,22 @@
 /* src/index.css */
 
-/**
- * TUTOR: Este es tu archivo de estilos globales. Contiene las variables
- * de color y tipografía de tu marca, estilos base para el `body`, y
- * ahora, las reglas para unificar el color de todos los botones.
- */
-
 /* Fuentes importadas de Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap');
 
 /* Variables de color y tipografía de la marca "HuertoHogar" */
 :root {
-    --accent-green: #2E8B57;
-    --accent-brown: #8B4513;
-    --font-header: 'Playfair Display', serif;
-    --font-main: 'Montserrat', sans-serif;
+  --accent-green: #2E8B57;
+  --accent-brown: #8B4513;
+  --font-header: 'Playfair Display', serif;
+  --font-main: 'Montserrat', sans-serif;
 }
 
 /* Estilos base del cuerpo de la página */
 body {
-  font-family: var(--font-main, sans-serif);
+   font-family: var(--font-main, sans-serif);
+   /* AÑADIDO: Se establece el color de fondo y de texto principal */
+   background-color: #F7F7F7; /* Blanco Suave */
+   color: #333333; /* Gris Oscuro */
 }
 
 /* Estilo para que el enlace activo en la navegación se vea verde */
@@ -29,25 +26,16 @@ body {
 }
 
 /* --- ESTILOS GLOBALES PARA BOTONES --- */
-
-/* * TUTOR: Aquí definimos el verde como el color para los botones primarios.
- * Apuntamos a `.btn-primary` y `.btn-success` para unificar ambos.
- * También definimos un color un poco más oscuro para el efecto :hover.
-*/
 .btn-primary, .btn-success {
-    background-color: var(--accent-green); /* Verde Esmeralda: #2E8B57 */
+    background-color: var(--accent-green);
     border-color: var(--accent-green);
 }
 
 .btn-primary:hover, .btn-success:hover {
-    background-color: #256d44; /* Un verde ligeramente más oscuro */
+    background-color: #256d44;
     border-color: #256d44;
 }
 
-/*
- * TUTOR: Aprovechamos de darle el color verde también a los botones secundarios
- * (los que tienen solo borde) para mantener la coherencia.
-*/
 .btn-outline-secondary {
     color: var(--accent-green);
     border-color: var(--accent-green);
@@ -58,13 +46,12 @@ body {
     color: white;
 }
 
-/*
- * TUTOR: Es importante mantener el color rojo para acciones de "peligro"
- * como eliminar o cerrar sesión. Es lo que el usuario espera y mejora la usabilidad.
-*/
 .btn-danger, .btn-outline-danger {
-    /* Mantenemos los colores por defecto de Bootstrap para estos casos */
     --bs-btn-color: #fff;
     --bs-btn-bg: #dc3545;
     --bs-btn-border-color: #dc3545;
+}
+
+.title-green {
+    color: var(--accent-green) !important;
 }
