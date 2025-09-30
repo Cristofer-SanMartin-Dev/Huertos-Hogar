@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import StarRating from './StarRating.jsx';
 
 const ReviewsModal = ({ product, show, onClose }) => {
-  // TUTOR: Usamos useEffect para actualizar las reseñas si el producto cambia
-  // mientras el modal ya está abierto (aunque es un caso raro, es buena práctica).
   const [reviews, setReviews] = useState(product ? product.reviews : []);
   const [newReviewText, setNewReviewText] = useState('');
 
