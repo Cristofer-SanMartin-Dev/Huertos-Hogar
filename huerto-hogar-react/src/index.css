@@ -2,10 +2,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap');
 
 /**
- * TUTOR: He adaptado tus variables y estilos base de tu CSS original.
- * Al importarlo en main.jsx, estos estilos se aplicarán a toda la aplicación,
- * complementando a Bootstrap.
+ * TUTOR: Este es tu archivo de estilos globales. Contiene las variables
+ * de color y tipografía de tu marca, estilos base para el `body`, y
+ * ahora, las reglas para unificar el color de todos los botones.
  */
+
+/* Fuentes importadas de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap');
+
+/* Variables de color y tipografía de la marca "HuertoHogar" */
 :root {
   --accent-green: #2E8B57;
   --accent-brown: #8B4513;
@@ -13,6 +18,7 @@
   --font-main: 'Montserrat', sans-serif;
 }
 
+/* Estilos base del cuerpo de la página */
 body {
   font-family: var(--font-main, sans-serif);
   background-color: #F7F7F7;

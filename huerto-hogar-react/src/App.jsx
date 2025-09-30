@@ -38,7 +38,6 @@ const Layout = () => (
     </div>
 );
 
-// TUTOR: Componente principal de la aplicación que define todas las rutas.
 function App() {
   return (
     <Routes>
@@ -64,6 +63,8 @@ function App() {
         {/* Autenticación */}
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="blog" element={<BlogPage />} />
+        <Route path="blog/:articleId" element={<ArticlePage />} />
         
         {/* Rutas Protegidas de Usuario */}
         <Route
