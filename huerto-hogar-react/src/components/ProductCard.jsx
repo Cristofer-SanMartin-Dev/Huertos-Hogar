@@ -1,11 +1,10 @@
 // src/components/ProductCard.jsx
 import React from 'react';
 import { useCart } from '../context/CartContext.jsx';
-// 1. Importa el nuevo componente de estrellas
 import StarRating from './StarRating.jsx';
 
 const ProductCard = ({ product, onViewReviews }) => {
-  const { name, price, description, stock, imageUrl, rating } = product; // Añadimos 'rating'
+  const { name, price, description, stock, imageUrl, rating, priceUnit } = product;
   const isOutOfStock = stock === 0;
   const { addToCart } = useCart();
 
@@ -15,11 +14,13 @@ const ProductCard = ({ product, onViewReviews }) => {
         <img src={imageUrl} className="card-img-top" alt={name} style={{ height: '225px', objectFit: 'cover' }} />
         <div className="card-body d-flex flex-column">
           <h5 className="card-title" style={{fontFamily: 'var(--font-header)'}}>{name}</h5>
-          
-          {/* 2. Añadimos el componente de valoración por estrellas */}
           <StarRating rating={rating} />
           
-          <p className="card-text text-success fw-bold fs-5 mb-2">${price.toLocaleString('es-CL')}</p>
+          <p className="card-text text-success fw-bold fs-5 mb-2">
+            ${price.toLocaleString('es-CL')} 
+            <span className="text-muted fs-6 fw-normal ms-2">{priceUnit}</span>
+          </p>
+
           <p className="card-text flex-grow-1">{description}</p>
           <div className="mt-auto">
             <p className={`fw-bold mb-2 ${isOutOfStock ? 'text-danger' : 'text-muted'}`}>
@@ -34,7 +35,7 @@ const ProductCard = ({ product, onViewReviews }) => {
                 {isOutOfStock ? 'No disponible' : 'Agregar al carrito'}
               </button>
               <button onClick={() => onViewReviews(product)} className="btn btn-outline-secondary">
-                Ver Reseñas
+                Ver Detalles y Reseñas
               </button>
             </div>
           </div>
