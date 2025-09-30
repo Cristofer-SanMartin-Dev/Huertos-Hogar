@@ -41,8 +41,6 @@ const Layout = () => (
     </div>
 );
 
-// TUTOR: Componente Layout para la estructura principal de la página (Header y Footer).
-// <Outlet /> de react-router-dom renderizará aquí el componente de la página activa.
 const Layout = () => (
     <div className="d-flex flex-column" style={{ minHeight: "100vh" }}>
         <Header />
@@ -53,7 +51,6 @@ const Layout = () => (
     </div>
 );
 
-// TUTOR: Componente principal de la aplicación que define todas las rutas.
 function App() {
   return (
     <Routes>
