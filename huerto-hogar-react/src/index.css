@@ -1,60 +1,75 @@
 /* src/index.css */
-
-/* Fuentes importadas de Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap');
 
 :root {
-  --accent-green: #2E8B57;
-  --accent-brown: #8B4513;
-  --font-header: 'Playfair Display', serif;
-  --font-main: 'Montserrat', sans-serif;
+    --accent-green: #2E8B57;
+    --accent-brown: #8B4513;
+    --font-header: 'Playfair Display', serif;
+    --font-main: 'Montserrat', sans-serif;
 }
 
 body {
-   font-family: var(--font-main, sans-serif);
-   /* AÑADIDO: Se establece el color de fondo y de texto principal */
-   background-color: #F7F7F7; /* Blanco Suave */
-   color: #333333; /* Gris Oscuro */
+    font-family: var(--font-main, sans-serif);
+    background-color: #F7F7F7;
+    color: #333333;
 }
 
-/* --- ESTILOS DE NAVEGACIÓN --- */
-.nav-pills .nav-link { 
-  color: #333333; 
-  font-weight: 600; 
-}
-.nav-pills .nav-link.active { 
-  background-color: var(--accent-green); 
-  color: white !important; 
+/* ... (Estilos de nav, botones, login, etc.) ... */
+.nav-pills .nav-link { color: #333333; font-weight: 600; }
+.nav-pills .nav-link.active { background-color: var(--accent-green); color: white !important; }
+.btn-primary, .btn-success { background-color: var(--accent-green); border-color: var(--accent-green); }
+.btn-primary:hover, .btn-success:hover { background-color: #256d44; border-color: #256d44; }
+.btn-outline-secondary { color: var(--accent-green); border-color: var(--accent-green); }
+.btn-outline-secondary:hover { background-color: var(--accent-green); color: white; }
+.btn-danger, .btn-outline-danger { --bs-btn-color: #fff; --bs-btn-bg: #dc3545; --bs-btn-border-color: #dc3545; }
+.title-green { color: var(--accent-green) !important; }
+.product-title { font-family: var(--font-header); color: var(--accent-brown); }
+.login-container { max-width: 400px; margin: 2rem auto; padding: 2rem; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
+.login-container h2 { margin-bottom: 2rem; color: var(--accent-brown); }
+.login-container .form-group { text-align: left; margin-bottom: 1.5rem; }
+.login-container .form-group label { display: block; font-weight: bold; margin-bottom: 0.5rem; }
+.login-container .form-group .form-control { border-radius: 4px; }
+.login-container .d-grid .btn { padding: 0.75rem; }
+.login-container p a { color: var(--accent-green); font-weight: bold; text-decoration: none; }
+.login-container p a:hover { text-decoration: underline; }
+
+/* --- CLASES PARA REEMPLAZAR ESTILOS EN LÍNEA --- */
+
+.layout-container {
+  min-height: 100vh;
 }
 
-/* --- ESTILOS GLOBALES PARA BOTONES --- */
-.btn-primary, .btn-success {
-    background-color: var(--accent-green);
-    border-color: var(--accent-green);
+.logo-img {
+  height: 50px;
 }
 
-.btn-primary:hover, .btn-success:hover {
-    background-color: #256d44;
-    border-color: #256d44;
+.hero-section {
+  /* TUTOR: CORRECCIÓN AQUÍ. La URL ahora está entre comillas para que sea válida. */
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1974");
+  background-size: cover;
+  background-position: center;
 }
 
-.btn-outline-secondary {
-    color: var(--accent-green);
-    border-color: var(--accent-green);
-}
-
-/* Para títulos de productos (tarjetas, modal, carrito) */
-.product-title {
+.section-title {
   font-family: var(--font-header);
   color: var(--accent-brown);
 }
 
-.btn-danger, .btn-outline-danger {
-    --bs-btn-color: #fff;
-    --bs-btn-bg: #dc3545;
-    --bs-btn-border-color: #dc3545;
+.product-card-img {
+  height: 225px;
+  object-fit: cover;
 }
 
-.title-green {
-    color: var(--accent-green) !important;
+.cart-item-img {
+  max-height: 100px;
+  width: auto;
 }
+
+.map-container {
+  height: 450px;
+}
+
+.modal-overlay {
+  background-color: rgba(0,0,0,0.5);
+}
+
