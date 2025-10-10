@@ -18,15 +18,18 @@ const Header = () => {
     <header className="py-3 mb-4 border-bottom bg-white shadow-sm sticky-top">
       <div className="container d-flex flex-wrap justify-content-center align-items-center">
         <NavLink to="/" className="d-flex align-items-center mb-2 mb-md-0 me-md-auto text-dark text-decoration-none">
-          <span className="fs-4" style={{ fontFamily: 'var(--font-header)' }}>HuertoHogar</span>
+          <img 
+            src="/assets/logo-huertohogar.png" 
+            alt="HuertoHogar Logo" 
+            style={{ height: '50px' }} 
+            className="me-2"
+          />
         </NavLink>
         <ul className="nav nav-pills">
           <li className="nav-item"><NavLink to="/" className="nav-link">Inicio</NavLink></li>
           <li className="nav-item"><NavLink to="/productos" className="nav-link">Productos</NavLink></li>
-          {/* 1. Añadimos el nuevo enlace al Blog */}
           <li className="nav-item"><NavLink to="/blog" className="nav-link">Blog</NavLink></li>
           <li className="nav-item"><NavLink to="/carrito" className="nav-link">Carrito ({cartCount})</NavLink></li>
-          
           {isAuthenticated ? (
             <>
               <li className="nav-item"><NavLink to="/perfil" className="nav-link">Mi Perfil</NavLink></li>
