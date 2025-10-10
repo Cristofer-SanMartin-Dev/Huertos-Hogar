@@ -77,7 +77,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* --- SECCIÓN QUIÉNES SOMOS --- */}
       <section className="container py-5">
         <div className="row">
           <div className="col-lg-8 mx-auto text-center">
