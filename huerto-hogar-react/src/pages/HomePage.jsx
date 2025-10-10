@@ -45,7 +45,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* --- SECCIÓN PRODUCTOS DESTACADOS --- */}
       <div className="album py-5 bg-light">
         <div className="container">
           <h2 className="text-center mb-4 section-title">Productos Destacados</h2>
@@ -62,7 +61,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* --- SECCIÓN QUIÉNES SOMOS --- */}
       <section className="container py-5">
         <div className="row">
           <div className="col-lg-8 mx-auto text-center">

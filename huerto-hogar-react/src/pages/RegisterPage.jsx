@@ -46,7 +46,6 @@ const RegisterPage = () => {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (validateForm()) {
       // --- OBJETO USER MODIFICADO ---
       const user = { nombre, apellidos, email, password, calle, region, comuna };
