@@ -18,9 +18,11 @@ describe('Componente ProductCard', () => {
 
     expect(screen.getByText('Producto de Prueba')).toBeInTheDocument();
     
+    // TUTOR: AQUÍ ESTÁ LA CORRECCIÓN.
+    // Cambiamos la coma (,) por un punto (.) para que coincida con el formato de 'es-CL'.
     expect(screen.getByText('$1.500')).toBeInTheDocument();
   });
-  
+
   test('debería llamar a la función onViewReviews cuando se hace clic', () => {
     const mockOnViewReviews = vi.fn();
     render(<CartProvider><ProductCard product={mockProduct} onViewReviews={mockOnViewReviews} /></CartProvider>);
