@@ -41,13 +41,16 @@ const Layout = () => (
     </div>
 );
 
+// --- NUEVOS IMPORTS ---
+import CheckoutPage from './pages/CheckoutPage.jsx';
+import OrderSuccessPage from './pages/OrderSuccessPage.jsx';
+import OrderErrorPage from './pages/OrderErrorPage.jsx';
+// --- FIN NUEVOS IMPORTS ---
+
+
 const Layout = () => (
-    <div className="d-flex flex-column" style={{ minHeight: "100vh" }}>
-        <Header />
-        <main className="flex-grow-1">
-            <Outlet />
-        </main>
-        <Footer />
+    <div className="d-flex flex-column layout-container">
+        {/* ... (Header y Footer) ... */}
     </div>
 );
 
