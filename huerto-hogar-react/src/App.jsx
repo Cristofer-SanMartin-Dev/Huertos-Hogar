@@ -2,16 +2,13 @@
 import { Routes, Route, Outlet } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
-import ProtectedRoute from './components/ProtectedRoute.jsx';
-
-// --- Imports de Páginas Públicas ---
 import HomePage from './pages/HomePage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
-import ProductForm from './pages/ProductForm.jsx'; // Formulario CRUD (lo usaremos dentro de admin)
 import CartPage from './pages/CartPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 import BlogPage from './pages/BlogPage.jsx';
 import ArticlePage from './pages/ArticlePage.jsx';
 import CategoriasPage from './pages/CategoriasPage.jsx';
@@ -22,11 +19,12 @@ import CheckoutPage from './pages/CheckoutPage.jsx';
 import OrderSuccessPage from './pages/OrderSuccessPage.jsx';
 import OrderErrorPage from './pages/OrderErrorPage.jsx';
 
-// --- Imports de Páginas de Admin ---
+// --- NUEVOS IMPORTS DE ADMIN ---
 import AdminLayout from './pages/admin/AdminLayout.jsx';
 import DashboardPage from './pages/admin/DashboardPage.jsx';
+// --- FIN NUEVOS IMPORTS ---
 
-// --- Layout Público (con Header y Footer) ---
+// Layout público (sin cambios)
 const Layout = () => (
     <div className="d-flex flex-column layout-container">
         <Header />
@@ -40,7 +38,7 @@ const Layout = () => (
 function App() {
   return (
     <Routes>
-      {/* --- RUTAS PÚBLICAS (usan el Layout con Header/Footer) --- */}
+      {/* --- RUTAS PÚBLICAS (usando el Layout con Header/Footer) --- */}
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="productos" element={<ProductsPage />} />
@@ -57,7 +55,7 @@ function App() {
         <Route path="nosotros" element={<NosotrosPage />} />
         <Route path="contacto" element={<ContactoPage />} />
         
-        {/* Ruta de Perfil (Protegida, pero usa el Layout público) */}
+        {/* Ruta de Perfil (Protegida) */}
         <Route
           path="perfil"
           element={
@@ -66,12 +64,15 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
-        {/* Ruta comodín para páginas no encontradas */}
         <Route path="*" element={<div className="container text-center py-5"><h2 className="section-title">404: Página no encontrada</h2></div>} />
       </Route>
 
-      {/* --- RUTAS DE ADMINISTRADOR (usan AdminLayout y están protegidas) --- */}
+      {/* --- NUEVAS RUTAS DE ADMINISTRADOR (usando AdminLayout) --- */}
+      {/* TUTOR: Este grupo de rutas está anidado.
+        1. Protegemos toda la sección /admin con <ProtectedRoute>.
+        2. Usamos <AdminLayout /> como el contenedor visual (con Sidebar).
+        3. <DashboardPage /> se mostrará en el <Outlet /> de AdminLayout cuando la ruta sea exactamente /admin.
+      */}
       <Route 
         path="/admin" 
         element={
@@ -81,9 +82,7 @@ function App() {
         }
       >
         <Route index element={<DashboardPage />} />
-        {/* Aquí añadiremos las otras páginas de admin (ej: /admin/productos)
-          que usarán el ProductForm que ya creamos.
-        */}
+        {/* Aquí añadiremos las otras páginas de admin (ej: /admin/productos) */}
       </Route>
 
     </Routes>
