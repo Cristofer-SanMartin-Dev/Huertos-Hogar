@@ -45,12 +45,19 @@ const Layout = () => (
 import CheckoutPage from './pages/CheckoutPage.jsx';
 import OrderSuccessPage from './pages/OrderSuccessPage.jsx';
 import OrderErrorPage from './pages/OrderErrorPage.jsx';
-// --- FIN NUEVOS IMPORTS ---
 
+// --- Imports de Páginas de Admin ---
+import AdminLayout from './pages/admin/AdminLayout.jsx';
+import DashboardPage from './pages/admin/DashboardPage.jsx';
 
+// --- Layout Público (con Header y Footer) ---
 const Layout = () => (
     <div className="d-flex flex-column layout-container">
-        {/* ... (Header y Footer) ... */}
+        <Header />
+        <main className="flex-grow-1">
+            <Outlet />
+        </main>
+        <Footer />
     </div>
 );
 
@@ -82,6 +89,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+        
+        {/* Ruta comodín para páginas no encontradas */}
         <Route path="*" element={<div className="container text-center py-5"><h2 className="section-title">404: Página no encontrada</h2></div>} />
       </Route>
 
