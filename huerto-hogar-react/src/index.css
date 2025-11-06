@@ -2,10 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap');
 
 :root {
-    --accent-green: #2E8B57;
-    --accent-brown: #8B4513;
-    --font-header: 'Playfair Display', serif;
-    --font-main: 'Montserrat', sans-serif;
+  --accent-green: #2E8B57;
+   --accent-brown: #8B4513;
+   --font-header: 'Playfair Display', serif;
+   --font-main: 'Montserrat', sans-serif;
 }
 
 body {
@@ -62,12 +62,18 @@ body {
   color: var(--accent-brown);
 }
 
-.layout-container {
+/* --- NUEVOS ESTILOS PARA EL PANEL DE ADMIN --- */
+
+.admin-layout {
+  display: flex;
   min-height: 100vh;
 }
 
-.logo-img {
-  height: 50px;
+.sidebar {
+  width: 250px; /* Ancho fijo para el menú lateral */
+  background-color: #343a40; /* Color oscuro para el sidebar */
+  padding: 1.5rem;
+  color: white;
 }
 
 .modal-overlay {
