@@ -2,19 +2,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap');
 
 :root {
-    --accent-green: #2E8B57;
-    --accent-brown: #8B4513;
-    --font-header: 'Playfair Display', serif;
-    --font-main: 'Montserrat', sans-serif;
+  --accent-green: #2E8B57;
+   --accent-brown: #8B4513;
+   --font-header: 'Playfair Display', serif;
+   --font-main: 'Montserrat', sans-serif;
 }
 
 body {
-    font-family: var(--font-main, sans-serif);
-    background-color: #F7F7F7;
-    color: #333333;
+   font-family: var(--font-main, sans-serif);
+   background-color: #F7F7F7;
+   color: #333333;
 }
 
-/* ... (Estilos de nav, botones, login, etc.) ... */
+/* ... (Estilos de nav, botones, login, etc. se mantienen igual) ... */
 .nav-pills .nav-link { color: #333333; font-weight: 600; }
 .nav-pills .nav-link.active { background-color: var(--accent-green); color: white !important; }
 .btn-primary, .btn-success { background-color: var(--accent-green); border-color: var(--accent-green); }
@@ -32,44 +32,50 @@ body {
 .login-container .d-grid .btn { padding: 0.75rem; }
 .login-container p a { color: var(--accent-green); font-weight: bold; text-decoration: none; }
 .login-container p a:hover { text-decoration: underline; }
+.layout-container { min-height: 100vh; }
+.logo-img { height: 50px; }
+.hero-section { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1974"); background-size: cover; background-position: center; }
+.section-title { font-family: var(--font-header); color: var(--accent-brown); }
+.product-card-img { height: 225px; object-fit: cover; }
+.cart-item-img { max-height: 100px; width: auto; }
+.map-container { height: 450px; }
+.modal-overlay { background-color: rgba(0,0,0,0.5); }
 
-/* --- CLASES PARA REEMPLAZAR ESTILOS EN LÍNEA --- */
 
-.layout-container {
+/* --- NUEVOS ESTILOS PARA EL PANEL DE ADMIN --- */
+
+.admin-layout {
+  display: flex;
   min-height: 100vh;
 }
 
-.logo-img {
-  height: 50px;
+.sidebar {
+  width: 250px; /* Ancho fijo para el menú lateral */
+  background-color: #343a40; /* Color oscuro para el sidebar */
+  padding: 1.5rem;
+  color: white;
 }
 
-.hero-section {
-  /* TUTOR: CORRECCIÓN AQUÍ. La URL ahora está entre comillas para que sea válida. */
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1974");
-  background-size: cover;
-  background-position: center;
+.sidebar .nav-link {
+  color: #cdaaa0; /* Color de texto claro para enlaces */
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.25rem;
 }
 
-.section-title {
-  font-family: var(--font-header);
-  color: var(--accent-brown);
+.sidebar .nav-link:hover {
+  background-color: #495057; /* Fondo al pasar el mouse */
 }
 
-.product-card-img {
-  height: 225px;
-  object-fit: cover;
+/* Estilo para el enlace activo */
+.sidebar .nav-link.active {
+  background-color: var(--accent-green); /* Verde de la marca */
+  color: white;
+  font-weight: bold;
 }
 
-.cart-item-img {
-  max-height: 100px;
-  width: auto;
+.admin-content {
+  flex-grow: 1; /* Ocupa el resto del espacio */
+  padding: 2rem;
+  background-color: #f8f9fa; /* Fondo gris claro para el contenido */
 }
-
-.map-container {
-  height: 450px;
-}
-
-.modal-overlay {
-  background-color: rgba(0,0,0,0.5);
-}
-
