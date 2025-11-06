@@ -11,6 +11,7 @@ import CartPage from './pages/CartPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 import BlogPage from './pages/BlogPage.jsx';
 import ArticlePage from './pages/ArticlePage.jsx';
 import CategoriasPage from './pages/CategoriasPage.jsx';
@@ -40,7 +41,7 @@ const Layout = () => (
 function App() {
   return (
     <Routes>
-      {/* --- RUTAS PÚBLICAS (usan el Layout con Header/Footer) --- */}
+      {/* --- RUTAS PÚBLICAS (usando el Layout con Header/Footer) --- */}
       <Route path="/" element={<Layout />}>
         {/* 2. Reemplaza el placeholder con el componente importado */}
         <Route index element={<HomePage />} />
