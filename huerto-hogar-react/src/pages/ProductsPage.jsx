@@ -3,42 +3,47 @@ import React, { useState, useEffect } from 'react';
 import { getProducts } from '../services/productService.js';
 import ProductCard from '../components/ProductCard.jsx';
 import SearchBar from '../components/SearchBar.jsx';
+import ReviewsModal from '../components/ReviewsModal.jsx'; // 1. Importa el modal
 
-// TUTOR: Página del catálogo con lógica de estado para búsqueda y filtrado.
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Efecto para cargar los productos una sola vez.
+  // 2. Estados para controlar el modal
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
   useEffect(() => {
     const allProducts = getProducts();
     setProducts(allProducts);
     setFilteredProducts(allProducts);
   }, []);
 
-  // Efecto que se ejecuta cada vez que cambia el término de búsqueda o la categoría.
   useEffect(() => {
     let result = products;
-
-    // Filtrar por término de búsqueda
     if (searchTerm) {
-      result = result.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      result = result.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
     }
-
-    // Filtrar por categoría
     if (selectedCategory !== 'all') {
-      result = result.filter(product => product.category === selectedCategory);
+      result = result.filter(p => p.category === selectedCategory);
     }
-
     setFilteredProducts(result);
   }, [searchTerm, selectedCategory, products]);
   
-  // Extraemos las categorías únicas para el dropdown del filtro.
   const categories = [...new Set(products.map(p => p.category))];
+  
+  // 3. Funciones para abrir y cerrar el modal
+  const handleViewReviews = (product) => {
+    setSelectedProduct(product);
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    setSelectedProduct(null);
+  };
 
   return (
     <div className="container py-5">
@@ -57,12 +62,20 @@ const ProductsPage = () => {
       <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         {filteredProducts.length > 0 ? (
           filteredProducts.map(product => (
-            <ProductCard key={product.id} product={product} />
+            // 4. Pasamos la función a cada ProductCard
+            <ProductCard key={product.id} product={product} onViewReviews={handleViewReviews} />
           ))
         ) : (
           <p className="col-12 text-center text-muted">No se encontraron productos que coincidan con tu búsqueda.</p>
         )}
       </div>
+
+      {/* 5. Renderizamos el modal */}
+      <ReviewsModal 
+        product={selectedProduct} 
+        show={isModalVisible} 
+        onClose={handleCloseModal} 
+      />
     </div>
   );
 };
