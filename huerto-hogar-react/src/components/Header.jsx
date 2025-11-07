@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext.jsx';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useCart } from '../context/CartContext';
+// 1. Importamos el hook de autenticación
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
 const { cart } = useCart();
