@@ -1,7 +1,9 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-const AuthContext = createContext();
+// TUTOR: Aquí está el cambio clave. Añadimos 'export' para que otros archivos,
+// como nuestras pruebas, puedan importar y usar `AuthContext`.
+export const AuthContext = createContext();
 
 const simulatedUser = {
   email: 'juan.perez@example.com',
@@ -18,8 +20,6 @@ export const AuthProvider = ({ children }) => {
     const loggedIn = localStorage.getItem('isAuthenticated');
     if (loggedIn === 'true') {
       setIsAuthenticated(true);
-      // TUTOR: Ahora guardamos toda la información del usuario en el estado
-      // para que esté disponible en la página de perfil.
       setUser(simulatedUser);
     }
   }, []);
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     if (email === simulatedUser.email && password === simulatedUser.password) {
       localStorage.setItem('isAuthenticated', 'true');
       setIsAuthenticated(true);
-      setUser(simulatedUser); // Guardamos el objeto de usuario completo
+      setUser(simulatedUser);
       return true;
     }
     return false;
@@ -40,20 +40,14 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const value = {
-    isAuthenticated,
-    user,
-    login,
-    logout
-  };
-
+  const value = { isAuthenticated, user, login, logout };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth debe ser usado dentro de un AuthProvider');
+    throw new Error('useAuth must be used within a AuthProvider');
   }
   return context;
 };
