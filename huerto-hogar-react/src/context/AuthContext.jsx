@@ -77,6 +77,7 @@ export const AuthProvider = ({ children }) => {
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// 4. Creamos el hook personalizado
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (context === undefined) {
