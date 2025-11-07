@@ -3,9 +3,9 @@
 
 :root {
   --accent-green: #2E8B57;
-   --accent-brown: #8B4513;
-   --font-header: 'Playfair Display', serif;
-   --font-main: 'Montserrat', sans-serif;
+  --accent-brown: #8B4513;
+  --font-header: 'Playfair Display', serif;
+  --font-main: 'Montserrat', sans-serif;
 }
 
 body {
