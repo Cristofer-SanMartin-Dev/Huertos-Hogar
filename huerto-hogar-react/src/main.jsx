@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // src/main.jsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -26,6 +27,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>
 );
 =======
+=======
+>>>>>>> af2fc13 (Extructura base)
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
@@ -36,6 +39,7 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
+<<<<<<< HEAD
 >>>>>>> af2fc13 (Extructura base)
 =======
 // src/main.jsx
@@ -64,3 +68,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>
 );
 >>>>>>> f624ce9 (Configuración Inicial, Estructura y Layout Principal)
+=======
+>>>>>>> af2fc13 (Extructura base)
