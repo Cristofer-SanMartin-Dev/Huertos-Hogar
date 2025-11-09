@@ -44,6 +44,11 @@ const HomePage = () => {
     setSelectedProduct(null);
   };
 
+  // 3. Función simulada para 'onDelete' (los botones de admin no deberían estar en ProductCard)
+  const handleDeleteProduct = (id) => {
+    console.warn("Función de eliminar solo disponible en el panel de admin.");
+  };
+
   return (
     <>
       {/* --- SECCIÓN HERO --- */}
@@ -66,7 +71,7 @@ const HomePage = () => {
       {/* --- PRODUCTOS DESTACADOS --- */}
       <div className="album py-5 bg-light">
         <div className="container">
-          <h2 className="text-center mb-4" style={{fontFamily: 'var(--font-header)', color: 'var(--accent-brown)'}}>Productos Destacados</h2>
+          <h2 className="text-center mb-4 section-title">Productos Destacados</h2>
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {featuredProducts.map(product => (
               <ProductCard 

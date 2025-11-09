@@ -18,6 +18,7 @@ const RegisterPage = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  // Función para validar los campos del formulario
   const validateForm = () => {
     const newErrors = {};
 
@@ -41,11 +42,15 @@ const RegisterPage = () => {
     // --- FIN VALIDACIÓN ---
 
     setErrors(newErrors);
+    
+    // Devuelve 'true' solo si no hay errores
     return Object.keys(newErrors).length === 0;
   };
   
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // 1. Valida el formulario
     if (validateForm()) {
       // --- OBJETO USER MODIFICADO ---
       const user = { nombre, apellidos, email, password, calle, region, comuna };
@@ -124,6 +129,9 @@ const RegisterPage = () => {
           </div>
           {/* --- FIN FORMULARIO MODIFICADO --- */}
           
+          {errors.api && <div className="alert alert-danger mt-3">{errors.api}</div>}
+          
+          {/* Aquí se mostrará el error "El email ya está en uso." */}
           {errors.api && <div className="alert alert-danger mt-3">{errors.api}</div>}
           
           <div className="d-grid mt-4">
