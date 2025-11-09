@@ -1,16 +1,10 @@
 // src/pages/ProfilePage.jsx
 import React from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 
-/**
- * TUTOR: Esta es la página de perfil del usuario.
- * - `useAuth()`: Obtenemos la información del usuario (`user`) y la función `logout` del contexto.
- * - `useNavigate()`: La usamos para redirigir al usuario a la página de inicio después de cerrar sesión.
- * - La información mostrada (nombre, email, dirección) y el historial de compras son datos estáticos
- * que vienen de nuestro `AuthContext` para simular un perfil real.
- */
 const ProfilePage = () => {
+  // Obtenemos 'user' (que ahora incluye 'address') y 'logout'
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -19,14 +13,16 @@ const ProfilePage = () => {
     navigate('/'); // Redirige a la página de inicio
   };
 
-  // Si por alguna razón el componente se renderiza sin usuario, muestra un mensaje de carga.
+  // 'user' no debería ser null porque ProtectedRoute nos protege
   if (!user) {
     return <div className="container py-5 text-center">Cargando perfil...</div>;
   }
 
+  // TUTOR: Ahora user.name, user.email y user.address
+  // tienen los datos correctos que vienen desde la API.
   return (
     <div className="container py-5">
-      <h2 className="mb-4" style={{ fontFamily: 'var(--font-header)', color: 'var(--accent-brown)' }}>
+      <h2 className="mb-4 section-title">
         Mi Perfil
       </h2>
       <div className="row">
@@ -46,7 +42,7 @@ const ProfilePage = () => {
         <div className="col-md-6 mt-4 mt-md-0">
           <div className="card">
             <div className="card-header">
-              Historial de Compras
+              Historial de Compras (Simulado)
             </div>
             <ul className="list-group list-group-flush">
               <li className="list-group-item">
