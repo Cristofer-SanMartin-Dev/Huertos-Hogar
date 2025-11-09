@@ -26,3 +26,6 @@ while ($true) {
 
 Write-Host 'Final status:'
 git status --porcelain --branch
+cd 'c:\Users\crisa\OneDrive\Escritorio\Huertos-Hogar\huerto-hogar-react'
+npm install
+npm run build

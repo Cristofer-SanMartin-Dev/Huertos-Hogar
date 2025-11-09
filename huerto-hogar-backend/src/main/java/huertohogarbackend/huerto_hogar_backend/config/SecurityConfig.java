@@ -10,31 +10,21 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    /**
-     * TUTOR: Este método crea un "Bean" (un objeto gestionado por Spring)
-     * que sabe cómo encriptar y verificar contraseñas usando el algoritmo
-     * BCrypt, que es el estándar de la industria.
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * TUTOR: Por defecto, Spring Security bloquea TODAS las peticiones.
-     * Este método configura la seguridad para PERMITIR el acceso
-     * a nuestra API y a la documentación de Swagger.
-     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Deshabilita CSRF (un tipo de protección)
+            .csrf(csrf -> csrf.disable()) // Deshabilita CSRF
             .authorizeHttpRequests(authz -> authz
-                // Permite el acceso a nuestra API de productos y de registro
+                // Permite acceso PÚBLICO a productos y autenticación (login/registro)
                 .requestMatchers("/api/products/**", "/api/auth/**").permitAll() 
-                // Permite el acceso a la documentación de Swagger
+                // Permite acceso PÚBLICO a Swagger
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                // Pide autenticación para cualquier otra petición
+                // Pide autenticación para CUALQUIER OTRA petición
                 .anyRequest().authenticated()
             );
         return http.build();
