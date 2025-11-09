@@ -1,47 +1,56 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import AuthService from '../services/authService.js'; // Importa el servicio de API
 
-// TUTOR: Aquí está el cambio clave. Añadimos 'export' para que otros archivos,
-// como nuestras pruebas, puedan importar y usar `AuthContext`.
 export const AuthContext = createContext();
 
-const simulatedUser = {
-  email: 'juan.perez@example.com',
-  password: 'Password123!',
-  name: 'Juan Pérez',
-  address: 'Av. Siempre Viva 123, Santiago'
+export const AuthProvider = ({ children }) => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true); // Para manejar la carga inicial
+
+    // Al cargar la app, revisa si hay un usuario guardado en localStorage
+    useEffect(() => {
+        const savedUser = localStorage.getItem('user');
+        if (savedUser) {
+            setUser(JSON.parse(savedUser));
+            setIsAuthenticated(true);
+        }
+        setIsLoading(false); // Termina de cargar
+    }, []);
+
+    // Función de LOGIN (ahora llama a la API)
+    const login = (email, password) => {
+        // Devuelve la promesa para que LoginPage pueda manejarla
+        return AuthService.login(email, password)
+            .then(response => {
+                // Si la API responde OK (200)
+                const userData = response.data;
+                setUser(userData);
+                setIsAuthenticated(true);
+                // Guarda al usuario en localStorage para persistir la sesión
+                localStorage.setItem('user', JSON.stringify(userData));
+                return userData; // Devuelve los datos para la redirección
+            });
+    };
+
+    // CÓDIGO CORREGIDO
+const register = (user) => {
+    // 'user' es el objeto { name, email, password, address } que viene de RegisterPage
+    // Lo pasamos directamente al servicio
+     return AuthService.register(user);
 };
 
-export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+    // Función de LOGOUT (limpia el estado y localStorage)
+    const logout = () => {
+        localStorage.removeItem('user');
+        setUser(null);
+        setIsAuthenticated(false);
+    };
 
-  useEffect(() => {
-    const loggedIn = localStorage.getItem('isAuthenticated');
-    if (loggedIn === 'true') {
-      setIsAuthenticated(true);
-      setUser(simulatedUser);
-    }
-  }, []);
+    const value = { isAuthenticated, user, login, logout, register, isLoading };
 
-  const login = (email, password) => {
-    if (email === simulatedUser.email && password === simulatedUser.password) {
-      localStorage.setItem('isAuthenticated', 'true');
-      setIsAuthenticated(true);
-      setUser(simulatedUser);
-      return true;
-    }
-    return false;
-  };
-
-  const logout = () => {
-    localStorage.removeItem('isAuthenticated');
-    setIsAuthenticated(false);
-    setUser(null);
-  };
-
-  const value = { isAuthenticated, user, login, logout };
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
