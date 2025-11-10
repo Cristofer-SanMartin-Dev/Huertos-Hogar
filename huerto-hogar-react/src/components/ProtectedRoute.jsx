@@ -1,31 +1,34 @@
-// src/components/ProtectedRoute.jsx
+// Ruta: src/components/ProtectedRoute.jsx
 import React from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { Navigate, useLocation } from 'react-router-dom';
 
+// El rol por defecto es 'CUSTOMER', que ahora coincidirá
+// con el rol que asigna el backend.
 const ProtectedRoute = ({ children, role = 'CUSTOMER' }) => {
     
-    // Obtenemos 'isLoading' del contexto
     const { isAuthenticated, user, isLoading } = useAuth();
     const location = useLocation();
 
-    // Verificación de Carga:
+    // 1. Muestra "Cargando..." mientras AuthContext revisa localStorage
     if (isLoading) {
-        // Muestra un mensaje mientras se verifica la sesión en localStorage
         return <div className="container text-center py-5"><h2>Cargando...</h2></div>;
     }
 
-    // Verificación de Autenticación (si ya no está cargando):
+    // 2. Si terminó de cargar y no está autenticado, lo manda al login
     if (!isAuthenticated || !user) {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    // Verificación de Rol:
+    // 3. (ESTO ES LO QUE ARREGLAMOS)
+    // Ahora 'user.role' será "CUSTOMER" y 'role' es "CUSTOMER".
+    // La condición ( "CUSTOMER" !== "CUSTOMER" ) será 'false' y permitirá el paso.
     if (user.role !== role) {
-        return <Navigate to="/" replace />; // Redirige al inicio si el rol no coincide
+        // Esto solo se activará si un CUSTOMER intenta ir a una ruta de ADMIN
+        return <Navigate to="/" replace />; 
     }
 
-    // Si pasa todo, muestra la página protegida.
+    // 4. Muestra la página protegida (ej: ProfilePage)
     return children;
 };
 
