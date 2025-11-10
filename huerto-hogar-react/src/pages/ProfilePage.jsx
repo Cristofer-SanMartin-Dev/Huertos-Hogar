@@ -147,7 +147,6 @@ const ProfilePage = () => {
         
         {/* ... (Columna de Historial de Compras - sin cambios) ... */}
         <div className="col-md-6 mt-4 mt-md-0">
-          {/* ... (Historial de Compras - sin cambios) ... */}
           <div className="card">
             <div className="card-header">Historial de Compras (Simulado)</div>
             <ul className="list-group list-group-flush">
