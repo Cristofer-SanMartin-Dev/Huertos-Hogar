@@ -1,18 +1,18 @@
+// Ruta: src/main/java/huertohogarbackend/huerto_hogar_backend/dto/RegisterRequest.java
 package huertohogarbackend.huerto_hogar_backend.dto;
 
 import lombok.Data;
 
-/**
- * DTO (Data Transfer Object) para recibir los datos del formulario de registro.
- * Debe coincidir exactamente con el JSON que envía React.
- */
 @Data
 public class RegisterRequest {
     
-    private String name;
+    // --- CAMPOS MODIFICADOS ---
+    private String nombre;    // Renombrado desde 'name'
+    private String apellidos; // Nuevo campo
     private String email;
     private String password;
-    private String address; // <--- El campo que faltaba
-    
-    // Lombok @Data genera los getters y setters automáticamente
+    private String calle;     // Renombrado desde 'address'
+    private String region;    // Nuevo campo
+    private String comuna;    // Nuevo campo
+    // --- FIN DE MODIFICADOS ---
 }
