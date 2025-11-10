@@ -1,24 +1,24 @@
 import axios from 'axios';
 
-// TUTOR: Esta es la URL base de tu API de autenticación.
-// Apunta al @RequestMapping("/api/auth") de tu AuthController.
+// --- ¡SOLUCIÓN 403 FORBIDDEN! ---
+// Configura axios para que envíe cookies (credenciales) en TODAS las peticiones
+axios.defaults.withCredentials = true;
+
+// Define la URL base de tu API de Spring Boot
 const API_URL = 'http://localhost:8080/api/auth';
 
 /**
- * TUTOR: Esta clase agrupa todas las llamadas de API
+ * Esta clase agrupa todas las llamadas de API
  * relacionadas con la autenticación.
  */
 class AuthService {
     
     /**
      * Llama al endpoint POST /api/auth/login
-     * @param {string} email - El email del usuario
-     * @param {string} password - La contraseña del usuario
-     * @returns {Promise} - La promesa de Axios con la respuesta del backend
      */
     login(email, password) {
-        // Envía un objeto que coincide con el DTO LoginRequest del backend
-        return axios.post(API_URL + '/login', { 
+        // 'axios.post' ahora enviará las credenciales (cookies)
+        return axios.post(`${API_URL}/login`, { 
             email: email, 
             password: password 
         });
@@ -26,16 +26,19 @@ class AuthService {
 
     /**
      * Llama al endpoint POST /api/auth/register
-     * @param {object} user - Un objeto con { name, email, password }
-     * @returns {Promise} - La promesa de Axios con la respuesta del backend
      */
     register(user) {
-        // Envía el objeto de usuario que coincide con el @Entity User del backend
-        return axios.post(API_URL + '/register', user);
+        // 'axios.post' ahora enviará las credenciales
+        return axios.post(`${API_URL}/register`, user);
     }
 
-    // TUTOR: Aquí podríamos añadir un método logout() si el backend lo requiriera,
-    // pero por ahora, el logout es solo en el frontend.
+    /**
+     * Llama al endpoint PUT /api/auth/profile/{userId}
+     */
+    updateUser(userId, userData) {
+        // Esta petición 'PUT' ahora incluirá la cookie de sesión
+        return axios.put(`${API_URL}/profile/${userId}`, userData);
+    }
 }
 
 // Exportamos una instancia única (Singleton) del servicio.
