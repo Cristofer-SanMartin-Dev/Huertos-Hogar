@@ -70,8 +70,6 @@ const ProfilePage = () => {
     return <div className="container py-5 text-center">Cargando perfil...</div>;
   }
 
-  // TUTOR: Ahora user.name, user.email y user.address
-  // tienen los datos correctos que vienen desde la API.
   return (
     <div className="container py-5">
       <h2 className="mb-4 section-title">Mi Perfil</h2>
@@ -149,6 +147,7 @@ const ProfilePage = () => {
         
         {/* ... (Columna de Historial de Compras - sin cambios) ... */}
         <div className="col-md-6 mt-4 mt-md-0">
+          {/* ... (Historial de Compras - sin cambios) ... */}
           <div className="card">
             <div className="card-header">Historial de Compras (Simulado)</div>
             <ul className="list-group list-group-flush">
