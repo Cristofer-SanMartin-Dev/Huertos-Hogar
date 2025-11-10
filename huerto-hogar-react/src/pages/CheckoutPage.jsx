@@ -1,29 +1,43 @@
-import React, { useState } from 'react';
+// Ruta: src/pages/CheckoutPage.jsx
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx'; // Importa useAuth
 
-// TUTOR: Este componente simula la página de checkout (Figura 6).
 const CheckoutPage = () => {
-    const { cart, clearCart } = useCart();
+    const { cart, clearCart } = useCart(); // Obtiene el carrito
     const navigate = useNavigate();
+    const { user } = useAuth(); // Obtén el usuario del contexto
 
-    // Calcula el total
+    // Calcula el total del carrito
     const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
-    // Estados para el formulario (simulado)
+    // Estados para el formulario
     const [nombre, setNombre] = useState('');
     const [apellidos, setApellidos] = useState('');
     const [correo, setCorreo] = useState('');
+    const [calle, setCalle] = useState('');
+    const [region, setRegion] = useState('');
+    const [comuna, setComuna] = useState('');
 
-    // Función para simular el pago
+    // Efecto para auto-completar el formulario si el usuario está logueado
+    useEffect(() => {
+        if (user) {
+            setNombre(user.nombre || '');
+            setApellidos(user.apellidos || '');
+            setCorreo(user.email || '');
+            setCalle(user.calle || '');
+            setRegion(user.region || '');
+            setComuna(user.comuna || '');
+        }
+    }, [user]); // Se ejecuta cuando 'user' carga o cambia
+
+    // Lógica de pago
     const handlePagar = (e) => {
         e.preventDefault();
-        // Lógica de pago simulada:
-        // Si el nombre es "error", simulamos un pago fallido.
         if (nombre.toLowerCase() === 'error') {
             navigate('/pago-error');
         } else {
-            // Si todo está bien, limpiamos el carrito y vamos a la pág de éxito.
             clearCart();
             navigate('/pago-exitoso');
         }
@@ -33,7 +47,8 @@ const CheckoutPage = () => {
         <div className="container py-5">
             <h2 className="mb-4 section-title">Completa tu Compra</h2>
             <div className="row g-5">
-                {/* Columna del Resumen del Carrito */}
+                
+                {/* --- SECCIÓN DEL CARRITO (RESTAURADA) --- */}
                 <div className="col-md-5 col-lg-4 order-md-last">
                     <h4 className="d-flex justify-content-between align-items-center mb-3">
                         <span className="product-title">Tu Carrito</span>
@@ -55,8 +70,9 @@ const CheckoutPage = () => {
                         </li>
                     </ul>
                 </div>
+                {/* --- FIN DE LA SECCIÓN DEL CARRITO --- */}
 
-                {/* Columna del Formulario (basado en Figura 6) */}
+                {/* Columna del Formulario (controlado y auto-completado) */}
                 <div className="col-md-7 col-lg-8">
                     <h4 className="mb-3 product-title">Información del Cliente</h4>
                     <form onSubmit={handlePagar}>
@@ -71,32 +87,22 @@ const CheckoutPage = () => {
                             </div>
                             <div className="col-12 form-group">
                                 <label htmlFor="correo" className="form-label">Correo</label>
-                                <input type="email" className="form-control" id="correo" placeholder="tu@email.com" value={correo} onChange={(e) => setCorreo(e.target.value)} required />
+                                <input type="email" className="form-control" id="correo" value={correo} onChange={(e) => setCorreo(e.target.value)} required />
                             </div>
                             <div className="col-12 form-group">
                                 <label htmlFor="calle" className="form-label">Calle</label>
-                                <input type="text" className="form-control" id="calle" placeholder="Av. Siempre Viva 123" required />
+                                <input type="text" className="form-control" id="calle" value={calle} onChange={(e) => setCalle(e.target.value)} required />
                             </div>
-                            <div className="col-md-5 form-group">
+                            <div className="col-md-6 form-group">
                                 <label htmlFor="region" className="form-label">Región</label>
-                                <select className="form-select" id="region" required>
-                                    <option value="">Seleccionar...</option>
-                                    <option>Metropolitana de Santiago</option>
-                                    {/* ... (otras regiones) ... */}
-                                </select>
+                                <input type="text" className="form-control" id="region" value={region} onChange={(e) => setRegion(e.target.value)} required />
                             </div>
-                            <div className="col-md-4 form-group">
+                            <div className="col-md-6 form-group">
                                 <label htmlFor="comuna" className="form-label">Comuna</label>
-                                <select className="form-select" id="comuna" required>
-                                    <option value="">Seleccionar...</option>
-                                    <option>Cerrillos</option>
-                                    {/* ... (otras comunas) ... */}
-                                </select>
+                                <input type="text" className="form-control" id="comuna" value={comuna} onChange={(e) => setComuna(e.target.value)} required />
                             </div>
                         </div>
-
                         <hr className="my-4" />
-
                         <button className="w-100 btn btn-primary btn-lg" type="submit">
                             Pagar ahora ${cartTotal.toLocaleString('es-CL')}
                         </button>

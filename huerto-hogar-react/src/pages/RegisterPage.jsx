@@ -1,61 +1,58 @@
+// Ruta: src/pages/RegisterPage.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx'; 
 
 const RegisterPage = () => {
-  const [name, setName] = useState('');
+  // --- ESTADOS MODIFICADOS ---
+  const [nombre, setNombre] = useState('');
+  const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [address, setAddress] = useState(''); 
+  const [calle, setCalle] = useState('');
+  const [region, setRegion] = useState('');
+  const [comuna, setComuna] = useState('');
+  // --- FIN ESTADOS MODIFICADOS ---
+
   const [errors, setErrors] = useState({});
-  
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  // Función para validar los campos del formulario
   const validateForm = () => {
     const newErrors = {};
 
-    // Validar Nombre
-    if (!name.trim()) {
-      newErrors.name = 'El nombre completo es obligatorio.';
-    }
+    // --- VALIDACIÓN ACTUALIZADA ---
+    if (!nombre.trim()) newErrors.nombre = 'El nombre es obligatorio.';
+    if (!apellidos.trim()) newErrors.apellidos = 'El apellido es obligatorio.';
+    if (!calle.trim()) newErrors.calle = 'La calle es obligatoria.';
+    if (!region.trim()) newErrors.region = 'La región es obligatoria.';
+    if (!comuna.trim()) newErrors.comuna = 'La comuna es obligatoria.';
 
-    // Validar Email
     if (!email.trim()) {
       newErrors.email = 'El correo electrónico es obligatorio.';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = 'El formato del correo no es válido.';
     }
-
-    // Validar Contraseña
     if (!password) {
       newErrors.password = 'La contraseña es obligatoria.';
     } else if (password.length < 6) {
       newErrors.password = 'La contraseña debe tener al menos 6 caracteres.';
     }
-    
-    // Validar Dirección (puedes descomentar esto si la dirección es obligatoria)
-    // if (!address.trim()) {
-    //   newErrors.address = 'La dirección es obligatoria.';
-    // }
+    // --- FIN VALIDACIÓN ---
 
     setErrors(newErrors);
-    
-    // Devuelve 'true' solo si no hay errores
     return Object.keys(newErrors).length === 0;
   };
   
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // 1. Valida el formulario
     if (validateForm()) {
-      const user = { name, email, password, address };
-
+      // --- OBJETO USER MODIFICADO ---
+      const user = { nombre, apellidos, email, password, calle, region, comuna };
+      
       console.log("Validación exitosa. Enviando a la API:", user);
 
-      // 2. Llama a la API de registro
       register(user)
         .then(response => {
           alert('¡Registro exitoso! Serás redirigido para iniciar sesión.');
@@ -63,19 +60,11 @@ const RegisterPage = () => {
         })
         .catch(error => {
           console.error("Error en el registro:", error); 
-          
           if (error.response && error.response.data) {
-            
-            // --- ¡ESTA ES LA MEJORA! ---
-            // Lee el mensaje de error directamente (ej. "Error: El email ya está en uso.")
-            // y lo pone en el estado 'api' para mostrarlo en el alert.
             setErrors({ api: error.response.data || 'Error en el registro.' });
-
           } else if (error.request) {
-            // Error de red (backend caído o CORS)
-            setErrors({ api: 'No se pudo conectar con el servidor. Revisa tu conexión.' });
+            setErrors({ api: 'No se pudo conectar con el servidor.' });
           } else {
-            // Otro tipo de error
             setErrors({ api: 'Error inesperado. Inténtalo de nuevo.' });
           }
         });
@@ -88,62 +77,54 @@ const RegisterPage = () => {
     <div className="container py-5">
       <div className="login-container">
         <h2 className="text-center section-title">Crea tu Cuenta</h2>
-        {/* 'noValidate' deshabilita la validación HTML para usar la nuestra */}
         <form onSubmit={handleSubmit} noValidate>
           
-          <div className="form-group">
-            <label htmlFor="name">Nombre Completo:</label>
-            <input 
-              type="text" 
-              id="name" 
-              className={`form-control ${errors.name ? 'is-invalid' : ''}`} 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
-              required 
-            />
-            {/* Muestra el error de validación para este campo */}
-            {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+          {/* --- FORMULARIO MODIFICADO --- */}
+          <div className="row g-3">
+            <div className="col-sm-6 form-group">
+              <label htmlFor="nombre">Nombre:</label>
+              <input type="text" id="nombre" className={`form-control ${errors.nombre ? 'is-invalid' : ''}`} value={nombre} onChange={(e) => setNombre(e.target.value)} required />
+              {errors.nombre && <div className="invalid-feedback">{errors.nombre}</div>}
+            </div>
+
+            <div className="col-sm-6 form-group">
+              <label htmlFor="apellidos">Apellidos:</label>
+              <input type="text" id="apellidos" className={`form-control ${errors.apellidos ? 'is-invalid' : ''}`} value={apellidos} onChange={(e) => setApellidos(e.target.value)} required />
+              {errors.apellidos && <div className="invalid-feedback">{errors.apellidos}</div>}
+            </div>
+
+            <div className="col-12 form-group">
+              <label htmlFor="email">Correo Electrónico:</label>
+              <input type="email" id="email" className={`form-control ${errors.email ? 'is-invalid' : ''}`} value={email} onChange={(e) => setEmail(e.target.value)} required />
+              {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+            </div>
+
+            <div className="col-12 form-group">
+              <label htmlFor="calle">Calle y Número:</label>
+              <input type="text" id="calle" className={`form-control ${errors.calle ? 'is-invalid' : ''}`} value={calle} onChange={(e) => setCalle(e.target.value)} required />
+              {errors.calle && <div className="invalid-feedback">{errors.calle}</div>}
+            </div>
+
+            <div className="col-md-6 form-group">
+              <label htmlFor="region">Región:</label>
+              <input type="text" id="region" className={`form-control ${errors.region ? 'is-invalid' : ''}`} value={region} onChange={(e) => setRegion(e.target.value)} required />
+              {errors.region && <div className="invalid-feedback">{errors.region}</div>}
+            </div>
+
+            <div className="col-md-6 form-group">
+              <label htmlFor="comuna">Comuna:</label>
+              <input type="text" id="comuna" className={`form-control ${errors.comuna ? 'is-invalid' : ''}`} value={comuna} onChange={(e) => setComuna(e.target.value)} required />
+              {errors.comuna && <div className="invalid-feedback">{errors.comuna}</div>}
+            </div>
+
+            <div className="col-12 form-group">
+              <label htmlFor="password">Contraseña:</label>
+              <input type="password" id="password" className={`form-control ${errors.password ? 'is-invalid' : ''}`} value={password} onChange={(e) => setPassword(e.target.value)} required />
+              {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+            </div>
           </div>
+          {/* --- FIN FORMULARIO MODIFICADO --- */}
           
-          <div className="form-group">
-            <label htmlFor="email">Correo Electrónico:</label>
-            <input 
-              type="email" 
-              id="email" 
-              className={`form-control ${errors.email ? 'is-invalid' : ''}`} 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              required 
-            />
-            {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="address">Dirección:</label>
-            <input 
-              type="text" 
-              id="address" 
-              className={`form-control ${errors.address ? 'is-invalid' : ''}`}
-              value={address} 
-              onChange={(e) => setAddress(e.target.value)} 
-            />
-             {errors.address && <div className="invalid-feedback">{errors.address}</div>}
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="password">Contraseña:</label>
-            <input 
-              type="password" 
-              id="password" 
-              className={`form-control ${errors.password ? 'is-invalid' : ''}`} 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              required 
-            />
-            {errors.password && <div className="invalid-feedback">{errors.password}</div>}
-          </div>
-          
-          {/* Aquí se mostrará el error "El email ya está en uso." */}
           {errors.api && <div className="alert alert-danger mt-3">{errors.api}</div>}
           
           <div className="d-grid mt-4">
