@@ -1,34 +1,31 @@
+// Ruta: src/main/java/huertohogarbackend/huerto_hogar_backend/model/User.java
 package huertohogarbackend.huerto_hogar_backend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*; 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+@Data 
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "app_users")
+@Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
-    @Column(unique = true)
+    // --- CAMPOS MODIFICADOS ---
+    private String nombre;    // Renombrado desde 'name'
+    private String apellidos; // Nuevo campo
+    
+    @Column(unique = true) 
     private String email;
 
-    private String password;
-    
-    // --- TUTOR: ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
-    // Añadimos el campo 'address' al modelo de la base de datos.
-    private String address;
+    private String password; 
+
+    private String calle;     // Renombrado desde 'address'
+    private String region;    // Nuevo campo
+    private String comuna;    // Nuevo campo
+    // --- FIN DE MODIFICADOS ---
+
+    private String role;
 }
