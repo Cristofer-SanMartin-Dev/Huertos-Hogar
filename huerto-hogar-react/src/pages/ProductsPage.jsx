@@ -1,40 +1,30 @@
 // src/pages/ProductsPage.jsx
 import React, { useState, useEffect } from 'react';
-import { getProducts } from '../services/productService.js';
 import ProductCard from '../components/ProductCard.jsx';
-import SearchBar from '../components/SearchBar.jsx';
-import ReviewsModal from '../components/ReviewsModal.jsx'; // 1. Importa el modal
+import ReviewsModal from '../components/ReviewsModal.jsx';
+import { useCart } from '../context/CartContext.jsx'; // Si usas el carrito aquí
+
+// 1. Importación CORREGIDA (Instancia por defecto)
+import ProductService from '../services/productService.js';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-
-  // 2. Estados para controlar el modal
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
+  // 2. Cargar productos desde el Backend
   useEffect(() => {
-    const allProducts = getProducts();
-    setProducts(allProducts);
-    setFilteredProducts(allProducts);
+    ProductService.getAllProducts()
+      .then(response => {
+        // Axios devuelve los datos en 'response.data'
+        setProducts(response.data);
+      })
+      .catch(error => {
+        console.error("Error al cargar los productos:", error);
+      });
   }, []);
 
-  useEffect(() => {
-    let result = products;
-    if (searchTerm) {
-      result = result.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    }
-    if (selectedCategory !== 'all') {
-      result = result.filter(p => p.category === selectedCategory);
-    }
-    setFilteredProducts(result);
-  }, [searchTerm, selectedCategory, products]);
-  
-  const categories = [...new Set(products.map(p => p.category))];
-  
-  // 3. Funciones para abrir y cerrar el modal
+  // Manejo del Modal de Reseñas
   const handleViewReviews = (product) => {
     setSelectedProduct(product);
     setIsModalVisible(true);
@@ -45,32 +35,35 @@ const ProductsPage = () => {
     setSelectedProduct(null);
   };
 
+  // Función simulada para delete (no usada por clientes)
+  const handleDelete = () => {
+    console.warn("Acción no permitida aquí");
+  };
+
   return (
     <div className="container py-5">
-      <h2 className="text-center mb-4" style={{ fontFamily: 'var(--font-header)', color: 'var(--accent-brown)' }}>
-        Nuestro Catálogo
-      </h2>
-
-      <SearchBar
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-        categories={categories}
-      />
-
-      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map(product => (
-            // 4. Pasamos la función a cada ProductCard
-            <ProductCard key={product.id} product={product} onViewReviews={handleViewReviews} />
+      <h2 className="text-center mb-4 section-title">Nuestros Productos</h2>
+      
+      {/* Filtros (Opcional: Aquí podrías agregar un input para filtrar por nombre) */}
+      
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {products.length > 0 ? (
+          products.map((product) => (
+            <ProductCard 
+              key={product.id} 
+              product={product} 
+              onViewReviews={handleViewReviews}
+              onDelete={handleDelete} // Pasamos una función vacía o de log
+            />
           ))
         ) : (
-          <p className="col-12 text-center text-muted">No se encontraron productos que coincidan con tu búsqueda.</p>
+          <div className="col-12 text-center">
+            <p className="text-muted">Cargando productos o no hay stock disponible...</p>
+          </div>
         )}
       </div>
 
-      {/* 5. Renderizamos el modal */}
+      {/* Modal de Reseñas */}
       <ReviewsModal 
         product={selectedProduct} 
         show={isModalVisible} 

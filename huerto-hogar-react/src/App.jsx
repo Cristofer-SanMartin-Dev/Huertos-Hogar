@@ -7,10 +7,6 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 // --- Imports de Páginas Públicas ---
 import HomePage from './pages/HomePage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
-// TUTOR: Las siguientes 2 líneas de ProductForm y AdminProductListPage se eliminan
-// porque pertenecen al CRUD de productos, que aún no hemos conectado.
-// import ProductForm from './pages/ProductForm.jsx'; 
-// import AdminProductListPage from './pages/admin/AdminProductListPage.jsx';
 import CartPage from './pages/CartPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
@@ -28,6 +24,9 @@ import OrderErrorPage from './pages/OrderErrorPage.jsx';
 // --- Imports de Páginas de Admin ---
 import AdminLayout from './pages/admin/AdminLayout.jsx';
 import DashboardPage from './pages/admin/DashboardPage.jsx';
+// --- ¡NUEVOS IMPORTS AÑADIDOS! ---
+import ProductForm from './pages/admin/ProductForm.jsx';
+import AdminProductListPage from './pages/admin/AdminProductListPage.jsx';
 
 
 // --- Layout Público (sin cambios) ---
@@ -82,11 +81,18 @@ function App() {
         }
       >
         <Route index element={<DashboardPage />} />
-        {/* TUTOR: Las rutas del CRUD de productos se eliminan temporalmente
+        
+        {/* --- RUTAS DEL CRUD DE PRODUCTOS ACTIVADAS --- */}
+        
+        {/* Lista de productos (Ver y Eliminar) */}
         <Route path="productos" element={<AdminProductListPage />} />
+        
+        {/* Crear nuevo producto */}
         <Route path="productos/nuevo" element={<ProductForm />} />
+        
+        {/* Editar producto existente (recibe ID) */}
         <Route path="productos/editar/:id" element={<ProductForm />} />
-        */}
+        
       </Route>
 
     </Routes>
