@@ -1,56 +1,82 @@
-// TUTOR: El nombre del paquete coincide con tu estructura de carpetas
 package huertohogarbackend.huerto_hogar_backend.service;
 
-// Importamos nuestro Modelo y Repositorio
 import huertohogarbackend.huerto_hogar_backend.model.Product;
 import huertohogarbackend.huerto_hogar_backend.repository.ProductRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-/**
- * TUTOR: Esta clase es el "Servicio" .
- * Es el intermediario entre el Controlador (que recibe las peticiones web)
- * y el Repositorio (que habla con la base de datos).
- * Aquí va la lógica de negocio.
- *
- * Adaptamos el 'BookService' de la guía  para 'Product'.
- */
-@Service // [cite: 807] Le dice a Spring que esta clase es un Servicio
+@Service
 public class ProductService {
 
-    // @Autowired [cite: 808] le pide a Spring que "inyecte" (nos pase) una instancia
-    // de ProductRepository automáticamente.
     @Autowired
     private ProductRepository productRepository;
 
-    // Método para obtener TODOS los productos
-    // (Adaptado de 'obtenerTodosLosProductos' 
+    // Carpeta donde se guardarán las imágenes (en la raíz del proyecto)
+    private final Path rootLocation = Paths.get("uploads");
+
+    public ProductService() {
+        try {
+            Files.createDirectories(rootLocation); // Crea la carpeta si no existe
+        } catch (IOException e) {
+            throw new RuntimeException("No se pudo inicializar la carpeta de uploads", e);
+        }
+    }
+
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
-    // Método para obtener UN producto por su ID
-    // (Adaptado de 'obtenerProductoPorId')
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
     }
 
-    // Método para guardar (crear o actualizar) un producto
-    // (Adaptado de 'guardarProducto' )
-    public Product saveProduct(Product product) {
+    // Guardar producto CON imagen
+    public Product saveProduct(Product product, MultipartFile imageFile) throws IOException {
+        if (imageFile != null && !imageFile.isEmpty()) {
+            // Generar nombre único para evitar colisiones (ej: uuid_manzana.jpg)
+            String uniqueFilename = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+            
+            // Guardar el archivo físico
+            Files.copy(imageFile.getInputStream(), this.rootLocation.resolve(uniqueFilename));
+            
+            // Guardar el nombre en el objeto
+            product.setImageName(uniqueFilename);
+        }
         return productRepository.save(product);
     }
 
-    // Método para eliminar un producto por su ID
-    // (Adaptado de 'deleteBook' / 'eliminarProducto' )
+    // Actualizar producto
+    public Product updateProduct(Long id, Product productDetails, MultipartFile imageFile) throws IOException {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        product.setName(productDetails.getName());
+        product.setDescription(productDetails.getDescription());
+        product.setPrice(productDetails.getPrice());
+        product.setStock(productDetails.getStock());
+        product.setCategory(productDetails.getCategory());
+
+        // Si viene una nueva imagen, la guardamos y actualizamos
+        if (imageFile != null && !imageFile.isEmpty()) {
+            // (Opcional: Aquí podrías borrar la imagen antigua del disco)
+            String uniqueFilename = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+            Files.copy(imageFile.getInputStream(), this.rootLocation.resolve(uniqueFilename));
+            product.setImageName(uniqueFilename);
+        }
+
+        return productRepository.save(product);
+    }
+
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
-
-    // TUTOR: Más adelante, podríamos añadir lógica de negocio aquí,
-    // como validar que el stock no sea negativo al guardar,
-    // o aplicar un descuento (como en el ejemplo de la PPT ).
 }

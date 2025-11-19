@@ -1,30 +1,28 @@
-// TUTOR: El nombre del paquete coincide con tu estructura de carpetas
 package huertohogarbackend.huerto_hogar_backend.model;
 
-// TUTOR: Usamos `jakarta.persistence` porque estás en Spring Boot 3.
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-/**
- * Hemos añadido los campos que coinciden con tu frontend de HuertoHogar.
- */
-@Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
+@Table(name = "products")
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id; // ID único
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private String name;        // Nombre (ej: "Manzanas Fuji")
-    private String description; // Descripción del producto
-    private double price;       // Precio (ej: 1200)
-    private int stock;          // Stock disponible (ej: 150)
+    private String name;
+    
+    @Column(length = 1000) // Permite descripciones largas
+    private String description;
+    
+    private Double price;
+    
+    private Integer stock;
+    
+    private String category; // Ej: "Frutas", "Verduras"
+
+    // Aquí guardaremos solo el nombre del archivo (ej: "manzana-123.jpg")
+    private String imageName; 
 }
