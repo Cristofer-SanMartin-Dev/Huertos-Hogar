@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard.jsx';
 import ReviewsModal from '../components/ReviewsModal.jsx';
 
-// Importamos el servicio de productos
-import { getFeaturedProducts } from '../services/productService.js';
+// 1. Importa el servicio completo (instancia por defecto)
+import ProductService from '../services/productService.js';
 
 const HomePage = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -13,26 +13,21 @@ const HomePage = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
-    // Cargar productos destacados al montar el componente
-    setFeaturedProducts(getFeaturedProducts());
-  }, []); // El array vacío `[]` asegura que se ejecute solo una vez.
-
-  // Funciones para abrir y cerrar el modal de reseñas
-  const handleViewReviews = (product) => {
-    setSelectedProduct(product);
-    setIsModalVisible(true);
-  };
-
-  // Función para cerrar el modal (pasa al ReviewsModal)
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
-    setSelectedProduct(null);
-  };
-
-  // Función simulada para 'onDelete' (solo visual en HomePage, lógica real en Admin)
-  const handleDeleteProduct = (id) => {
-    console.warn("Función de eliminar solo disponible en el panel de admin.");
-  };
+    // 2. Llama a la API real para obtener productos
+    ProductService.getAllProducts()
+      .then(response => {
+        // Filtramos o tomamos los primeros 3 productos para "Destacados"
+        // Si tu backend tuviera un endpoint /featured, lo usaríamos aquí.
+        const allProducts = response.data;
+        const top3 = allProducts.slice(0, 3); 
+        setFeaturedProducts(top3);
+      })
+      .catch(error => {
+        console.error("Error al cargar productos destacados:", error);
+        // Opcional: Poner productos vacíos o mostrar un mensaje
+        setFeaturedProducts([]);
+      });
+  }, []);
 
   const handleViewReviews = (product) => {
     setSelectedProduct(product);
@@ -44,7 +39,7 @@ const HomePage = () => {
     setSelectedProduct(null);
   };
 
-  // 3. Función simulada para 'onDelete' (los botones de admin no deberían estar en ProductCard)
+  // Función simulada para 'onDelete' (no hace nada en Home)
   const handleDeleteProduct = (id) => {
     console.warn("Función de eliminar solo disponible en el panel de admin.");
   };
@@ -73,14 +68,21 @@ const HomePage = () => {
         <div className="container">
           <h2 className="text-center mb-4 section-title">Productos Destacados</h2>
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {featuredProducts.map(product => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                onViewReviews={handleViewReviews} 
-                onDelete={handleDeleteProduct}
-              />
-            ))}
+            {/* Renderizado condicional por si no hay productos aún */}
+            {featuredProducts.length > 0 ? (
+                featuredProducts.map(product => (
+                  <ProductCard 
+                    key={product.id} 
+                    product={product} 
+                    onViewReviews={handleViewReviews} 
+                    onDelete={handleDeleteProduct}
+                  />
+                ))
+            ) : (
+                <div className="col-12 text-center">
+                    <p>Cargando productos destacados o no hay stock disponible...</p>
+                </div>
+            )}
           </div>
           <div className="text-center mt-4">
              <Link to="/productos" className="btn btn-outline-secondary">Ver todo el catálogo</Link>
@@ -93,42 +95,27 @@ const HomePage = () => {
         <div className="row">
           <div className="col-lg-8 mx-auto text-center">
             <h2 className="section-title">¿Quiénes Somos?</h2>
-            <p className="lead text-muted">
-              <strong>HuertoHogar</strong> es una tienda online dedicada a llevar la frescura y calidad de los productos del campo directamente a la puerta de nuestros clientes en Chile.
-            </p>
+            <p className="lead text-muted"><strong>HuertoHogar</strong> es una iniciativa nacida de la pasión por la agricultura sostenible y el deseo de conectar a las familias con el origen de sus alimentos. Trabajamos directamente con agricultores locales para asegurar que cada producto que llega a tu mesa sea fresco, saludable y cultivado con respeto por la tierra.</p>
           </div>
         </div>
         <div className="row mt-4">
-          <div className="col-md-6 mb-3">
-            <div className="card h-100 p-4 shadow-sm border-0">
-              <h4 className="text-center title-green">Nuestra Misión</h4>
-              <p>Proporcionar productos frescos y de calidad directamente desde el campo, garantizando la frescura y el sabor en cada entrega. Nos comprometemos a fomentar una conexión más cercana entre los consumidores y los agricultores locales.</p>
-            </div>
-          </div>
-          <div className="col-md-6 mb-3">
-            <div className="card h-100 p-4 shadow-sm border-0">
-              <h4 className="text-center title-green">Nuestra Visión</h4>
-              <p>Ser la tienda online líder en la distribución de productos frescos y naturales en Chile, reconocida por nuestra calidad excepcional, servicio al cliente y compromiso con la sostenibilidad y el comercio justo.</p>
-            </div>
-          </div>
+          <div className="col-md-6"><div className="card h-100 p-3"><h4 className="text-center" style={{color: 'var(--accent-green)'}}>Nuestra Misión</h4><p>Llevar frescura y calidad a cada hogar, fomentando el consumo responsable y apoyando a la economía local.</p></div></div>
+          <div className="col-md-6 mt-3 mt-md-0"><div className="card h-100 p-3"><h4 className="text-center" style={{color: 'var(--accent-green)'}}>Nuestra Visión</h4><p>Ser el referente nacional en distribución de productos orgánicos y locales, creando una comunidad consciente y saludable.</p></div></div>
         </div>
         
-        {/* --- MAPA DE SUCURSALES --- */}
+        {/* Sección del Mapa (Corregido el src para evitar errores 404 falsos, o puedes dejarlo vacío) */}
         <div className="row mt-5">
-          <div className="col-12 text-center mb-3">
-            <h3 className="section-title">Nuestras Sucursales</h3>
-            <p className="text-muted">Encuéntranos en nuestros puntos de distribución.</p>
-          </div>
+          <div className="col-12 text-center"><h3 className="section-title">Nuestras Sucursales</h3><p>Encuéntranos en nuestros puntos de retiro a lo largo del país.</p></div>
           <div className="col-12">
-            <div className="map-container rounded shadow overflow-hidden" style={{ height: '400px' }}>
+            <div className="map-container rounded shadow overflow-hidden">
+                {/* Nota: Usamos un mapa de ejemplo de Google Maps Embed API */}
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.461554759736!2d-70.61608368480096!3d-33.43725898077751!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662cf700074041b%3A0x17433098152d97c2!2sProvidencia%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses!2scl!4v1635789452134!5m2!1ses!2scl"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.850318587988!2d-70.6508826848009!3d-33.44013418077967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c5a7c6e2c7c1%3A0x3e0b7f7b7b7b7b7b!2sSantiago%2C%20Chile!5e0!3m2!1ses!2scl!4v1620000000000!5m2!1ses!2scl"
                 width="100%" 
                 height="100%" 
                 style={{ border: 0 }} 
                 allowFullScreen="" 
                 loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
                 title="Mapa de Sucursales de HuertoHogar"
               ></iframe>
             </div>

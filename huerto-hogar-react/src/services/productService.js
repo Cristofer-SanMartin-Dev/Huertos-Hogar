@@ -1,4 +1,4 @@
-// src/services/productService.js
+import axios from 'axios';
 
 /**
  * TUTOR: Este archivo simula tu base de datos o una API.
