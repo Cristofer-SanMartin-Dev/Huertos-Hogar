@@ -49,6 +49,11 @@ public class SecurityConfig {
                 // 2. Define tus endpoints públicos
                 .requestMatchers("/api/products/**", "/api/auth/login", "/api/auth/register").permitAll() 
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                // --- ¡AÑADE ESTA LÍNEA NUEVA! ---
+                // Esto permite que el navegador cargue las fotos sin iniciar sesión
+                .requestMatchers("/images/**").permitAll() 
+                // --------------------------------
                 
                 // 3. Protege todo lo demás
                 .anyRequest().authenticated()
