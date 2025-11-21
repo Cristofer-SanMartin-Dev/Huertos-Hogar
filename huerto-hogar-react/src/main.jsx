@@ -7,18 +7,14 @@ import { CartProvider } from './context/CartContext';
 // 1. Importa el AuthProvider
 import { AuthProvider } from './context/AuthContext';
 
-// Importamos los Contextos (Estado global)
-import { CartProvider } from './context/CartContext';
-import { AuthProvider } from './context/AuthContext';
-
-// Importamos los estilos
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      {/* AuthProvider envuelve a CartProvider, y este a la App */}
+      {/* 2. Envuelve la app con AuthProvider */}
+      {/* Es buena idea que AuthProvider envuelva a CartProvider si el carrito depende del usuario */}
       <AuthProvider>
         <CartProvider>
           <App />

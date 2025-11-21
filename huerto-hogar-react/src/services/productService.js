@@ -1,38 +1,67 @@
 import axios from 'axios';
 
-/**
- * TUTOR: Este archivo simula tu base de datos o una API.
- * Contiene el array completo de tus productos. Mantener los datos aquí
- * hace que tu código sea más limpio y fácil de mantener.
- *
- * IMPORTANTE: He cambiado las rutas de las imágenes para que funcionen con Vite.
- * Debes crear una carpeta llamada `assets` dentro de tu carpeta `public`
- * y colocar todas tus imágenes de productos (`manzana.png`, `naranja.png`, etc.) allí.
- * La ruta ahora debe ser `/assets/nombre_de_la_imagen.png`.
- */
-const BASE_URL = 'http://localhost:8080/api/products';
+const API_URL = 'http://localhost:8080/api/products';
+const IMAGE_BASE_URL = 'http://localhost:8080/images/'; // URL para ver imágenes
 
-    // (GET) /api/products/{id}
+class ProductService {
+    
+    getAllProducts() {
+        return axios.get(API_URL);
+    }
+
     getProductById(id) {
-        return axios.get(`${BASE_URL}/${id}`);
+        return axios.get(`${API_URL}/${id}`);
     }
 
-    // (POST) /api/products
-    createProduct(product) {
-        return axios.post(BASE_URL, product);
+    // CREAR: Usamos FormData para enviar texto + archivo
+    createProduct(productData, imageFile) {
+        const formData = new FormData();
+        formData.append('name', productData.name);
+        formData.append('description', productData.description);
+        formData.append('price', productData.price);
+        formData.append('stock', productData.stock);
+        formData.append('category', productData.category);
+        
+        if (imageFile) {
+            formData.append('image', imageFile); // 'image' debe coincidir con @RequestParam en Java
+        }
+
+        return axios.post(API_URL, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
     }
 
-    // (PUT) /api/products/{id}
-    updateProduct(id, product) {
-        return axios.put(`${BASE_URL}/${id}`, product);
+    // ACTUALIZAR: Igual que crear, pero con PUT
+    updateProduct(id, productData, imageFile) {
+        const formData = new FormData();
+        formData.append('name', productData.name);
+        formData.append('description', productData.description);
+        formData.append('price', productData.price);
+        formData.append('stock', productData.stock);
+        formData.append('category', productData.category);
+        
+        if (imageFile) {
+            formData.append('image', imageFile);
+        }
+
+        return axios.put(`${API_URL}/${id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
     }
 
-    // (DELETE) /api/products/{id}
     deleteProduct(id) {
-        return axios.delete(`${BASE_URL}/${id}`);
+        return axios.delete(`${API_URL}/${id}`);
+    }
+    
+    // Helper para obtener la URL completa de la imagen
+    getImageUrl(imageName) {
+        if (!imageName) return 'https://via.placeholder.com/150'; // Imagen por defecto
+        return IMAGE_BASE_URL + imageName;
     }
 }
 
-// Exportamos una instancia única (Singleton) de la clase,
-// como lo hace la guía[cite: 977].
 export default new ProductService();
