@@ -15,6 +15,7 @@ public class UpdateUserRequest {
     private String calle;
     private String region;
     private String comuna;
+    private String telefono;
 
-    // Nota: Omitimos email, password y role a propósito.
+    // Nota: Omitimos email, password, role y puntos a propósito.
 }

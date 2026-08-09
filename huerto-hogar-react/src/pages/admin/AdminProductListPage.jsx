@@ -19,7 +19,10 @@ const AdminProductListPage = () => {
         if (window.confirm('¿Estás seguro de eliminar este producto?')) {
             ProductService.deleteProduct(id)
                 .then(() => loadProducts()) // Recargar lista
-                .catch(err => alert('Error al eliminar'));
+                .catch(err => {
+                    console.error('Error al eliminar el producto:', err);
+                    alert('Error al eliminar');
+                });
         }
     };
 
@@ -32,6 +35,7 @@ const AdminProductListPage = () => {
                 </Link>
             </div>
 
+            <div className="table-responsive">
             <table className="table table-striped align-middle">
                 <thead>
                     <tr>
@@ -69,6 +73,7 @@ const AdminProductListPage = () => {
                     ))}
                 </tbody>
             </table>
+            </div>
         </div>
     );
 };

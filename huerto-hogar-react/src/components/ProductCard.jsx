@@ -4,38 +4,51 @@ import { useCart } from '../context/CartContext.jsx';
 import StarRating from './StarRating.jsx';
 // 1. Importamos el servicio para obtener la URL base de las imágenes
 import ProductService from '../services/productService.js';
+import { shareProduct } from '../utils/share.js';
 
 const ProductCard = ({ product, onViewReviews }) => {
   // 2. Cambiamos 'imageUrl' por 'imageName' (así se llama en tu base de datos)
-  const { name, price, description, stock, imageName, rating, priceUnit } = product;
-  
+  const { name, price, description, stock, imageName, averageRating, priceUnit, descuento, precioConDescuento } = product;
+
   const isOutOfStock = stock === 0;
+  const tieneDescuento = descuento > 0 && precioConDescuento != null;
   const { addToCart } = useCart();
 
   return (
     <div className="col">
-      <div className="card shadow-sm h-100">
+      <div className="card shadow-sm h-100" style={{ position: 'relative' }}>
+        {tieneDescuento && (
+          <span className="discount-badge">-{descuento}%</span>
+        )}
         {/* 3. Usamos el helper del servicio para construir la URL completa */}
-        <img 
-            src={ProductService.getImageUrl(imageName)} 
-            className="card-img-top" 
-            alt={name} 
-            style={{ height: '225px', objectFit: 'cover' }} 
+        <img
+            src={ProductService.getImageUrl(imageName)}
+            className="card-img-top"
+            alt={name}
+            style={{ height: '225px', objectFit: 'cover' }}
         />
-        
+
         <div className="card-body d-flex flex-column">
           <h5 className="card-title" style={{fontFamily: 'var(--font-header)', color: 'var(--accent-brown)'}}>{name}</h5>
-          
+
           {/* StarRating ya está protegido contra nulos gracias a la corrección anterior */}
-          <StarRating rating={rating} />
-          
-          <p className="card-text text-success fw-bold fs-5 mb-2">
-            ${price?.toLocaleString('es-CL')} 
-            <span className="text-muted fs-6 fw-normal ms-2">{priceUnit || 'unidad'}</span>
-          </p>
+          <StarRating rating={averageRating} />
+
+          {tieneDescuento ? (
+            <p className="card-text fs-5 mb-2">
+              <span className="text-decoration-line-through text-muted me-2">${price?.toLocaleString('es-CL')}</span>
+              <span className="text-success fw-bold">${precioConDescuento.toLocaleString('es-CL')}</span>
+              <span className="text-muted fs-6 fw-normal ms-2">{priceUnit || 'unidad'}</span>
+            </p>
+          ) : (
+            <p className="card-text text-success fw-bold fs-5 mb-2">
+              ${price?.toLocaleString('es-CL')}
+              <span className="text-muted fs-6 fw-normal ms-2">{priceUnit || 'unidad'}</span>
+            </p>
+          )}
 
           <p className="card-text flex-grow-1">{description}</p>
-          
+
           <div className="mt-auto">
             <p className={`fw-bold mb-2 ${isOutOfStock ? 'text-danger' : 'text-muted'}`}>
               {isOutOfStock ? 'Agotado' : `Stock: ${stock}`}
@@ -50,6 +63,9 @@ const ProductCard = ({ product, onViewReviews }) => {
               </button>
               <button onClick={() => onViewReviews(product)} className="btn btn-outline-secondary">
                 Ver Detalles y Reseñas
+              </button>
+              <button onClick={() => shareProduct(product)} className="btn btn-outline-secondary btn-sm">
+                Compartir
               </button>
             </div>
           </div>

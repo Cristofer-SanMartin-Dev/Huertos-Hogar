@@ -24,5 +24,17 @@ public class Product {
     private String category; // Ej: "Frutas", "Verduras"
 
     // Aquí guardaremos solo el nombre del archivo (ej: "manzana-123.jpg")
-    private String imageName; 
+    private String imageName;
+
+    // --- Información adicional del producto (opcional) ---
+    private String origin; // Lugar de origen, ej. "Valle del Maule"
+
+    @Column(length = 1000)
+    private String sustainability; // Prácticas o certificaciones sostenibles
+
+    @Column(length = 1000)
+    private String recipes; // Ideas de recetas, texto libre separado por comas
+
+    // Porcentaje de descuento (0-100). Nulo o 0 significa que no está en oferta.
+    private Integer descuento;
 }

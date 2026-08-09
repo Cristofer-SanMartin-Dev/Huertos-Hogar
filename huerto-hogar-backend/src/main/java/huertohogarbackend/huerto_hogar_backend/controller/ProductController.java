@@ -1,7 +1,9 @@
 package huertohogarbackend.huerto_hogar_backend.controller;
 
+import huertohogarbackend.huerto_hogar_backend.dto.ProductResponse;
 import huertohogarbackend.huerto_hogar_backend.model.Product;
 import huertohogarbackend.huerto_hogar_backend.service.ProductService;
+import huertohogarbackend.huerto_hogar_backend.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +19,26 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private ReviewService reviewService;
+
+    private ProductResponse toResponse(Product product) {
+        Double avgRating = reviewService.getAverageRating(product.getId());
+        Integer reviewCount = reviewService.getReviewCount(product.getId());
+        return ProductResponse.from(product, avgRating, reviewCount);
+    }
+
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public List<ProductResponse> getAllProducts() {
+        return productService.getAllProducts().stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
         return productService.getProductById(id)
+                .map(this::toResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -38,7 +52,11 @@ public class ProductController {
             @RequestParam("description") String description,
             @RequestParam("price") Double price,
             @RequestParam("stock") Integer stock,
-            @RequestParam("category") String category
+            @RequestParam("category") String category,
+            @RequestParam(value = "origin", required = false) String origin,
+            @RequestParam(value = "sustainability", required = false) String sustainability,
+            @RequestParam(value = "recipes", required = false) String recipes,
+            @RequestParam(value = "descuento", required = false) Integer descuento
     ) {
         try {
             Product newProduct = new Product();
@@ -47,6 +65,10 @@ public class ProductController {
             newProduct.setPrice(price);
             newProduct.setStock(stock);
             newProduct.setCategory(category);
+            newProduct.setOrigin(origin);
+            newProduct.setSustainability(sustainability);
+            newProduct.setRecipes(recipes);
+            newProduct.setDescuento(descuento);
 
             Product savedProduct = productService.saveProduct(newProduct, image);
             return ResponseEntity.ok(savedProduct);
@@ -64,7 +86,11 @@ public class ProductController {
             @RequestParam("description") String description,
             @RequestParam("price") Double price,
             @RequestParam("stock") Integer stock,
-            @RequestParam("category") String category
+            @RequestParam("category") String category,
+            @RequestParam(value = "origin", required = false) String origin,
+            @RequestParam(value = "sustainability", required = false) String sustainability,
+            @RequestParam(value = "recipes", required = false) String recipes,
+            @RequestParam(value = "descuento", required = false) Integer descuento
     ) {
         try {
             Product productDetails = new Product();
@@ -73,6 +99,10 @@ public class ProductController {
             productDetails.setPrice(price);
             productDetails.setStock(stock);
             productDetails.setCategory(category);
+            productDetails.setOrigin(origin);
+            productDetails.setSustainability(sustainability);
+            productDetails.setRecipes(recipes);
+            productDetails.setDescuento(descuento);
 
             Product updatedProduct = productService.updateProduct(id, productDetails, image);
             return ResponseEntity.ok(updatedProduct);
@@ -83,7 +113,11 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
-        return ResponseEntity.ok().build();
+        try {
+            productService.deleteProduct(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(409).body(e.getMessage());
+        }
     }
 }

@@ -3,6 +3,7 @@ package huertohogarbackend.huerto_hogar_backend.service;
 import huertohogarbackend.huerto_hogar_backend.model.Product;
 import huertohogarbackend.huerto_hogar_backend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,6 +65,10 @@ public class ProductService {
         product.setPrice(productDetails.getPrice());
         product.setStock(productDetails.getStock());
         product.setCategory(productDetails.getCategory());
+        product.setOrigin(productDetails.getOrigin());
+        product.setSustainability(productDetails.getSustainability());
+        product.setRecipes(productDetails.getRecipes());
+        product.setDescuento(productDetails.getDescuento());
 
         // Si viene una nueva imagen, la guardamos y actualizamos
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -77,6 +82,11 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+        try {
+            productRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            // El producto tiene pedidos asociados (OrderItem lo referencia por FK).
+            throw new RuntimeException("No se puede eliminar un producto con pedidos asociados.");
+        }
     }
 }

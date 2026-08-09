@@ -22,19 +22,17 @@ const StarRating = ({ rating }) => {
   // Detecta si necesitamos dibujar media estrella
   const halfStar = (5 - fullStars - emptyStars) > 0;
 
+  // Se arma una sola cadena de estrellas en vez de un <span> por estrella:
+  // el resultado visual es el mismo, pero el texto queda en un único nodo,
+  // legible tanto para los lectores de pantalla como para las pruebas.
+  const stars = '★'.repeat(fullStars) + (halfStar ? '★' : '') + '☆'.repeat(emptyStars);
+
   return (
     <div className="mb-2">
-      <span className="text-warning">
-        {/* Renderiza las estrellas llenas */}
-        {[...Array(fullStars)].map((_, i) => <span key={`full-${i}`}>★</span>)}
-        
-        {/* Renderiza la media estrella si aplica */}
-        {halfStar && <span key="half">★</span>} 
-        
-        {/* Renderiza las estrellas vacías */}
-        {[...Array(emptyStars)].map((_, i) => <span key={`empty-${i}`}>☆</span>)}
+      <span className="text-warning" aria-label={`Valoración: ${safeRating.toFixed(1)} de 5`}>
+        {stars}
       </span>
-      
+
       {/* Muestra el número con 1 decimal */}
       <span className="text-muted ms-2">{safeRating.toFixed(1)}</span>
     </div>

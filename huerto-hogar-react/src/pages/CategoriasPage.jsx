@@ -18,7 +18,7 @@ const CategoriasPage = () => {
             <div className="row row-cols-1 row-cols-md-4 g-4">
                 {categorias.map(categoria => (
                     <div key={categoria.nombre} className="col">
-                        <Link to="/productos" className="text-decoration-none">
+                        <Link to={`/productos?categoria=${encodeURIComponent(categoria.nombre)}`} className="text-decoration-none">
                             <div className="card h-100 shadow-sm text-center">
                                 <img src={categoria.img} className="card-img-top p-4" alt={categoria.nombre} style={{height: '200px', objectFit: 'contain'}} />
                                 <div className="card-body">

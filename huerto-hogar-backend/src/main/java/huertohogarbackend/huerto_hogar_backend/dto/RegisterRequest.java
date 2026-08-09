@@ -14,5 +14,6 @@ public class RegisterRequest {
     private String calle;     // Renombrado desde 'address'
     private String region;    // Nuevo campo
     private String comuna;    // Nuevo campo
+    private String telefono;  // Número de contacto
     // --- FIN DE MODIFICADOS ---
 }
