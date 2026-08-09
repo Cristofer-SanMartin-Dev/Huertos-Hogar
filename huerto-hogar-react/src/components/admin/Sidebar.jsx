@@ -27,6 +27,9 @@ const Sidebar = () => {
                 <li className="nav-item">
                     <NavLink className="nav-link" to="/admin/reportes">Reportes</NavLink>
                 </li>
+                <li className="nav-item">
+                    <NavLink className="nav-link" to="/admin/mensajes">Mensajes</NavLink>
+                </li>
                 <hr className="text-white" />
                 <li className="nav-item">
                     <NavLink className="nav-link" to="/admin/perfil">Perfil</NavLink>
