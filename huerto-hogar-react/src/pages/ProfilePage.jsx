@@ -1,12 +1,20 @@
 // Ruta: src/pages/ProfilePage.jsx
 import React, { useState, useEffect } from 'react'; // 1. Importa useState y useEffect
 import { useAuth } from '../context/AuthContext.jsx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import orderService from '../services/orderService.js';
 
 const ProfilePage = () => {
   // 2. Obtén 'updateUser' del contexto
   const { user, logout, updateUser } = useAuth();
   const navigate = useNavigate();
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    orderService.getMine()
+      .then(response => setOrders(response.data))
+      .catch(err => console.error('Error al cargar el historial de pedidos:', err));
+  }, []);
 
   // 3. Crea estados locales para el formulario
   const [formData, setFormData] = useState({
@@ -14,7 +22,8 @@ const ProfilePage = () => {
     apellidos: '',
     calle: '',
     region: '',
-    comuna: ''
+    comuna: '',
+    telefono: ''
   });
   const [isEditing, setIsEditing] = useState(false); // Estado para saber si estamos editando
   const [isLoading, setIsLoading] = useState(false); // Para deshabilitar el botón al guardar
@@ -28,7 +37,8 @@ const ProfilePage = () => {
         apellidos: user.apellidos || '',
         calle: user.calle || '',
         region: user.region || '',
-        comuna: user.comuna || ''
+        comuna: user.comuna || '',
+        telefono: user.telefono || ''
       });
     }
   }, [user]); // Se ejecuta cada vez que el objeto 'user' cambia
@@ -110,6 +120,10 @@ const ProfilePage = () => {
                     <label htmlFor="email" className="form-label">Email (no editable):</label>
                     <input type="email" id="email" name="email" className="form-control" value={user.email} disabled />
                   </div>
+                  <div className="form-group mb-2">
+                    <label htmlFor="telefono" className="form-label">Número de Contacto:</label>
+                    <input type="tel" id="telefono" name="telefono" className="form-control" value={formData.telefono} onChange={handleChange} />
+                  </div>
                   <hr />
                   <p><strong>Dirección de Despacho:</strong></p>
                   <div className="form-group mb-2">
@@ -135,6 +149,8 @@ const ProfilePage = () => {
                   <p><strong>Nombre:</strong> {user.nombre}</p>
                   <p><strong>Apellidos:</strong> {user.apellidos}</p>
                   <p><strong>Email:</strong> {user.email}</p>
+                  <p><strong>Número de Contacto:</strong> {user.telefono || 'No especificado'}</p>
+                  <p><strong>Puntos de Fidelidad:</strong> {user.puntos ?? 0}</p>
                   <hr />
                   <p><strong>Dirección de Despacho:</strong></p>
                   <p>{user.calle || 'No especificada'}</p>
@@ -145,12 +161,29 @@ const ProfilePage = () => {
           </div>
         </div>
         
-        {/* ... (Columna de Historial de Compras - sin cambios) ... */}
+        {/* Historial de Compras real */}
         <div className="col-md-6 mt-4 mt-md-0">
           <div className="card">
-            <div className="card-header">Historial de Compras (Simulado)</div>
+            <div className="card-header">Historial de Compras</div>
             <ul className="list-group list-group-flush">
-              {/* ... (items del historial) ... */}
+              {orders.length > 0 ? (
+                orders.map(order => (
+                  <li key={order.id} className="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <strong>Pedido #{order.id}</strong>
+                      <small className="text-muted d-block">
+                        {new Date(order.fecha).toLocaleDateString('es-CL')} — {order.estado}
+                      </small>
+                    </div>
+                    <div className="text-end">
+                      <div>${order.total.toLocaleString('es-CL')}</div>
+                      <Link to={`/pedidos/${order.id}`} className="small">Ver detalle</Link>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <li className="list-group-item text-muted">Aún no tienes pedidos.</li>
+              )}
             </ul>
           </div>
         </div>

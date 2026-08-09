@@ -2,12 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext.jsx';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx'; // Importa useAuth
+import { useAuth } from '../context/AuthContext.jsx';
+import orderService from '../services/orderService.js';
+
+const manana = () => {
+    const fecha = new Date();
+    fecha.setDate(fecha.getDate() + 1);
+    return fecha.toISOString().split('T')[0];
+};
 
 const CheckoutPage = () => {
     const { cart, clearCart } = useCart(); // Obtiene el carrito
     const navigate = useNavigate();
-    const { user } = useAuth(); // Obtén el usuario del contexto
+    const { user, refreshUser } = useAuth(); // Obtén el usuario del contexto
 
     // Calcula el total del carrito
     const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -19,6 +26,8 @@ const CheckoutPage = () => {
     const [calle, setCalle] = useState('');
     const [region, setRegion] = useState('');
     const [comuna, setComuna] = useState('');
+    const [fechaEntrega, setFechaEntrega] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Efecto para auto-completar el formulario si el usuario está logueado
     useEffect(() => {
@@ -32,22 +41,42 @@ const CheckoutPage = () => {
         }
     }, [user]); // Se ejecuta cuando 'user' carga o cambia
 
-    // Lógica de pago
+    // Crea el pedido real en el backend: el precio de cada ítem lo recalcula
+    // el servidor a partir del producto vigente, nunca de lo que envía el cliente.
     const handlePagar = (e) => {
         e.preventDefault();
-        if (nombre.toLowerCase() === 'error') {
-            navigate('/pago-error');
-        } else {
-            clearCart();
-            navigate('/pago-exitoso');
-        }
+        setIsSubmitting(true);
+
+        const payload = {
+            items: cart.map(item => ({ productId: item.id, cantidad: item.quantity })),
+            calle,
+            region,
+            comuna,
+            fechaEntregaPreferida: fechaEntrega || null,
+        };
+
+        orderService.create(payload)
+            .then(response => {
+                clearCart();
+                // El pedido suma puntos de fidelidad en el servidor; refresca
+                // el usuario en caché para que el perfil los muestre al tiro.
+                refreshUser().catch(err => console.error('Error al refrescar el usuario:', err));
+                navigate('/pago-exitoso', { state: { orderId: response.data.id } });
+            })
+            .catch(error => {
+                console.error('Error al crear el pedido:', error);
+                navigate('/pago-error', {
+                    state: { message: error.response?.data || 'No se pudo procesar el pedido.' },
+                });
+            })
+            .finally(() => setIsSubmitting(false));
     };
 
     return (
         <div className="container py-5">
             <h2 className="mb-4 section-title">Completa tu Compra</h2>
-            <div className="row g-5">
-                
+            <div className="row g-3 g-md-5">
+
                 {/* --- SECCIÓN DEL CARRITO (RESTAURADA) --- */}
                 <div className="col-md-5 col-lg-4 order-md-last">
                     <h4 className="d-flex justify-content-between align-items-center mb-3">
@@ -101,10 +130,14 @@ const CheckoutPage = () => {
                                 <label htmlFor="comuna" className="form-label">Comuna</label>
                                 <input type="text" className="form-control" id="comuna" value={comuna} onChange={(e) => setComuna(e.target.value)} required />
                             </div>
+                            <div className="col-12 form-group">
+                                <label htmlFor="fechaEntrega" className="form-label">Fecha de entrega preferida (opcional)</label>
+                                <input type="date" className="form-control" id="fechaEntrega" min={manana()} value={fechaEntrega} onChange={(e) => setFechaEntrega(e.target.value)} />
+                            </div>
                         </div>
                         <hr className="my-4" />
-                        <button className="w-100 btn btn-primary btn-lg" type="submit">
-                            Pagar ahora ${cartTotal.toLocaleString('es-CL')}
+                        <button className="w-100 btn btn-primary btn-lg" type="submit" disabled={isSubmitting || cart.length === 0}>
+                            {isSubmitting ? 'Procesando...' : `Pagar ahora $${cartTotal.toLocaleString('es-CL')}`}
                         </button>
                     </form>
                 </div>

@@ -20,6 +20,7 @@ import ContactoPage from './pages/ContactoPage.jsx';
 import CheckoutPage from './pages/CheckoutPage.jsx';
 import OrderSuccessPage from './pages/OrderSuccessPage.jsx';
 import OrderErrorPage from './pages/OrderErrorPage.jsx';
+import OrderDetailPage from './pages/OrderDetailPage.jsx';
 
 // --- Páginas de Administración ---
 import AdminLayout from './pages/admin/AdminLayout.jsx';
@@ -27,6 +28,11 @@ import DashboardPage from './pages/admin/DashboardPage.jsx';
 // --- ¡NUEVOS IMPORTS AÑADIDOS! ---
 import ProductForm from './pages/admin/ProductForm.jsx';
 import AdminProductListPage from './pages/admin/AdminProductListPage.jsx';
+import ContactMessagesPage from './pages/admin/ContactMessagesPage.jsx';
+import AdminOrdersPage from './pages/admin/AdminOrdersPage.jsx';
+import AdminUsersPage from './pages/admin/AdminUsersPage.jsx';
+import AdminCategoriesPage from './pages/admin/AdminCategoriesPage.jsx';
+import AdminReportsPage from './pages/admin/AdminReportsPage.jsx';
 
 
 // --- Layout Público (sin cambios) ---
@@ -59,9 +65,24 @@ function App() {
         
         {/* Carrito y Checkout */}
         <Route path="carrito" element={<CartPage />} />
-        <Route path="checkout" element={<CheckoutPage />} />
+        <Route
+          path="checkout"
+          element={
+            <ProtectedRoute>
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="pago-exitoso" element={<OrderSuccessPage />} />
         <Route path="pago-error" element={<OrderErrorPage />} />
+        <Route
+          path="pedidos/:id"
+          element={
+            <ProtectedRoute>
+              <OrderDetailPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Autenticación */}
         <Route path="login" element={<LoginPage />} />
@@ -93,7 +114,37 @@ function App() {
         }
       >
         <Route index element={<DashboardPage />} />
-        {/* Aquí irán las rutas del CRUD de productos en el futuro */}
+
+        {/* CRUD de productos */}
+        <Route path="productos" element={<AdminProductListPage />} />
+        <Route path="productos/nuevo" element={<ProductForm />} />
+        <Route path="productos/editar/:id" element={<ProductForm />} />
+
+        {/* Mensajes de contacto */}
+        <Route path="mensajes" element={<ContactMessagesPage />} />
+
+        {/* Pedidos */}
+        <Route path="ordenes" element={<AdminOrdersPage />} />
+
+        {/* Usuarios, Categorías y Reportes */}
+        <Route path="usuarios" element={<AdminUsersPage />} />
+        <Route path="categorias" element={<AdminCategoriesPage />} />
+        <Route path="reportes" element={<AdminReportsPage />} />
+
+        {/* Perfil del admin: mismo componente que usan los clientes, ya
+            funciona para cualquier usuario autenticado sin importar el rol. */}
+        <Route path="perfil" element={<ProfilePage />} />
+
+        {/* Cualquier otra ruta del panel que no exista */}
+        <Route
+          path="*"
+          element={
+            <div className="container mt-4">
+              <h2>Sección en construcción</h2>
+              <p className="text-muted">Esta parte del panel de administración todavía no está implementada.</p>
+            </div>
+          }
+        />
       </Route>
     </Routes>
   );

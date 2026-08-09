@@ -1,17 +1,19 @@
 // src/pages/OrderErrorPage.jsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-// TUTOR: Basado en la Figura 8
 const OrderErrorPage = () => {
+    const location = useLocation();
+    const message = location.state?.message;
+
     return (
         <div className="container text-center py-5">
             <div className="login-container" style={{maxWidth: '600px'}}>
-                <h2 className="section-title text-danger">❌ No se pudo realizar el pago</h2>
-                <p className="lead">Hubo un problema al procesar tu pago (nro #20240705).</p>
-                <p>Por favor, revisa tus datos e inténtalo de nuevo. Si el problema persiste, contacta a tu banco.</p>
+                <h2 className="section-title text-danger">❌ No se pudo realizar el pedido</h2>
+                <p className="lead">{message || 'Hubo un problema al procesar tu pedido.'}</p>
+                <p>Por favor, revisa tus datos e inténtalo de nuevo.</p>
                 <Link to="/checkout" className="btn btn-primary mt-3">
-                    Volver a Intentar el Pago
+                    Volver a Intentar
                 </Link>
             </div>
         </div>
