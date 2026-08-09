@@ -23,7 +23,33 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-unused-vars': ['error', {
+        varsIgnorePattern: '^[A-Z_]',
+        // Permite descartar campos con rest: const { token, ...user } = data
+        ignoreRestSiblings: true,
+      }],
+      // Aviso, no error: los contextos exportan el Provider junto al contexto y
+      // su hook. Solo afecta al refresco en caliente durante el desarrollo.
+      'react-refresh/only-export-components': 'warn',
+    },
+  },
+  {
+    // Los archivos de prueba usan los globales de Vitest (describe, test, expect).
+    files: ['**/*.test.{js,jsx}', 'src/tests/**/*.{js,jsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        vi: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+      },
     },
   },
 ])

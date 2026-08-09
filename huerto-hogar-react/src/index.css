@@ -7,8 +7,21 @@
 :root {
   --accent-green: #2E8B57;
    --accent-brown: #8B4513;
+   --accent-yellow: #FFD700;
    --font-header: 'Playfair Display', serif;
    --font-main: 'Montserrat', sans-serif;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background-color: var(--accent-yellow);
+  color: #333333;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.5rem;
+  z-index: 1;
 }
 
 body {
@@ -40,6 +53,12 @@ h1 {
 
 .modal-overlay {
   background-color: rgba(0,0,0,0.5);
+}
+
+/* Logo del header: alto fijo para que quede en línea con el menú de navegación */
+.logo-img {
+  height: 48px;
+  width: auto;
 }
 
 /* --- Overrides de Bootstrap --- */
@@ -184,4 +203,32 @@ h1 {
   flex-grow: 1;
   padding: 2rem;
   background-color: #f8f9fa;
+  /* Evita que tablas u otro contenido ancho empujen el layout fuera del viewport. */
+  min-width: 0;
+}
+
+/* En pantallas angostas el sidebar fijo de 250px no cabe: se apila arriba
+   del contenido en vez de comprimirse hasta ser ilegible. */
+@media (max-width: 767.98px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .admin-content {
+    padding: 1rem;
+  }
+}
+
+/* Boleta imprimible: al imprimir, solo se ve el documento, no el header/footer/menú. */
+@media print {
+  .no-print,
+  header,
+  footer {
+    display: none !important;
+  }
 }

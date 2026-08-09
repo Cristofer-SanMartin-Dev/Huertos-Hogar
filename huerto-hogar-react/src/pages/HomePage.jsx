@@ -39,8 +39,8 @@ const HomePage = () => {
     setSelectedProduct(null);
   };
 
-  // Función simulada para 'onDelete' (no hace nada en Home)
-  const handleDeleteProduct = (id) => {
+  // En la portada no se elimina: eso vive solo en el panel de administración.
+  const handleDeleteProduct = () => {
     console.warn("Función de eliminar solo disponible en el panel de admin.");
   };
 
@@ -90,38 +90,44 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* SECCIÓN QUIÉNES SOMOS */}
-      <section className="container py-5">
+      {/* TEASER QUIÉNES SOMOS: el detalle de misión y visión vive en /nosotros,
+          para no duplicar ese texto en dos páginas. */}
+      <section className="container py-5 text-center">
+        <div className="col-lg-8 mx-auto">
+          <h2 className="section-title">¿Quiénes Somos?</h2>
+          <p className="lead text-muted">
+            <strong>HuertoHogar</strong> nació de la pasión por la agricultura sostenible y el deseo de conectar a las familias con el origen de sus alimentos.
+          </p>
+          <Link to="/nosotros" className="btn btn-outline-secondary mt-2">Conoce más sobre nosotros</Link>
+        </div>
+      </section>
+
+      {/* Mapa de sucursales */}
+      <div className="container pb-5">
         <div className="row">
-          <div className="col-lg-8 mx-auto text-center">
-            <h2 className="section-title">¿Quiénes Somos?</h2>
-            <p className="lead text-muted"><strong>HuertoHogar</strong> es una iniciativa nacida de la pasión por la agricultura sostenible y el deseo de conectar a las familias con el origen de sus alimentos. Trabajamos directamente con agricultores locales para asegurar que cada producto que llega a tu mesa sea fresco, saludable y cultivado con respeto por la tierra.</p>
-          </div>
-        </div>
-        <div className="row mt-4">
-          <div className="col-md-6"><div className="card h-100 p-3"><h4 className="text-center" style={{color: 'var(--accent-green)'}}>Nuestra Misión</h4><p>Llevar frescura y calidad a cada hogar, fomentando el consumo responsable y apoyando a la economía local.</p></div></div>
-          <div className="col-md-6 mt-3 mt-md-0"><div className="card h-100 p-3"><h4 className="text-center" style={{color: 'var(--accent-green)'}}>Nuestra Visión</h4><p>Ser el referente nacional en distribución de productos orgánicos y locales, creando una comunidad consciente y saludable.</p></div></div>
-        </div>
-        
-        {/* Sección del Mapa (Corregido el src para evitar errores 404 falsos, o puedes dejarlo vacío) */}
-        <div className="row mt-5">
           <div className="col-12 text-center"><h3 className="section-title">Nuestras Sucursales</h3><p>Encuéntranos en nuestros puntos de retiro a lo largo del país.</p></div>
           <div className="col-12">
             <div className="map-container rounded shadow overflow-hidden">
-                {/* Nota: Usamos un mapa de ejemplo de Google Maps Embed API */}
-              <iframe 
+              <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.850318587988!2d-70.6508826848009!3d-33.44013418077967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c5a7c6e2c7c1%3A0x3e0b7f7b7b7b7b7b!2sSantiago%2C%20Chile!5e0!3m2!1ses!2scl!4v1620000000000!5m2!1ses!2scl"
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen="" 
-                loading="lazy" 
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
                 title="Mapa de Sucursales de HuertoHogar"
               ></iframe>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+
+      {/* Modal de reseñas de los productos destacados */}
+      <ReviewsModal
+        product={selectedProduct}
+        show={isModalVisible}
+        onClose={handleCloseModal}
+      />
     </>
   );
 };

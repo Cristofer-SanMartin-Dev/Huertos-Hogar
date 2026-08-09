@@ -1,7 +1,20 @@
 // src/context/CartContext.jsx
-import React, { createContext, useReducer, useContext } from 'react';
+import React, { createContext, useReducer, useContext, useEffect } from 'react';
 
 export const CartContext = createContext();
+
+const CART_STORAGE_KEY = 'cart';
+
+// Sin esto, el carrito se pierde en cada recarga de página porque solo
+// vivía en memoria (useReducer sin respaldo).
+const loadInitialCart = () => {
+  try {
+    const saved = localStorage.getItem(CART_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+};
 
 const cartReducer = (state, action) => {
   switch (action.type) {
@@ -41,36 +54,18 @@ const cartReducer = (state, action) => {
     case 'CLEAR_CART': {
       return [];
     }
-    case 'INCREMENT_QUANTITY': {
-      return state.map(item => {
-        if (item.id === action.payload && item.quantity < item.stock) {
-          return { ...item, quantity: item.quantity + 1 };
-        }
-        return item;
-      });
-    }
-    case 'DECREMENT_QUANTITY': {
-      const itemToDecrement = state.find(item => item.id === action.payload);
-      if (itemToDecrement && itemToDecrement.quantity === 1) {
-        return state.filter(item => item.id !== action.payload);
-      }
-      return state.map(item =>
-        item.id === action.payload ? { ...item, quantity: item.quantity - 1 } : item
-      );
-    }
-    case 'REMOVE_FROM_CART': {
-      return state.filter(item => item.id !== action.payload);
-    }
-    case 'CLEAR_CART': {
-      return [];
-    }
     default:
       return state;
   }
 };
 
 export const CartProvider = ({ children }) => {
-  const [cart, dispatch] = useReducer(cartReducer, []);
+  const [cart, dispatch] = useReducer(cartReducer, undefined, loadInitialCart);
+
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  }, [cart]);
+
   const addToCart = (product) => {
     dispatch({ type: 'ADD_TO_CART', payload: product });
     // Puedes comentar el alert si resulta molesto

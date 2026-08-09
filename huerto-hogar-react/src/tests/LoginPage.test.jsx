@@ -9,8 +9,12 @@ import LoginPage from '../pages/LoginPage.jsx';
 import { AuthContext } from '../context/AuthContext.jsx';
 
 describe('Página LoginPage', () => {
-  test('debería mostrar un mensaje de error con credenciales incorrectas', () => {
-    const mockLogin = vi.fn(() => false);
+  // El login llama a la API y devuelve una Promesa, así que el mock debe
+  // devolver una promesa rechazada para simular credenciales incorrectas.
+  test('debería mostrar un mensaje de error con credenciales incorrectas', async () => {
+    const mockLogin = vi.fn(() =>
+      Promise.reject({ response: { data: 'Correo o contraseña incorrectos.' } })
+    );
 
     render(
       <MemoryRouter>
@@ -21,11 +25,11 @@ describe('Página LoginPage', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Ingresar/i }));
-    expect(screen.getByText('Correo o contraseña incorrectos.')).toBeInTheDocument();
+    expect(await screen.findByText('Correo o contraseña incorrectos.')).toBeInTheDocument();
   });
 
   test('debería llamar a la función login con el email y password del formulario', () => {
-    const mockLogin = vi.fn();
+    const mockLogin = vi.fn(() => Promise.resolve({ role: 'CUSTOMER' }));
 
     render(
       <MemoryRouter>
