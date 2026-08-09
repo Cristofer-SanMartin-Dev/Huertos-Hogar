@@ -1,45 +1,59 @@
-import axios from 'axios';
+// Ruta: src/services/authService.js
+import http, { setToken, clearSession } from './http.js';
 
-// --- ¡SOLUCIÓN 403 FORBIDDEN! ---
-// Configura axios para que envíe cookies (credenciales) en TODAS las peticiones
-axios.defaults.withCredentials = true;
-
-// Define la URL base de tu API de Spring Boot
-const API_URL = 'http://localhost:8080/api/auth';
+const AUTH_PATH = '/api/auth';
 
 /**
- * Esta clase agrupa todas las llamadas de API
- * relacionadas con la autenticación.
+ * Agrupa las llamadas de API relacionadas con la autenticación.
+ *
+ * El backend devuelve un JWT en el login y en el registro; aquí se guarda para
+ * que el interceptor de http.js lo envíe en las peticiones protegidas.
  */
 class AuthService {
-    
-    /**
-     * Llama al endpoint POST /api/auth/login
-     */
+
+    /** POST /api/auth/login */
     login(email, password) {
-        // 'axios.post' ahora enviará las credenciales (cookies)
-        return axios.post(`${API_URL}/login`, { 
-            email: email, 
-            password: password 
-        });
+        return http.post(`${AUTH_PATH}/login`, { email, password })
+            .then((response) => {
+                setToken(response.data.token);
+                return response;
+            });
     }
 
     /**
-     * Llama al endpoint POST /api/auth/register
+     * POST /api/auth/register
+     *
+     * Tras registrarse la app redirige al login, así que aquí NO se guarda el
+     * token: dejarlo guardado sin usuario en contexto produciría una sesión a
+     * medias. Se limpia cualquier resto de una sesión anterior.
      */
     register(user) {
-        // 'axios.post' ahora enviará las credenciales
-        return axios.post(`${API_URL}/register`, user);
+        clearSession();
+        return http.post(`${AUTH_PATH}/register`, user);
     }
 
     /**
-     * Llama al endpoint PUT /api/auth/profile/{userId}
+     * PUT /api/auth/profile/{userId}
+     * Requiere token. El backend verifica además que el id sea el del propio
+     * usuario, así que no se puede editar el perfil de otra persona.
      */
     updateUser(userId, userData) {
-        // Esta petición 'PUT' ahora incluirá la cookie de sesión
-        return axios.put(`${API_URL}/profile/${userId}`, userData);
+        return http.put(`${AUTH_PATH}/profile/${userId}`, userData);
+    }
+
+    /** Borra token y usuario del navegador. */
+    logout() {
+        clearSession();
+    }
+
+    /**
+     * GET /api/auth/me
+     * Trae los datos vigentes del usuario (ej. puntos de fidelidad tras un
+     * pedido), que localStorage no actualiza por sí solo entre acciones.
+     */
+    getCurrentUser() {
+        return http.get(`${AUTH_PATH}/me`);
     }
 }
 
-// Exportamos una instancia única (Singleton) del servicio.
 export default new AuthService();

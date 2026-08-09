@@ -1,6 +1,7 @@
 // Ruta: src/context/AuthContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import AuthService from '../services/authService.js'; 
+import AuthService from '../services/authService.js';
+import { getToken, clearSession } from '../services/http.js';
 
 export const AuthContext = createContext();
 
@@ -11,21 +12,27 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const savedUser = localStorage.getItem('user');
-        if (savedUser) {
+        // Sin token no hay sesión válida: el backend rechazaría cualquier
+        // petición protegida, así que tampoco la damos por buena en el cliente.
+        if (savedUser && getToken()) {
             setUser(JSON.parse(savedUser));
             setIsAuthenticated(true);
+        } else {
+            clearSession();
         }
-        setIsLoading(false); 
+        setIsLoading(false);
     }, []);
 
     const login = (email, password) => {
         return AuthService.login(email, password)
             .then(response => {
-                const userData = response.data;
+                // El token ya lo guardó AuthService; aquí solo conservamos los
+                // datos de perfil, sin el token, para no duplicarlo en 'user'.
+                const { token, tokenType, ...userData } = response.data;
                 setUser(userData);
                 setIsAuthenticated(true);
                 localStorage.setItem('user', JSON.stringify(userData));
-                return userData; 
+                return userData;
             });
     };
 
@@ -34,7 +41,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => {
-        localStorage.removeItem('user');
+        // Borra token y usuario del navegador en un solo punto.
+        AuthService.logout();
         setUser(null);
         setIsAuthenticated(false);
     };
@@ -63,15 +71,32 @@ export const AuthProvider = ({ children }) => {
     };
     // --- FIN DE LA FUNCIÓN ---
 
+    /**
+     * Vuelve a pedir los datos del usuario al backend y actualiza el estado
+     * local. Necesario tras acciones que cambian datos del lado del servidor
+     * sin que el cliente los sepa (ej. los puntos de fidelidad al completar
+     * un pedido): sin esto, quedarían desactualizados hasta el próximo login.
+     */
+    const refreshUser = () => {
+        return AuthService.getCurrentUser()
+            .then(response => {
+                const updatedUser = response.data;
+                setUser(updatedUser);
+                localStorage.setItem('user', JSON.stringify(updatedUser));
+                return updatedUser;
+            });
+    };
+
     // --- 3. AÑADE 'updateUser' AL VALOR ---
-    const value = { 
-        isAuthenticated, 
-        user, 
-        login, 
-        logout, 
-        register, 
-        isLoading, 
-        updateUser // <--- Añadido aquí
+    const value = {
+        isAuthenticated,
+        user,
+        login,
+        logout,
+        register,
+        isLoading,
+        updateUser, // <--- Añadido aquí
+        refreshUser
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

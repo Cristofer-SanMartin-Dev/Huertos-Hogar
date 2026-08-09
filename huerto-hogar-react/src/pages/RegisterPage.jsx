@@ -12,31 +12,62 @@ const RegisterPage = () => {
   const [calle, setCalle] = useState('');
   const [region, setRegion] = useState('');
   const [comuna, setComuna] = useState('');
+  const [telefono, setTelefono] = useState('');
   // --- FIN ESTADOS MODIFICADOS ---
 
   const [errors, setErrors] = useState({});
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  // Mismas reglas que valida el backend (AuthService.validarRegistro): la
+  // validación real vive en el servidor, esta es solo para dar feedback
+  // inmediato sin esperar el viaje de ida y vuelta a la API.
+  const NOMBRE_REGEX = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,}$/;
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const TELEFONO_REGEX = /^\+?\d{8,15}$/;
+  const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
   const validateForm = () => {
     const newErrors = {};
 
     // --- VALIDACIÓN ACTUALIZADA ---
-    if (!nombre.trim()) newErrors.nombre = 'El nombre es obligatorio.';
-    if (!apellidos.trim()) newErrors.apellidos = 'El apellido es obligatorio.';
-    if (!calle.trim()) newErrors.calle = 'La calle es obligatoria.';
+    if (!nombre.trim()) {
+      newErrors.nombre = 'El nombre es obligatorio.';
+    } else if (!NOMBRE_REGEX.test(nombre.trim())) {
+      newErrors.nombre = 'El nombre debe tener solo letras y al menos 2 caracteres.';
+    }
+
+    if (!apellidos.trim()) {
+      newErrors.apellidos = 'El apellido es obligatorio.';
+    } else if (!NOMBRE_REGEX.test(apellidos.trim())) {
+      newErrors.apellidos = 'Los apellidos deben tener solo letras y al menos 2 caracteres.';
+    }
+
+    if (!calle.trim()) {
+      newErrors.calle = 'La calle es obligatoria.';
+    } else if (calle.trim().length < 3) {
+      newErrors.calle = 'La calle debe tener al menos 3 caracteres.';
+    }
+
     if (!region.trim()) newErrors.region = 'La región es obligatoria.';
     if (!comuna.trim()) newErrors.comuna = 'La comuna es obligatoria.';
 
+    if (!telefono.trim()) {
+      newErrors.telefono = 'El número de contacto es obligatorio.';
+    } else if (!TELEFONO_REGEX.test(telefono.trim())) {
+      newErrors.telefono = 'El teléfono debe tener entre 8 y 15 dígitos (puede empezar con +).';
+    }
+
     if (!email.trim()) {
       newErrors.email = 'El correo electrónico es obligatorio.';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
+    } else if (!EMAIL_REGEX.test(email.trim())) {
       newErrors.email = 'El formato del correo no es válido.';
     }
+
     if (!password) {
       newErrors.password = 'La contraseña es obligatoria.';
-    } else if (password.length < 6) {
-      newErrors.password = 'La contraseña debe tener al menos 6 caracteres.';
+    } else if (!PASSWORD_REGEX.test(password)) {
+      newErrors.password = 'Debe tener 8+ caracteres, con mayúscula, minúscula, número y símbolo.';
     }
     // --- FIN VALIDACIÓN ---
 
@@ -49,12 +80,10 @@ const RegisterPage = () => {
 
     if (validateForm()) {
       // --- OBJETO USER MODIFICADO ---
-      const user = { nombre, apellidos, email, password, calle, region, comuna };
-      
-      console.log("Validación exitosa. Enviando a la API:", user);
+      const user = { nombre, apellidos, email, password, calle, region, comuna, telefono };
 
       register(user)
-        .then(response => {
+        .then(() => {
           alert('¡Registro exitoso! Serás redirigido para iniciar sesión.');
           navigate('/login');
         })
@@ -68,8 +97,6 @@ const RegisterPage = () => {
             setErrors({ api: 'Error inesperado. Inténtalo de nuevo.' });
           }
         });
-    } else {
-      console.log("Validación fallida. No se envía el formulario.");
     }
   };
 
@@ -118,18 +145,23 @@ const RegisterPage = () => {
             </div>
 
             <div className="col-12 form-group">
+              <label htmlFor="telefono">Número de Contacto:</label>
+              <input type="tel" id="telefono" className={`form-control ${errors.telefono ? 'is-invalid' : ''}`} value={telefono} onChange={(e) => setTelefono(e.target.value)} required />
+              {errors.telefono && <div className="invalid-feedback">{errors.telefono}</div>}
+            </div>
+
+            <div className="col-12 form-group">
               <label htmlFor="password">Contraseña:</label>
               <input type="password" id="password" className={`form-control ${errors.password ? 'is-invalid' : ''}`} value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <div className="form-text">Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo (ej: !@#$%).</div>
               {errors.password && <div className="invalid-feedback">{errors.password}</div>}
             </div>
           </div>
           {/* --- FIN FORMULARIO MODIFICADO --- */}
           
-          {errors.api && <div className="alert alert-danger mt-3">{errors.api}</div>}
-          
           {/* Aquí se mostrará el error "El email ya está en uso." */}
           {errors.api && <div className="alert alert-danger mt-3">{errors.api}</div>}
-          
+
           <div className="d-grid mt-4">
             <button type="submit" className="btn btn-primary">Registrarme</button>
           </div>

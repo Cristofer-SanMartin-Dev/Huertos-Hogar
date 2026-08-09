@@ -3,10 +3,10 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { Navigate, useLocation } from 'react-router-dom';
 
-// El rol por defecto es 'CUSTOMER', que ahora coincidirá
-// con el rol que asigna el backend.
-const ProtectedRoute = ({ children, role = 'CUSTOMER' }) => {
-    
+// Sin 'role', solo exige sesión iniciada (cualquier rol). Pasar role="ADMIN"
+// para restringir además a ese rol específico, como hace el panel de admin.
+const ProtectedRoute = ({ children, role }) => {
+
     const { isAuthenticated, user, isLoading } = useAuth();
     const location = useLocation();
 
@@ -20,12 +20,9 @@ const ProtectedRoute = ({ children, role = 'CUSTOMER' }) => {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    // 3. (ESTO ES LO QUE ARREGLAMOS)
-    // Ahora 'user.role' será "CUSTOMER" y 'role' es "CUSTOMER".
-    // La condición ( "CUSTOMER" !== "CUSTOMER" ) será 'false' y permitirá el paso.
-    if (user.role !== role) {
-        // Esto solo se activará si un CUSTOMER intenta ir a una ruta de ADMIN
-        return <Navigate to="/" replace />; 
+    // 3. Si se pidió un rol específico (ej. "ADMIN"), lo exige.
+    if (role && user.role !== role) {
+        return <Navigate to="/" replace />;
     }
 
     // 4. Muestra la página protegida (ej: ProfilePage)
