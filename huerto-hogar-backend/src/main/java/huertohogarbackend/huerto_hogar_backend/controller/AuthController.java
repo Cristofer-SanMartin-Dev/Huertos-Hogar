@@ -109,8 +109,9 @@ public class AuthController {
             return ResponseEntity.status(403).body(e.getMessage());
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(404).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error al actualizar el perfil.");
+        } catch (RuntimeException e) {
+            // Incluye los errores de validación (ej. "El nombre debe tener...").
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

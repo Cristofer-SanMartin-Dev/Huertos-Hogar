@@ -29,6 +29,44 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false); // Estado para saber si estamos editando
   const [isLoading, setIsLoading] = useState(false); // Para deshabilitar el botón al guardar
   const [error, setError] = useState(''); // Para mostrar errores de guardado
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  // Mismas reglas que valida el backend (AuthService.validarActualizacionPerfil).
+  const NOMBRE_REGEX = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,}$/;
+  const TELEFONO_REGEX = /^\+?\d{8,15}$/;
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.nombre.trim()) {
+      newErrors.nombre = 'El nombre es obligatorio.';
+    } else if (!NOMBRE_REGEX.test(formData.nombre.trim())) {
+      newErrors.nombre = 'El nombre debe tener solo letras y al menos 2 caracteres.';
+    }
+
+    if (!formData.apellidos.trim()) {
+      newErrors.apellidos = 'Los apellidos son obligatorios.';
+    } else if (!NOMBRE_REGEX.test(formData.apellidos.trim())) {
+      newErrors.apellidos = 'Los apellidos deben tener solo letras y al menos 2 caracteres.';
+    }
+
+    if (!formData.calle.trim()) {
+      newErrors.calle = 'La calle es obligatoria.';
+    } else if (formData.calle.trim().length < 3) {
+      newErrors.calle = 'La calle debe tener al menos 3 caracteres.';
+    }
+
+    if (!formData.region.trim()) newErrors.region = 'La región es obligatoria.';
+    if (!formData.comuna.trim()) newErrors.comuna = 'La comuna es obligatoria.';
+
+    if (!formData.telefono.trim()) {
+      newErrors.telefono = 'El número de contacto es obligatorio.';
+    } else if (!TELEFONO_REGEX.test(formData.telefono.trim())) {
+      newErrors.telefono = 'El teléfono debe tener entre 8 y 15 dígitos (puede empezar con +).';
+    }
+
+    setFieldErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   // 4. Llena el estado del formulario cuando el 'user' cargue
   useEffect(() => {
@@ -61,9 +99,13 @@ const ProfilePage = () => {
   // 6. Manejador para guardar el formulario
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
 
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
     updateUser(formData)
       .then(() => {
         setIsLoading(false);
@@ -72,7 +114,7 @@ const ProfilePage = () => {
       })
       .catch(err => {
         setIsLoading(false);
-        setError('Error al guardar los cambios. Inténtalo de nuevo.');
+        setError(err.response?.data || 'Error al guardar los cambios. Inténtalo de nuevo.');
         console.error(err);
       });
   };
@@ -111,11 +153,13 @@ const ProfilePage = () => {
                 <form onSubmit={handleSubmit}>
                   <div className="form-group mb-2">
                     <label htmlFor="nombre" className="form-label">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" className="form-control" value={formData.nombre} onChange={handleChange} />
+                    <input type="text" id="nombre" name="nombre" className={`form-control ${fieldErrors.nombre ? 'is-invalid' : ''}`} value={formData.nombre} onChange={handleChange} />
+                    {fieldErrors.nombre && <div className="invalid-feedback">{fieldErrors.nombre}</div>}
                   </div>
                   <div className="form-group mb-2">
                     <label htmlFor="apellidos" className="form-label">Apellidos:</label>
-                    <input type="text" id="apellidos" name="apellidos" className="form-control" value={formData.apellidos} onChange={handleChange} />
+                    <input type="text" id="apellidos" name="apellidos" className={`form-control ${fieldErrors.apellidos ? 'is-invalid' : ''}`} value={formData.apellidos} onChange={handleChange} />
+                    {fieldErrors.apellidos && <div className="invalid-feedback">{fieldErrors.apellidos}</div>}
                   </div>
                   <div className="form-group mb-2">
                     <label htmlFor="email" className="form-label">Email (no editable):</label>
@@ -123,21 +167,25 @@ const ProfilePage = () => {
                   </div>
                   <div className="form-group mb-2">
                     <label htmlFor="telefono" className="form-label">Número de Contacto:</label>
-                    <input type="tel" id="telefono" name="telefono" className="form-control" value={formData.telefono} onChange={handleChange} />
+                    <input type="tel" id="telefono" name="telefono" className={`form-control ${fieldErrors.telefono ? 'is-invalid' : ''}`} value={formData.telefono} onChange={handleChange} />
+                    {fieldErrors.telefono && <div className="invalid-feedback">{fieldErrors.telefono}</div>}
                   </div>
                   <hr />
                   <p><strong>Dirección de Despacho:</strong></p>
                   <div className="form-group mb-2">
                     <label htmlFor="calle" className="form-label">Calle:</label>
-                    <input type="text" id="calle" name="calle" className="form-control" value={formData.calle} onChange={handleChange} />
+                    <input type="text" id="calle" name="calle" className={`form-control ${fieldErrors.calle ? 'is-invalid' : ''}`} value={formData.calle} onChange={handleChange} />
+                    {fieldErrors.calle && <div className="invalid-feedback">{fieldErrors.calle}</div>}
                   </div>
                   <div className="form-group mb-2">
                     <label htmlFor="comuna" className="form-label">Comuna:</label>
-                    <input type="text" id="comuna" name="comuna" className="form-control" value={formData.comuna} onChange={handleChange} />
+                    <input type="text" id="comuna" name="comuna" className={`form-control ${fieldErrors.comuna ? 'is-invalid' : ''}`} value={formData.comuna} onChange={handleChange} />
+                    {fieldErrors.comuna && <div className="invalid-feedback">{fieldErrors.comuna}</div>}
                   </div>
                   <div className="form-group mb-3">
                     <label htmlFor="region" className="form-label">Región:</label>
-                    <input type="text" id="region" name="region" className="form-control" value={formData.region} onChange={handleChange} />
+                    <input type="text" id="region" name="region" className={`form-control ${fieldErrors.region ? 'is-invalid' : ''}`} value={formData.region} onChange={handleChange} />
+                    {fieldErrors.region && <div className="invalid-feedback">{fieldErrors.region}</div>}
                   </div>
                   <button type="submit" className="btn btn-primary" disabled={isLoading}>
                     {isLoading ? 'Guardando...' : 'Guardar Cambios'}

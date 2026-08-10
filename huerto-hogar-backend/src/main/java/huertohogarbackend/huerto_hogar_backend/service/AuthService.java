@@ -41,6 +41,32 @@ public class AuthService {
     // Solo dígitos, con un '+' opcional al inicio (formato internacional).
     private static final Pattern TELEFONO_PATTERN = Pattern.compile("^\\+?\\d{8,15}$");
 
+    // --- Validadores de campo, reutilizados por el registro y la edición de perfil ---
+
+    private void validarNombre(String valor, String etiqueta) {
+        if (valor == null || !NOMBRE_PATTERN.matcher(valor.trim()).matches()) {
+            throw new RuntimeException(etiqueta + " debe tener solo letras y al menos 2 caracteres.");
+        }
+    }
+
+    private void validarCalle(String valor) {
+        if (valor == null || valor.trim().length() < 3) {
+            throw new RuntimeException("La calle debe tener al menos 3 caracteres.");
+        }
+    }
+
+    private void validarNoVacio(String valor, String mensaje) {
+        if (valor == null || valor.trim().isEmpty()) {
+            throw new RuntimeException(mensaje);
+        }
+    }
+
+    private void validarTelefono(String valor) {
+        if (valor == null || !TELEFONO_PATTERN.matcher(valor.trim()).matches()) {
+            throw new RuntimeException("El número de contacto debe tener entre 8 y 15 dígitos.");
+        }
+    }
+
     /**
      * Valida los campos del registro antes de crear la cuenta.
      *
@@ -49,12 +75,8 @@ public class AuthService {
      * vive en el servidor, la del cliente es solo para dar feedback rápido.
      */
     private void validarRegistro(RegisterRequest r) {
-        if (r.getNombre() == null || !NOMBRE_PATTERN.matcher(r.getNombre().trim()).matches()) {
-            throw new RuntimeException("El nombre debe tener solo letras y al menos 2 caracteres.");
-        }
-        if (r.getApellidos() == null || !NOMBRE_PATTERN.matcher(r.getApellidos().trim()).matches()) {
-            throw new RuntimeException("Los apellidos deben tener solo letras y al menos 2 caracteres.");
-        }
+        validarNombre(r.getNombre(), "El nombre");
+        validarNombre(r.getApellidos(), "Los apellidos");
         if (r.getEmail() == null || !EMAIL_PATTERN.matcher(r.getEmail().trim()).matches()) {
             throw new RuntimeException("El correo electrónico no tiene un formato válido.");
         }
@@ -62,18 +84,24 @@ public class AuthService {
             throw new RuntimeException(
                     "La contraseña debe tener al menos 8 caracteres, con mayúscula, minúscula, número y símbolo.");
         }
-        if (r.getCalle() == null || r.getCalle().trim().length() < 3) {
-            throw new RuntimeException("La calle debe tener al menos 3 caracteres.");
-        }
-        if (r.getRegion() == null || r.getRegion().trim().isEmpty()) {
-            throw new RuntimeException("La región es obligatoria.");
-        }
-        if (r.getComuna() == null || r.getComuna().trim().isEmpty()) {
-            throw new RuntimeException("La comuna es obligatoria.");
-        }
-        if (r.getTelefono() == null || !TELEFONO_PATTERN.matcher(r.getTelefono().trim()).matches()) {
-            throw new RuntimeException("El número de contacto debe tener entre 8 y 15 dígitos.");
-        }
+        validarCalle(r.getCalle());
+        validarNoVacio(r.getRegion(), "La región es obligatoria.");
+        validarNoVacio(r.getComuna(), "La comuna es obligatoria.");
+        validarTelefono(r.getTelefono());
+    }
+
+    /**
+     * Valida los campos editables del perfil. Mismas reglas que el registro,
+     * salvo que aquí no hay email ni contraseña (ese DTO no los incluye a
+     * propósito: no se pueden cambiar desde este formulario).
+     */
+    private void validarActualizacionPerfil(UpdateUserRequest r) {
+        validarNombre(r.getNombre(), "El nombre");
+        validarNombre(r.getApellidos(), "Los apellidos");
+        validarCalle(r.getCalle());
+        validarNoVacio(r.getRegion(), "La región es obligatoria.");
+        validarNoVacio(r.getComuna(), "La comuna es obligatoria.");
+        validarTelefono(r.getTelefono());
     }
 
     // FIX: El método DEBE devolver 'User' (Arregla el error de la línea 25)
@@ -89,10 +117,10 @@ public class AuthService {
         newUser.setNombre(registerRequest.getNombre());
         newUser.setApellidos(registerRequest.getApellidos());
         newUser.setEmail(registerRequest.getEmail());
-        
+
         // FIX: Usamos el passwordEncoder (Arregla la advertencia "is not used")
         newUser.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        
+
         newUser.setCalle(registerRequest.getCalle());
         newUser.setRegion(registerRequest.getRegion());
         newUser.setComuna(registerRequest.getComuna());
@@ -117,7 +145,7 @@ public class AuthService {
     // FIX: El método DEBE devolver 'Optional<User>' (Arregla el error de la línea 30)
     public Optional<User> loginUser(String email, String rawPassword) {
         Optional<User> userOptional = userRepository.findByEmail(email);
-        
+
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             // FIX: Usamos passwordEncoder.matches() (Arregla la advertencia "is not used")
@@ -125,8 +153,8 @@ public class AuthService {
                 return userOptional;
             }
         }
-        
-        return Optional.empty(); 
+
+        return Optional.empty();
     }
 
     /**
@@ -146,6 +174,8 @@ public class AuthService {
         if (!userToUpdate.getEmail().equalsIgnoreCase(requesterEmail)) {
             throw new AccessDeniedException("No puedes modificar el perfil de otro usuario.");
         }
+
+        validarActualizacionPerfil(updateUserRequest);
 
         userToUpdate.setNombre(updateUserRequest.getNombre());
         userToUpdate.setApellidos(updateUserRequest.getApellidos());

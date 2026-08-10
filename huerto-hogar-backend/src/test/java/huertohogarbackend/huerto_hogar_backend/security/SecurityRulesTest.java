@@ -67,7 +67,8 @@ class SecurityRulesTest {
                 "apellidos", "ApellidoEditado",
                 "calle", "Otra calle 456",
                 "region", "Valparaíso",
-                "comuna", "Viña del Mar"
+                "comuna", "Viña del Mar",
+                "telefono", "87654321"
         ));
     }
 
@@ -156,6 +157,48 @@ class SecurityRulesTest {
                         .content(bodyPerfil()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombre").value("NombreEditado"));
+    }
+
+    @Test
+    @DisplayName("Editar el perfil con un nombre inválido se rechaza con 400")
+    void editarPerfilConNombreInvalidoSeRechaza() throws Exception {
+        JsonNode usuario = registrar("nombre.invalido.perfil@test.cl");
+
+        String bodyInvalido = objectMapper.writeValueAsString(Map.of(
+                "nombre", "Ana123",
+                "apellidos", "Perez",
+                "calle", "Calle 123",
+                "region", "Metropolitana",
+                "comuna", "Santiago",
+                "telefono", "87654321"
+        ));
+
+        mockMvc.perform(put("/api/auth/profile/" + usuario.get("id").asLong())
+                        .header("Authorization", "Bearer " + usuario.get("token").asText())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bodyInvalido))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Editar el perfil con un teléfono inválido se rechaza con 400")
+    void editarPerfilConTelefonoInvalidoSeRechaza() throws Exception {
+        JsonNode usuario = registrar("telefono.invalido.perfil@test.cl");
+
+        String bodyInvalido = objectMapper.writeValueAsString(Map.of(
+                "nombre", "Ana",
+                "apellidos", "Perez",
+                "calle", "Calle 123",
+                "region", "Metropolitana",
+                "comuna", "Santiago",
+                "telefono", "no-es-un-telefono"
+        ));
+
+        mockMvc.perform(put("/api/auth/profile/" + usuario.get("id").asLong())
+                        .header("Authorization", "Bearer " + usuario.get("token").asText())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bodyInvalido))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
