@@ -69,6 +69,7 @@ public class ProductService {
         product.setSustainability(productDetails.getSustainability());
         product.setRecipes(productDetails.getRecipes());
         product.setDescuento(productDetails.getDescuento());
+        product.setUnidadMedida(productDetails.getUnidadMedida());
 
         // Si viene una nueva imagen, la guardamos y actualizamos
         if (imageFile != null && !imageFile.isEmpty()) {

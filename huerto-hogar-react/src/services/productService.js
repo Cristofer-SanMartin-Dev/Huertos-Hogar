@@ -38,6 +38,7 @@ class ProductService {
         if (productData.descuento !== '' && productData.descuento != null) {
             formData.append('descuento', productData.descuento);
         }
+        if (productData.unidadMedida) formData.append('unidadMedida', productData.unidadMedida);
 
         if (imageFile) {
             formData.append('image', imageFile); // 'image' coincide con @RequestParam en Java

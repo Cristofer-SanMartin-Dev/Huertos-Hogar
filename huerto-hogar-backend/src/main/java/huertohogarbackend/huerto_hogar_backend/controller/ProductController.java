@@ -56,7 +56,8 @@ public class ProductController {
             @RequestParam(value = "origin", required = false) String origin,
             @RequestParam(value = "sustainability", required = false) String sustainability,
             @RequestParam(value = "recipes", required = false) String recipes,
-            @RequestParam(value = "descuento", required = false) Integer descuento
+            @RequestParam(value = "descuento", required = false) Integer descuento,
+            @RequestParam(value = "unidadMedida", required = false) String unidadMedida
     ) {
         try {
             Product newProduct = new Product();
@@ -69,6 +70,9 @@ public class ProductController {
             newProduct.setSustainability(sustainability);
             newProduct.setRecipes(recipes);
             newProduct.setDescuento(descuento);
+            if (unidadMedida != null && !unidadMedida.isBlank()) {
+                newProduct.setUnidadMedida(unidadMedida);
+            }
 
             Product savedProduct = productService.saveProduct(newProduct, image);
             return ResponseEntity.ok(savedProduct);
@@ -90,7 +94,8 @@ public class ProductController {
             @RequestParam(value = "origin", required = false) String origin,
             @RequestParam(value = "sustainability", required = false) String sustainability,
             @RequestParam(value = "recipes", required = false) String recipes,
-            @RequestParam(value = "descuento", required = false) Integer descuento
+            @RequestParam(value = "descuento", required = false) Integer descuento,
+            @RequestParam(value = "unidadMedida", required = false) String unidadMedida
     ) {
         try {
             Product productDetails = new Product();
@@ -103,6 +108,7 @@ public class ProductController {
             productDetails.setSustainability(sustainability);
             productDetails.setRecipes(recipes);
             productDetails.setDescuento(descuento);
+            productDetails.setUnidadMedida((unidadMedida != null && !unidadMedida.isBlank()) ? unidadMedida : "unidad");
 
             Product updatedProduct = productService.updateProduct(id, productDetails, image);
             return ResponseEntity.ok(updatedProduct);

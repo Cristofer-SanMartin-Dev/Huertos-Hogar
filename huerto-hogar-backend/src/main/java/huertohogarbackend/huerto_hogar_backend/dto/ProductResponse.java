@@ -24,6 +24,7 @@ public class ProductResponse {
     private String sustainability;
     private String recipes;
     private Integer descuento;
+    private String unidadMedida;
     private Double precioConDescuento;
     private Double averageRating;
     private Integer reviewCount;
@@ -41,6 +42,7 @@ public class ProductResponse {
         response.setSustainability(product.getSustainability());
         response.setRecipes(product.getRecipes());
         response.setDescuento(product.getDescuento());
+        response.setUnidadMedida(product.getUnidadMedida());
 
         if (product.getDescuento() != null && product.getDescuento() > 0 && product.getPrice() != null) {
             double descontado = product.getPrice() * (1 - product.getDescuento() / 100.0);

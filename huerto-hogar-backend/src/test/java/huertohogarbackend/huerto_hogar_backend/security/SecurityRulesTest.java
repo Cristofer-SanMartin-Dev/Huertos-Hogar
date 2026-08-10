@@ -2,6 +2,7 @@ package huertohogarbackend.huerto_hogar_backend.security;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import huertohogarbackend.huerto_hogar_backend.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ class SecurityRulesTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // --- Utilidades ---
 
@@ -165,6 +169,21 @@ class SecurityRulesTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(bodyPerfil()))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Un token de una cuenta ya eliminada no rompe ni siquiera las rutas públicas")
+    void tokenDeUsuarioEliminadoNoRompeRutasPublicas() throws Exception {
+        JsonNode usuario = registrar("cuenta.a.eliminar@test.cl");
+        String tokenHuerfano = usuario.get("token").asText();
+
+        userRepository.deleteById(usuario.get("id").asLong());
+
+        // Antes de este arreglo, un token de una cuenta borrada tumbaba con
+        // 500 hasta las rutas públicas, porque el filtro no manejaba esta
+        // excepción y el catálogo depende de que la petición pase igual.
+        mockMvc.perform(get("/api/products").header("Authorization", "Bearer " + tokenHuerfano))
+                .andExpect(status().isOk());
     }
 
     // --- Catálogo: lectura pública, escritura solo ADMIN ---

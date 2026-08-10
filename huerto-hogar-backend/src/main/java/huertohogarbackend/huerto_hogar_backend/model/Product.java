@@ -37,4 +37,8 @@ public class Product {
 
     // Porcentaje de descuento (0-100). Nulo o 0 significa que no está en oferta.
     private Integer descuento;
+
+    // Unidad en la que se vende el producto: "kilo", "unidad", "bolsa 500g",
+    // "frasco 500g", "litro", etc. No todos los productos se venden por unidad.
+    private String unidadMedida = "unidad";
 }

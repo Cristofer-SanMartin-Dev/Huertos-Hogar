@@ -8,7 +8,7 @@ import ProductCard from '../components/ProductCard.jsx';
 import { CartProvider } from '../context/CartContext.jsx';
 
 const mockProduct = {
-  id: 'TEST001', name: 'Producto de Prueba', price: 1500, priceUnit: 'por unidad',
+  id: 'TEST001', name: 'Producto de Prueba', price: 1500, unidadMedida: 'unidad',
   stock: 5, rating: 3.5, recipes: [], reviews: []
 };
 describe('Componente ProductCard', () => {
@@ -33,5 +33,11 @@ describe('Componente ProductCard', () => {
     render(<CartProvider><ProductCard product={outOfStockProduct} /></CartProvider>);
     const addButton = screen.getByRole('button', { name: /No disponible/i });
     expect(addButton).toBeDisabled();
+  });
+
+  test('muestra la unidad de medida cuando el producto no se vende por unidad', () => {
+    const productoPorKilo = { ...mockProduct, unidadMedida: 'kilo' };
+    render(<CartProvider><ProductCard product={productoPorKilo} /></CartProvider>);
+    expect(screen.getByText(/por kilo/i)).toBeInTheDocument();
   });
 });

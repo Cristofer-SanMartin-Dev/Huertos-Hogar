@@ -8,7 +8,7 @@ import { shareProduct } from '../utils/share.js';
 
 const ProductCard = ({ product, onViewReviews }) => {
   // 2. Cambiamos 'imageUrl' por 'imageName' (así se llama en tu base de datos)
-  const { name, price, description, stock, imageName, averageRating, priceUnit, descuento, precioConDescuento } = product;
+  const { name, price, description, stock, imageName, averageRating, unidadMedida, descuento, precioConDescuento } = product;
 
   const isOutOfStock = stock === 0;
   const tieneDescuento = descuento > 0 && precioConDescuento != null;
@@ -38,12 +38,12 @@ const ProductCard = ({ product, onViewReviews }) => {
             <p className="card-text fs-5 mb-2">
               <span className="text-decoration-line-through text-muted me-2">${price?.toLocaleString('es-CL')}</span>
               <span className="text-success fw-bold">${precioConDescuento.toLocaleString('es-CL')}</span>
-              <span className="text-muted fs-6 fw-normal ms-2">{priceUnit || 'unidad'}</span>
+              <span className="text-muted fs-6 fw-normal ms-2">por {unidadMedida || 'unidad'}</span>
             </p>
           ) : (
             <p className="card-text text-success fw-bold fs-5 mb-2">
               ${price?.toLocaleString('es-CL')}
-              <span className="text-muted fs-6 fw-normal ms-2">{priceUnit || 'unidad'}</span>
+              <span className="text-muted fs-6 fw-normal ms-2">por {unidadMedida || 'unidad'}</span>
             </p>
           )}
 
