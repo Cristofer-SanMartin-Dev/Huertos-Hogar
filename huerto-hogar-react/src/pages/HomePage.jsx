@@ -48,13 +48,13 @@ const HomePage = () => {
   return (
     <>
       {/* --- SECCIÓN HERO --- */}
-      <section className="text-center container-fluid py-5 text-white hero-section" style={{ backgroundColor: '#2c3e50' }}>
+      <section className="text-center container-fluid py-5 text-white hero-section">
         <div className="row py-lg-5">
           <div className="col-lg-6 col-md-8 mx-auto">
-            <h1 className="fw-light section-title" style={{ color: 'white', textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>
+            <h1 className="fw-light section-title">
               Frescura del Campo a tu Hogar
             </h1>
-            <p className="lead" style={{ color: '#ecf0f1', textShadow: '1px 1px 2px rgba(0,0,0,0.7)' }}>
+            <p className="lead">
               Descubre la calidad de los productos de HuertoHogar. ¡Directo de la tierra a tu mesa!
             </p>
             <p>
