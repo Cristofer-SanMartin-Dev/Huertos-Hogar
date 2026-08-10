@@ -17,14 +17,14 @@ const NosotrosPage = () => {
             </div>
             <div className="row mt-4">
                 <div className="col-md-6">
-                    <div className="card h-100 p-3">
-                        <h4 className="text-center" style={{color: 'var(--accent-green)'}}>Nuestra Misión</h4>
+                    <div className="card h-100 p-3 hover-card">
+                        <h4 className="text-center title-green">Nuestra Misión</h4>
                         <p>Proporcionar productos frescos y de calidad directamente desde el campo, garantizando la frescura y el sabor en cada entrega. Nos comprometemos a fomentar una conexión más cercana entre los consumidores y los agricultores locales.</p>
                     </div>
                 </div>
                 <div className="col-md-6 mt-3 mt-md-0">
-                    <div className="card h-100 p-3">
-                        <h4 className="text-center" style={{color: 'var(--accent-green)'}}>Nuestra Visión</h4>
+                    <div className="card h-100 p-3 hover-card">
+                        <h4 className="text-center title-green">Nuestra Visión</h4>
                         <p>Ser la tienda online líder en la distribución de productos frescos y naturales en Chile, reconocida por nuestra calidad excepcional, servicio al cliente y compromiso con la sostenibilidad.</p>
                     </div>
                 </div>
@@ -43,9 +43,9 @@ const NosotrosPage = () => {
                 </div>
                 {sucursales.map(sucursal => (
                     <div key={sucursal.ciudad} className="col-6 col-md-4 col-lg-3 mb-3">
-                        <div className="card h-100 text-center p-3">
+                        <div className="card h-100 text-center p-3 hover-card">
                             <div className="fs-3 mb-1">📍</div>
-                            <h6 className="mb-0" style={{fontFamily: 'var(--font-header)'}}>{sucursal.ciudad}</h6>
+                            <h6 className="mb-0 product-title">{sucursal.ciudad}</h6>
                             <small className="text-muted d-block">{sucursal.region}</small>
                             <small className="text-muted">{sucursal.horario}</small>
                         </div>

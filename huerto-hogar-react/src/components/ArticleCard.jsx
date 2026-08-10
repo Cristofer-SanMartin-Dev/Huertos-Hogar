@@ -9,9 +9,9 @@ import { Link } from 'react-router-dom';
 const ArticleCard = ({ post }) => {
   return (
     <div className="col">
-      <div className="card shadow-sm h-100">
+      <div className="card shadow-sm h-100 hover-card">
         <div className="card-body">
-          <h4 className="card-title" style={{fontFamily: 'var(--font-header)'}}>{post.title}</h4>
+          <h4 className="card-title product-title">{post.title}</h4>
           <p className="card-text text-muted">Por {post.author} el {post.date}</p>
           <p className="card-text">{post.summary}</p>
           <Link to={`/blog/${post.id}`} className="btn btn-outline-success">

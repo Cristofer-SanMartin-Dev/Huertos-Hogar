@@ -16,7 +16,7 @@ const ProductCard = ({ product, onViewReviews }) => {
 
   return (
     <div className="col">
-      <div className="card shadow-sm h-100" style={{ position: 'relative' }}>
+      <div className="card shadow-sm h-100 hover-card" style={{ position: 'relative' }}>
         {tieneDescuento && (
           <span className="discount-badge">-{descuento}%</span>
         )}
@@ -29,7 +29,7 @@ const ProductCard = ({ product, onViewReviews }) => {
         />
 
         <div className="card-body d-flex flex-column">
-          <h5 className="card-title" style={{fontFamily: 'var(--font-header)', color: 'var(--accent-brown)'}}>{name}</h5>
+          <h5 className="card-title product-title">{name}</h5>
 
           {/* StarRating ya está protegido contra nulos gracias a la corrección anterior */}
           <StarRating rating={averageRating} />
