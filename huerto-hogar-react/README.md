@@ -1,16 +1,37 @@
-# React + Vite
+# HuertoHogar — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SPA en React 18 + Vite para la tienda online HuertoHogar. Ver el [README principal](../README.md) para una visión general del proyecto completo (incluye el backend).
 
-Currently, two official plugins are available:
+## Ejecutar en desarrollo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+Queda disponible en `http://localhost:5173` y espera que la API del backend esté corriendo en `http://localhost:8080` (URL definida en `src/services/http.js`).
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Scripts disponibles
 
-## Expanding the ESLint configuration
+```bash
+npm run dev       # servidor de desarrollo con HMR
+npm run build     # build de producción en dist/
+npm run preview   # sirve el build de producción localmente
+npm test          # tests con Vitest (25 tests)
+npm run lint      # ESLint
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Estructura
+
+```
+src/
+  pages/        Una página por ruta (incluye pages/admin para el panel)
+  components/   Componentes reutilizables (ProductCard, Header, modales, etc.)
+  context/      Estado global: AuthContext (sesión) y CartContext (carrito)
+  services/     Llamadas a la API (axios)
+  tests/        Pruebas con Vitest + React Testing Library
+```
+
+## Stack
+
+React 18, React Router 6, Bootstrap 5, Axios, react-toastify, Leaflet / react-leaflet (mapa de sucursales), Vitest + React Testing Library.
