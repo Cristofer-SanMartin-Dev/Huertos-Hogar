@@ -1,6 +1,7 @@
 // src/components/ReviewsModal.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import StarRating from './StarRating.jsx';
 import StarRatingInput from './StarRatingInput.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -48,6 +49,7 @@ const ReviewsModal = ({ product, show, onClose }) => {
         setReviews(prev => [response.data, ...prev]);
         setNewRating(0);
         setNewComment('');
+        toast.success('¡Gracias por tu reseña!');
       })
       .catch(error => {
         console.error('Error al publicar la reseña:', error);

@@ -1,5 +1,6 @@
 // src/context/CartContext.jsx
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 export const CartContext = createContext();
 
@@ -67,9 +68,15 @@ export const CartProvider = ({ children }) => {
   }, [cart]);
 
   const addToCart = (product) => {
+    // Antes esto fallaba en silencio si ya se había alcanzado el stock
+    // disponible; ahora se avisa por qué no se agregó más.
+    const existingItem = cart.find(item => item.id === product.id);
+    if (existingItem && existingItem.quantity >= product.stock) {
+      toast.warning(`No queda más stock disponible de ${product.name}.`);
+      return;
+    }
     dispatch({ type: 'ADD_TO_CART', payload: product });
-    // Puedes comentar el alert si resulta molesto
-    alert(`${product.name} ha sido agregado al carrito.`);
+    toast.success(`${product.name} se agregó al carrito.`);
   };
   const incrementQuantity = (productId) => dispatch({ type: 'INCREMENT_QUANTITY', payload: productId });
   const decrementQuantity = (productId) => dispatch({ type: 'DECREMENT_QUANTITY', payload: productId });

@@ -1,5 +1,7 @@
 // src/App.jsx
 import { Routes, Route, Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
@@ -48,6 +50,7 @@ const Layout = () => (
 
 function App() {
   return (
+    <>
     <Routes>
       {/* --- RUTAS PÚBLICAS (usan el Layout con Header/Footer) --- */}
       <Route path="/" element={<Layout />}>
@@ -147,6 +150,8 @@ function App() {
         />
       </Route>
     </Routes>
+    <ToastContainer position="bottom-right" autoClose={3000} newestOnTop />
+    </>
   );
 }
 

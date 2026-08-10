@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'; // 1. Importa useState y useEffect
 import { useAuth } from '../context/AuthContext.jsx';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import orderService from '../services/orderService.js';
 
 const ProfilePage = () => {
@@ -67,7 +68,7 @@ const ProfilePage = () => {
       .then(() => {
         setIsLoading(false);
         setIsEditing(false); // Cierra el modo edición
-        alert('¡Perfil actualizado con éxito!');
+        toast.success('¡Perfil actualizado con éxito!');
       })
       .catch(err => {
         setIsLoading(false);

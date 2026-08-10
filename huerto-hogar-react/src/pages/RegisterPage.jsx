@@ -1,7 +1,8 @@
 // Ruta: src/pages/RegisterPage.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx'; 
+import { toast } from 'react-toastify';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const RegisterPage = () => {
   // --- ESTADOS MODIFICADOS ---
@@ -84,7 +85,7 @@ const RegisterPage = () => {
 
       register(user)
         .then(() => {
-          alert('¡Registro exitoso! Serás redirigido para iniciar sesión.');
+          toast.success('¡Registro exitoso! Ya puedes iniciar sesión.');
           navigate('/login');
         })
         .catch(error => {

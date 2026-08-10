@@ -3,6 +3,7 @@ import React from 'react';
 import { useCart } from '../context/CartContext.jsx';
 import { Link } from 'react-router-dom';
 import ImpactoAmbiental from '../components/ImpactoAmbiental.jsx';
+import ProductService from '../services/productService.js';
 
 const CartPage = () => {
     // Obtenemos todo lo necesario del contexto del carrito
@@ -38,7 +39,7 @@ const CartPage = () => {
                         <div key={item.id} className="card mb-3">
                             <div className="row g-0">
                                 <div className="col-md-2 d-flex align-items-center justify-content-center p-2">
-                                    <img src={item.imageUrl} className="img-fluid rounded-start cart-item-img" alt={item.name} />
+                                    <img src={ProductService.getImageUrl(item.imageName)} className="img-fluid rounded-start cart-item-img" alt={item.name} />
                                 </div>
                                 <div className="col-md-10">
                                     <div className="card-body">

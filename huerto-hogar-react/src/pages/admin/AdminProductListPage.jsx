@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import ProductService from '../../services/productService';
 
 const AdminProductListPage = () => {
@@ -18,10 +19,13 @@ const AdminProductListPage = () => {
     const handleDelete = (id) => {
         if (window.confirm('¿Estás seguro de eliminar este producto?')) {
             ProductService.deleteProduct(id)
-                .then(() => loadProducts()) // Recargar lista
+                .then(() => {
+                    loadProducts(); // Recargar lista
+                    toast.success('Producto eliminado.');
+                })
                 .catch(err => {
                     console.error('Error al eliminar el producto:', err);
-                    alert('Error al eliminar');
+                    toast.error(err.response?.data || 'Error al eliminar el producto.');
                 });
         }
     };

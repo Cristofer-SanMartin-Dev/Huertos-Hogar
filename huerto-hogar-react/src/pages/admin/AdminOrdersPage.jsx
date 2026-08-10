@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import orderService from '../../services/orderService.js';
 
 const ESTADOS = ['PENDIENTE', 'PREPARANDO', 'ENVIADO', 'ENTREGADO', 'CANCELADO'];
@@ -23,10 +24,13 @@ const AdminOrdersPage = () => {
 
     const handleStatusChange = (orderId, nuevoEstado) => {
         orderService.updateStatus(orderId, nuevoEstado)
-            .then(() => loadOrders())
+            .then(() => {
+                loadOrders();
+                toast.success(`Pedido #${orderId} actualizado a ${nuevoEstado}.`);
+            })
             .catch(err => {
                 console.error('Error al actualizar el estado:', err);
-                alert('No se pudo actualizar el estado del pedido.');
+                toast.error('No se pudo actualizar el estado del pedido.');
             });
     };
 

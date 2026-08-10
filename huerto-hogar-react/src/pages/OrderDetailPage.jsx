@@ -61,12 +61,35 @@ const OrderDetailPage = () => {
             {/* Boleta */}
             <div className="card">
                 <div className="card-body">
-                    <h4 className="product-title">Boleta</h4>
-                    <p className="text-muted mb-1">Fecha: {new Date(order.fecha).toLocaleString('es-CL')}</p>
-                    <p className="text-muted">
-                        Envío a: {order.calleEnvio}, {order.comunaEnvio}, {order.regionEnvio}
-                        {order.fechaEntregaPreferida && ` — Entrega preferida: ${order.fechaEntregaPreferida}`}
-                    </p>
+                    <div className="d-flex align-items-center border-bottom pb-3 mb-3">
+                        <img
+                            src="/assets/logo-huertohogar.png"
+                            alt="HuertoHogar"
+                            style={{ height: '56px', width: 'auto' }}
+                            className="me-3"
+                        />
+                        <div>
+                            <h4 className="product-title mb-0">Boleta de Compra</h4>
+                            <small className="text-muted">Pedido #{order.id}</small>
+                        </div>
+                    </div>
+
+                    <div className="row mb-3">
+                        <div className="col-sm-6 mb-2">
+                            <strong className="d-block">Fecha</strong>
+                            <span className="text-muted">{new Date(order.fecha).toLocaleString('es-CL')}</span>
+                        </div>
+                        <div className="col-sm-6 mb-2">
+                            <strong className="d-block">Envío a</strong>
+                            <span className="text-muted">{order.calleEnvio}, {order.comunaEnvio}, {order.regionEnvio}</span>
+                        </div>
+                        {order.fechaEntregaPreferida && (
+                            <div className="col-sm-6">
+                                <strong className="d-block">Entrega preferida</strong>
+                                <span className="text-muted">{order.fechaEntregaPreferida}</span>
+                            </div>
+                        )}
+                    </div>
                     <table className="table">
                         <thead>
                             <tr>
