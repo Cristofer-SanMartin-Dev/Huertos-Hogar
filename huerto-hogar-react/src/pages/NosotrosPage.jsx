@@ -1,14 +1,6 @@
 import React from 'react';
-
-const sucursales = [
-    { ciudad: 'Santiago', region: 'Región Metropolitana' },
-    { ciudad: 'Puerto Montt', region: 'Región de Los Lagos' },
-    { ciudad: 'Villarica', region: 'Región de La Araucanía' },
-    { ciudad: 'Nacimiento', region: 'Región del Biobío' },
-    { ciudad: 'Viña del Mar', region: 'Región de Valparaíso' },
-    { ciudad: 'Valparaíso', region: 'Región de Valparaíso' },
-    { ciudad: 'Concepción', region: 'Región del Biobío' },
-];
+import BranchesMap from '../components/BranchesMap.jsx';
+import { sucursales } from '../data/sucursales.js';
 
 // TUTOR: Esta página es para la ruta /nosotros[cite: 879].
 // Reutilizamos el contenido que estaba en HomePage.
@@ -38,20 +30,24 @@ const NosotrosPage = () => {
                 </div>
             </div>
 
-            {/* Sucursales: HuertoHogar opera en 9 puntos del país, sin API de mapas
-                de pago disponible se muestran como tarjetas en vez de un mapa embebido
-                que solo puede centrarse en una ubicación a la vez. */}
+            {/* Sucursales: mapa interactivo con un pin clicable por ciudad
+                (muestra región y horario al hacer clic), más una lista debajo
+                para quienes prefieran verlas sin interactuar con el mapa. */}
             <div className="row mt-5">
                 <div className="col-12 text-center mb-4">
                     <h3 className="section-title">Nuestras Sucursales</h3>
-                    <p className="text-muted">Encuéntranos en nuestros puntos de retiro a lo largo del país.</p>
+                    <p className="text-muted">Haz clic en un punto del mapa para ver la información de esa sucursal.</p>
+                </div>
+                <div className="col-12 mb-4">
+                    <BranchesMap />
                 </div>
                 {sucursales.map(sucursal => (
                     <div key={sucursal.ciudad} className="col-6 col-md-4 col-lg-3 mb-3">
                         <div className="card h-100 text-center p-3">
                             <div className="fs-3 mb-1">📍</div>
                             <h6 className="mb-0" style={{fontFamily: 'var(--font-header)'}}>{sucursal.ciudad}</h6>
-                            <small className="text-muted">{sucursal.region}</small>
+                            <small className="text-muted d-block">{sucursal.region}</small>
+                            <small className="text-muted">{sucursal.horario}</small>
                         </div>
                     </div>
                 ))}

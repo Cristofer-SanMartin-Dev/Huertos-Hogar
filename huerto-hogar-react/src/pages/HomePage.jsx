@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard.jsx';
 import ReviewsModal from '../components/ReviewsModal.jsx';
+import BranchesMap from '../components/BranchesMap.jsx';
 
 // 1. Importa el servicio completo (instancia por defecto)
 import ProductService from '../services/productService.js';
@@ -102,22 +103,13 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Mapa de sucursales */}
+      {/* Mapa de sucursales: pines reales y clicables en las 7 ciudades donde
+          opera HuertoHogar, cada uno con su información al hacer clic. */}
       <div className="container pb-5">
         <div className="row">
-          <div className="col-12 text-center"><h3 className="section-title">Nuestras Sucursales</h3><p>Encuéntranos en nuestros puntos de retiro a lo largo del país.</p></div>
+          <div className="col-12 text-center mb-3"><h3 className="section-title">Nuestras Sucursales</h3><p>Haz clic en un punto del mapa para ver la información de esa sucursal.</p></div>
           <div className="col-12">
-            <div className="map-container rounded shadow overflow-hidden">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.850318587988!2d-70.6508826848009!3d-33.44013418077967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c5a7c6e2c7c1%3A0x3e0b7f7b7b7b7b7b!2sSantiago%2C%20Chile!5e0!3m2!1ses!2scl!4v1620000000000!5m2!1ses!2scl"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-                title="Mapa de Sucursales de HuertoHogar"
-              ></iframe>
-            </div>
+            <BranchesMap />
           </div>
         </div>
       </div>
