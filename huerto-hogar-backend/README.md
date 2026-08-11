@@ -95,7 +95,7 @@ Documentación interactiva completa (Swagger UI) con el backend corriendo: `http
 ./mvnw spring-boot:run
 ```
 
-Requiere una instancia de MySQL 8 accesible. Por defecto el proyecto asume `jdbc:mysql://localhost:3307/huertohogar_db`, usuario `root`; las tablas se crean/actualizan solas (`spring.jpa.hibernate.ddl-auto=update`), no hace falta correr scripts SQL a mano.
+Requiere una instancia de PostgreSQL accesible, con la base `huertohogar_db` ya creada (Postgres no la crea solo). Por defecto el proyecto asume `jdbc:postgresql://127.0.0.1:5432/huertohogar_db`, usuario `postgres`; las tablas se crean/actualizan solas (`spring.jpa.hibernate.ddl-auto=update`), no hace falta correr scripts SQL a mano.
 
 ## Variables de entorno
 
@@ -112,9 +112,9 @@ cp .env.example .env
 
 | Variable | Uso | Valor por defecto (solo dev) |
 |---|---|---|
-| `DB_URL` | URL JDBC de MySQL | `jdbc:mysql://localhost:3307/huertohogar_db` |
-| `DB_USERNAME` | Usuario de la BD | `root` |
-| `DB_PASSWORD` | Contraseña de la BD | `admin1234` |
+| `DB_URL` | URL JDBC de PostgreSQL | `jdbc:postgresql://127.0.0.1:5432/huertohogar_db` |
+| `DB_USERNAME` | Usuario de la BD | `postgres` |
+| `DB_PASSWORD` | Contraseña de la BD | *(sin default, obligatoria)* |
 | `JWT_SECRET` | Clave de firma HS256 (mín. 32 caracteres) | clave de desarrollo, **no usar en producción** |
 | `JWT_EXPIRATION_MS` | Vigencia del token en ms | `28800000` (8 horas) |
 | `CORS_ORIGINS` | Orígenes autorizados a llamar la API, separados por coma | `http://localhost:5173` |

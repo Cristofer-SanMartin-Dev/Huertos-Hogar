@@ -13,7 +13,7 @@
   <img alt="Spring Boot 3.5.7" src="https://img.shields.io/badge/Spring_Boot-3.5.7-6DB33F?logo=springboot&logoColor=white" />
   <img alt="React 18" src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white" />
   <img alt="Vite 5" src="https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white" />
-  <img alt="MySQL 8" src="https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white" />
+  <img alt="PostgreSQL 15" src="https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white" />
   <img alt="Tests: 78 passing" src="https://img.shields.io/badge/tests-78_passing-brightgreen" />
 </p>
 
@@ -78,7 +78,7 @@ Separación estricta cliente-servidor: el frontend nunca accede a la base de dat
                                                                         │ JPA / Hibernate
                                                                         ▼
                                                                 ┌───────────────┐
-                                                                │    MySQL 8     │
+                                                                │   PostgreSQL    │
                                                                 └───────────────┘
 ```
 
@@ -88,7 +88,7 @@ Separación estricta cliente-servidor: el frontend nunca accede a la base de dat
 
 | Capa | Tecnología |
 |---|---|
-| Backend | Java 21 · Spring Boot 3.5.7 · Spring Security · Spring Data JPA / Hibernate · JWT (jjwt) · MySQL 8 · springdoc-openapi |
+| Backend | Java 21 · Spring Boot 3.5.7 · Spring Security · Spring Data JPA / Hibernate · JWT (jjwt) · PostgreSQL 15 · springdoc-openapi |
 | Frontend | React 18 · Vite 5 · React Router 6 · Bootstrap 5 · Axios · Context API · Leaflet / react-leaflet · react-toastify |
 | Testing | JUnit 5 + MockMvc (backend) · Vitest + React Testing Library (frontend) |
 | Herramientas | Git, GitHub, Maven (`./mvnw`), npm |
@@ -99,7 +99,7 @@ Separación estricta cliente-servidor: el frontend nunca accede a la base de dat
 
 - Java 21 y Maven (o el wrapper `./mvnw` incluido, no requiere instalación aparte)
 - Node.js 18+
-- MySQL 8
+- PostgreSQL 15+
 
 ### 1. Backend
 
@@ -108,7 +108,7 @@ cd huerto-hogar-backend
 ./mvnw spring-boot:run
 ```
 
-Por defecto se conecta a `jdbc:mysql://localhost:3307/huertohogar_db` con usuario `root`; las tablas se crean y actualizan solas (`ddl-auto=update`), no hace falta correr scripts SQL a mano. El primer usuario que se registre con el email configurado en `ADMIN_EMAIL` obtiene automáticamente el rol `ADMIN`. Detalle completo de variables de entorno en [huerto-hogar-backend/README.md](huerto-hogar-backend/README.md).
+Por defecto se conecta a `jdbc:postgresql://127.0.0.1:5432/huertohogar_db` con usuario `postgres` (la base debe existir de antemano); las tablas se crean y actualizan solas (`ddl-auto=update`), no hace falta correr scripts SQL a mano. El primer usuario que se registre con el email configurado en `ADMIN_EMAIL` obtiene automáticamente el rol `ADMIN`. Detalle completo de variables de entorno en [huerto-hogar-backend/README.md](huerto-hogar-backend/README.md).
 
 La API queda en `http://localhost:8080`, con documentación interactiva en `http://localhost:8080/swagger-ui/index.html`.
 
