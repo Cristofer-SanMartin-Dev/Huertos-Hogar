@@ -1,0 +1,43 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: [main, desarrollo]
+    paths:
+      - 'huerto-hogar-react/**'
+      - '.github/workflows/frontend-ci.yml'
+  pull_request:
+    branches: [main, desarrollo]
+    paths:
+      - 'huerto-hogar-react/**'
+      - '.github/workflows/frontend-ci.yml'
+
+jobs:
+  build:
+    name: Lint, tests (Vitest) y build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: huerto-hogar-react
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: huerto-hogar-react/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests
+        run: npx vitest run
+
+      - name: Build de producción
+        run: npm run build

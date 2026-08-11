@@ -1,0 +1,38 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main, desarrollo]
+    paths:
+      - 'huerto-hogar-backend/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    branches: [main, desarrollo]
+    paths:
+      - 'huerto-hogar-backend/**'
+      - '.github/workflows/backend-ci.yml'
+
+jobs:
+  test:
+    name: Tests (JUnit + MockMvc, H2 en memoria)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: huerto-hogar-backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: huerto-hogar-backend/pom.xml
+
+      - name: Permiso de ejecución para mvnw
+        run: chmod +x mvnw
+
+      - name: Ejecutar tests
+        run: ./mvnw --batch-mode test

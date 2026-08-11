@@ -17,6 +17,11 @@
   <img alt="Tests: 65 passing" src="https://img.shields.io/badge/tests-65_passing-brightgreen" />
 </p>
 
+<p align="center">
+  <a href="https://github.com/Cristofer-SanMartin-Dev/Huertos-Hogar/actions/workflows/backend-ci.yml"><img alt="Backend CI" src="https://github.com/Cristofer-SanMartin-Dev/Huertos-Hogar/actions/workflows/backend-ci.yml/badge.svg" /></a>
+  <a href="https://github.com/Cristofer-SanMartin-Dev/Huertos-Hogar/actions/workflows/frontend-ci.yml"><img alt="Frontend CI" src="https://github.com/Cristofer-SanMartin-Dev/Huertos-Hogar/actions/workflows/frontend-ci.yml/badge.svg" /></a>
+</p>
+
 ## Tabla de contenidos
 
 - [Sobre el proyecto](#sobre-el-proyecto)
@@ -122,6 +127,8 @@ Queda disponible en `http://localhost:5173` y espera la API en `http://localhost
 |---|---|---|
 | Backend | `cd huerto-hogar-backend && ./mvnw test` | 40 pruebas de integración: autenticación, autorización por rol, validación de datos, reglas de carrito/pedidos |
 | Frontend | `cd huerto-hogar-react && npm test` | 25 pruebas de componentes y páginas clave (login, checkout, carrito, reseñas) |
+
+Ambos módulos corren automáticamente en **GitHub Actions** ante cada push o pull request a `main`/`desarrollo` — cada workflow solo se dispara si cambió el módulo correspondiente (`.github/workflows/backend-ci.yml` y `frontend-ci.yml`). El frontend además corre `lint` y `build` en el mismo workflow.
 
 ## Roles y permisos
 
