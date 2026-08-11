@@ -6,8 +6,8 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 // TUTOR: Importamos los contextos que acabamos de exportar.
-import { CartContext } from '../context/CartContext.jsx';
-import { AuthContext } from '../context/AuthContext.jsx';
+import { CartContext } from '../context/CartContext.js';
+import { AuthContext } from '../context/AuthContext.js';
 
 describe('Componente Header', () => {
   test('debería mostrar el número correcto de items en el carrito', () => {

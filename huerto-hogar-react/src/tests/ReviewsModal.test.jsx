@@ -6,7 +6,7 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 
 import ReviewsModal from '../components/ReviewsModal.jsx';
-import { AuthContext } from '../context/AuthContext.jsx';
+import { AuthContext } from '../context/AuthContext.js';
 import reviewService from '../services/reviewService.js';
 
 vi.mock('../services/reviewService.js', () => ({

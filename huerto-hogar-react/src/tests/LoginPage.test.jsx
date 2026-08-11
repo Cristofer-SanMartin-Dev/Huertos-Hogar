@@ -6,7 +6,7 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage.jsx';
 // TUTOR: Importamos el contexto que acabamos de exportar.
-import { AuthContext } from '../context/AuthContext.jsx';
+import { AuthContext } from '../context/AuthContext.js';
 
 describe('Página LoginPage', () => {
   // El login llama a la API y devuelve una Promesa, así que el mock debe

@@ -1,8 +1,8 @@
 // Ruta: src/pages/CheckoutPage.jsx
 import React, { useState, useEffect } from 'react';
-import { useCart } from '../context/CartContext.jsx';
+import { useCart } from '../context/CartContext.js';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../context/AuthContext.js';
 import orderService from '../services/orderService.js';
 
 const manana = () => {

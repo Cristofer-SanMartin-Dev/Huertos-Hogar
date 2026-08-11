@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext.jsx';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useCart } from '../context/CartContext.js';
+import { useAuth } from '../context/AuthContext.js';
 
 const Header = () => {
 const { cart } = useCart();

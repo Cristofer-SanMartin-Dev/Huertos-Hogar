@@ -1,8 +1,7 @@
-// src/context/CartContext.jsx
-import React, { createContext, useReducer, useContext, useEffect } from 'react';
+// Ruta: src/context/CartProvider.jsx
+import React, { useReducer, useEffect } from 'react';
 import { toast } from 'react-toastify';
-
-export const CartContext = createContext();
+import { CartContext } from './CartContext.js';
 
 const CART_STORAGE_KEY = 'cart';
 
@@ -83,22 +82,14 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = (productId) => dispatch({ type: 'REMOVE_FROM_CART', payload: productId });
   const clearCart = () => dispatch({ type: 'CLEAR_CART' });
 
-  const value = { 
-    cart, 
-    addToCart, 
-    incrementQuantity, 
-    decrementQuantity, 
-    removeFromCart, 
-    clearCart 
+  const value = {
+    cart,
+    addToCart,
+    incrementQuantity,
+    decrementQuantity,
+    removeFromCart,
+    clearCart
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
-};
-
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-  return context;
 };

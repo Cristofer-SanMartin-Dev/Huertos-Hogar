@@ -1,6 +1,6 @@
 // Ruta: src/components/ProtectedRoute.jsx
 import React from 'react';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../context/AuthContext.js';
 import { Navigate, useLocation } from 'react-router-dom';
 
 // Sin 'role', solo exige sesión iniciada (cualquier rol). Pasar role="ADMIN"

@@ -1,6 +1,6 @@
 // Ruta: src/pages/ProfilePage.jsx
 import React, { useState, useEffect } from 'react'; // 1. Importa useState y useEffect
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../context/AuthContext.js';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import orderService from '../services/orderService.js';

@@ -1,6 +1,6 @@
 // src/components/ProductCard.jsx
 import React from 'react';
-import { useCart } from '../context/CartContext.jsx';
+import { useCart } from '../context/CartContext.js';
 import StarRating from './StarRating.jsx';
 // 1. Importamos el servicio para obtener la URL base de las imágenes
 import ProductService from '../services/productService.js';

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import StarRating from './StarRating.jsx';
 import StarRatingInput from './StarRatingInput.jsx';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../context/AuthContext.js';
 import reviewService from '../services/reviewService.js';
 
 const ReviewsModal = ({ product, show, onClose }) => {

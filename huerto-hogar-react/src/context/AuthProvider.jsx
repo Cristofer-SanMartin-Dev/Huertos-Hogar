@@ -1,14 +1,13 @@
-// Ruta: src/context/AuthContext.jsx
-import React, { createContext, useState, useContext, useEffect } from 'react';
+// Ruta: src/context/AuthProvider.jsx
+import React, { useState, useEffect } from 'react';
+import { AuthContext } from './AuthContext.js';
 import AuthService from '../services/authService.js';
 import { getToken, clearSession } from '../services/http.js';
-
-export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true); 
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const savedUser = localStorage.getItem('user');
@@ -47,7 +46,6 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
     };
 
-    // --- FUNCIÓN NUEVA AÑADIDA ---
     /**
      * Llama al servicio para actualizar al usuario y actualiza el estado local.
      * @param {object} userData - Objeto con los datos a actualizar
@@ -69,7 +67,6 @@ export const AuthProvider = ({ children }) => {
                 return updatedUser; // Devuelve el usuario actualizado
             });
     };
-    // --- FIN DE LA FUNCIÓN ---
 
     /**
      * Vuelve a pedir los datos del usuario al backend y actualiza el estado
@@ -87,7 +84,6 @@ export const AuthProvider = ({ children }) => {
             });
     };
 
-    // --- 3. AÑADE 'updateUser' AL VALOR ---
     const value = {
         isAuthenticated,
         user,
@@ -95,17 +91,9 @@ export const AuthProvider = ({ children }) => {
         logout,
         register,
         isLoading,
-        updateUser, // <--- Añadido aquí
+        updateUser,
         refreshUser
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
-
-export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (context === undefined) {
-        throw new Error('useAuth must be used within a AuthProvider');
-    }
-    return context;
 };

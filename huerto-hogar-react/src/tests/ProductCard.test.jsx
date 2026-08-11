@@ -5,7 +5,7 @@ import { describe, test, expect, vi } from 'vitest';
 import '@testing-library/jest-dom';
 
 import ProductCard from '../components/ProductCard.jsx';
-import { CartProvider } from '../context/CartContext.jsx';
+import { CartProvider } from '../context/CartProvider.jsx';
 
 const mockProduct = {
   id: 'TEST001', name: 'Producto de Prueba', price: 1500, unidadMedida: 'unidad',

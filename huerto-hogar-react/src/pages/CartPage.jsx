@@ -1,6 +1,6 @@
 // src/pages/CartPage.jsx
 import React from 'react';
-import { useCart } from '../context/CartContext.jsx';
+import { useCart } from '../context/CartContext.js';
 import { Link } from 'react-router-dom';
 import ImpactoAmbiental from '../components/ImpactoAmbiental.jsx';
 import ProductService from '../services/productService.js';

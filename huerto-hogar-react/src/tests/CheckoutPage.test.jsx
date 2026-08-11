@@ -6,8 +6,8 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 
 import CheckoutPage from '../pages/CheckoutPage.jsx';
-import { CartContext } from '../context/CartContext.jsx';
-import { AuthContext } from '../context/AuthContext.jsx';
+import { CartContext } from '../context/CartContext.js';
+import { AuthContext } from '../context/AuthContext.js';
 import orderService from '../services/orderService.js';
 
 vi.mock('../services/orderService.js', () => ({
