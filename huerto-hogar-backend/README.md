@@ -101,6 +101,15 @@ Requiere una instancia de MySQL 8 accesible. Por defecto el proyecto asume `jdbc
 
 Ninguna es obligatoria para desarrollo local — todas tienen un valor de respaldo en `application.properties` — pero **en producción deben sobrescribirse todas**, especialmente `JWT_SECRET`.
 
+Para desarrollo local, la forma más simple de setearlas (en particular las de correo, que si no están el envío de recuperación de contraseña falla silenciosamente) es un archivo `.env` en esta carpeta:
+
+```bash
+cp .env.example .env
+# editar .env con tus credenciales reales
+```
+
+`application.properties` lo importa automáticamente (`spring.config.import=optional:file:.env[.properties]`) si existe; `.env` está en `.gitignore`, nunca se sube al repo.
+
 | Variable | Uso | Valor por defecto (solo dev) |
 |---|---|---|
 | `DB_URL` | URL JDBC de MySQL | `jdbc:mysql://localhost:3307/huertohogar_db` |
