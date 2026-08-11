@@ -1,7 +1,9 @@
 // Ruta: src/services/http.js
 import axios from 'axios';
 
-export const API_BASE_URL = 'http://localhost:8080';
+// Configurable por entorno (ver .env.example) para poder apuntar a un
+// backend real al desplegar, sin tener que tocar código.
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 const TOKEN_KEY = 'token';
 
 /**

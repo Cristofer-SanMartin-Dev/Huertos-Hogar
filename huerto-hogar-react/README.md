@@ -80,7 +80,16 @@ npm run lint      # ESLint
 
 ## Configuración de la API
 
-La URL base de la API está definida en `src/services/http.js` (`API_BASE_URL`), actualmente fija a `http://localhost:8080`. No hay un sistema de variables de entorno (`.env`) todavía: para apuntar a otro backend hay que editar ese archivo directamente.
+La URL base de la API se lee de la variable de entorno `VITE_API_BASE_URL` (ver `services/http.js`), con `http://localhost:8080` como valor por defecto si no está definida — así el desarrollo local sigue funcionando sin configurar nada.
+
+Para apuntar a otro backend (por ejemplo, al desplegar):
+
+```bash
+cp .env.example .env
+# editar .env con la URL real del backend
+```
+
+Vite solo expone al cliente las variables que empiezan con `VITE_`; no pongas secretos ahí, terminan en el bundle público del navegador. `.env` está en `.gitignore` — cada entorno tiene el suyo.
 
 ## Tests
 
