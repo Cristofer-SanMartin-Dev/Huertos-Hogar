@@ -29,7 +29,8 @@ import java.util.List;
  * el JwtAuthenticationFilter antes de llegar al controlador.
  *
  * Reglas de acceso:
- *  - Públicas: login, registro, catálogo (solo lectura), imágenes y Swagger.
+ *  - Públicas: login, registro, recuperación de contraseña, catálogo (solo
+ *    lectura), imágenes y Swagger.
  *  - Autenticadas: edición del perfil propio.
  *  - Solo ADMIN: crear, editar y eliminar productos.
  */
@@ -85,6 +86,7 @@ public class SecurityConfig {
 
                 // --- Público ---
                 .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/forgot-password", "/api/auth/reset-password").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()

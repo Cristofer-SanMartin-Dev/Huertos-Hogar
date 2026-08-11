@@ -13,6 +13,8 @@ import ProductsPage from './pages/ProductsPage.jsx';
 import CartPage from './pages/CartPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
+import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import BlogPage from './pages/BlogPage.jsx';
 import ArticlePage from './pages/ArticlePage.jsx';
@@ -95,6 +97,8 @@ function App() {
         {/* Autenticación */}
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="olvide-password" element={<ForgotPasswordPage />} />
+        <Route path="restablecer-contrasena" element={<ResetPasswordPage />} />
         <Route path="blog" element={<BlogPage />} />
         <Route path="blog/:articleId" element={<ArticlePage />} />
         

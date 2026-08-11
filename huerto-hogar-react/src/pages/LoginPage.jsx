@@ -48,6 +48,9 @@ const LoginPage = () => {
             <input type="password" id="password" className={`form-control ${error ? 'is-invalid' : ''}`} value={password} onChange={(e) => setPassword(e.target.value)} required />
             {error && <div className="invalid-feedback d-block mt-1">{error}</div>}
           </div>
+          <p className="text-end mt-2 mb-0">
+            <Link to="/olvide-password" className="small">¿Olvidaste tu contraseña?</Link>
+          </p>
           <div className="d-grid mt-4">
             <button type="submit" className="btn btn-primary">Ingresar</button>
           </div>

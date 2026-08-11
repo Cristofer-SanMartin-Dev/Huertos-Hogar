@@ -14,7 +14,7 @@
   <img alt="React 18" src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white" />
   <img alt="Vite 5" src="https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white" />
   <img alt="MySQL 8" src="https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white" />
-  <img alt="Tests: 65 passing" src="https://img.shields.io/badge/tests-65_passing-brightgreen" />
+  <img alt="Tests: 78 passing" src="https://img.shields.io/badge/tests-78_passing-brightgreen" />
 </p>
 
 <p align="center">
@@ -44,6 +44,7 @@ El objetivo del proyecto, más allá de cumplir la rúbrica académica, fue cons
 
 **Cuenta de usuario**
 - Registro e inicio de sesión con JWT (autenticación *stateless*, sin sesiones en el servidor).
+- Recuperación de contraseña por correo (token de un solo uso, expira en 1 hora).
 - Edición de perfil con validación de nombre, teléfono y dirección — mismas reglas en el formulario (feedback inmediato) y en el servidor (fuente de verdad).
 - Rutas protegidas tanto en el frontend (`ProtectedRoute`) como en el backend (Spring Security + verificación de que el recurso pertenece a quien hace la petición).
 
@@ -125,8 +126,8 @@ Queda disponible en `http://localhost:5173` y espera la API en `http://localhost
 
 | Módulo | Comando | Cobertura |
 |---|---|---|
-| Backend | `cd huerto-hogar-backend && ./mvnw test` | 40 pruebas de integración: autenticación, autorización por rol, validación de datos, reglas de carrito/pedidos |
-| Frontend | `cd huerto-hogar-react && npm test` | 25 pruebas de componentes y páginas clave (login, checkout, carrito, reseñas) |
+| Backend | `cd huerto-hogar-backend && ./mvnw test` | 47 pruebas de integración: autenticación, recuperación de contraseña, autorización por rol, validación de datos, reglas de carrito/pedidos |
+| Frontend | `cd huerto-hogar-react && npm test` | 31 pruebas de componentes y páginas clave (login, recuperar/restablecer contraseña, checkout, carrito, reseñas) |
 
 Ambos módulos corren automáticamente en **GitHub Actions** ante cada push o pull request a `main`/`desarrollo` — cada workflow solo se dispara si cambió el módulo correspondiente (`.github/workflows/backend-ci.yml` y `frontend-ci.yml`). El frontend además corre `lint` y `build` en el mismo workflow.
 

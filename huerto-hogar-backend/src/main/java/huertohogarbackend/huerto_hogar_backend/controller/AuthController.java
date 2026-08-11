@@ -2,8 +2,10 @@
 package huertohogarbackend.huerto_hogar_backend.controller;
 
 import huertohogarbackend.huerto_hogar_backend.dto.AuthResponse;
+import huertohogarbackend.huerto_hogar_backend.dto.ForgotPasswordRequest;
 import huertohogarbackend.huerto_hogar_backend.dto.LoginRequest;
 import huertohogarbackend.huerto_hogar_backend.dto.RegisterRequest;
+import huertohogarbackend.huerto_hogar_backend.dto.ResetPasswordRequest;
 import huertohogarbackend.huerto_hogar_backend.dto.UpdateUserRequest;
 import huertohogarbackend.huerto_hogar_backend.model.User;
 import huertohogarbackend.huerto_hogar_backend.security.JwtService;
@@ -111,6 +113,31 @@ public class AuthController {
             return ResponseEntity.status(404).body(e.getMessage());
         } catch (RuntimeException e) {
             // Incluye los errores de validación (ej. "El nombre debe tener...").
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * Solicita un enlace de recuperación de contraseña.
+     *
+     * Responde siempre el mismo mensaje genérico, exista o no ese email: así
+     * nadie puede usar este endpoint para averiguar qué correos están
+     * registrados (mismo criterio que el login).
+     */
+    @PostMapping("/forgot-password")
+    @Operation(summary = "Solicitar un enlace de recuperación de contraseña por correo")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        authService.solicitarRecuperacion(request.getEmail());
+        return ResponseEntity.ok("Si el correo está registrado, te enviamos un enlace de recuperación.");
+    }
+
+    @PostMapping("/reset-password")
+    @Operation(summary = "Restablecer la contraseña usando el token del correo de recuperación")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
+        try {
+            authService.restablecerContrasena(request.getToken(), request.getNewPassword());
+            return ResponseEntity.ok("Contraseña actualizada con éxito.");
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

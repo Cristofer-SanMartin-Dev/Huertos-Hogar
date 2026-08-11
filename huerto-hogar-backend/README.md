@@ -49,6 +49,8 @@ Documentación interactiva completa (Swagger UI) con el backend corriendo: `http
 | POST | `/login` | Público | Autentica y devuelve un JWT |
 | GET | `/me` | Autenticado | Datos vigentes del usuario del token |
 | PUT | `/profile/{userId}` | Autenticado (solo el dueño) | Edita nombre, dirección y teléfono |
+| POST | `/forgot-password` | Público | Genera un token de recuperación y envía el correo (responde igual exista o no el email) |
+| POST | `/reset-password` | Público | Cambia la contraseña usando el token del correo |
 
 **Catálogo** — `/api/products`
 
@@ -108,6 +110,14 @@ Ninguna es obligatoria para desarrollo local — todas tienen un valor de respal
 | `JWT_EXPIRATION_MS` | Vigencia del token en ms | `28800000` (8 horas) |
 | `CORS_ORIGINS` | Orígenes autorizados a llamar la API, separados por coma | `http://localhost:5173` |
 | `ADMIN_EMAIL` | Email que obtiene rol `ADMIN` al registrarse (solo una vez, el email es único) | `admin@huertohogar.cl` |
+| `MAIL_HOST` | Servidor SMTP para el correo de recuperación de contraseña | `smtp.gmail.com` |
+| `MAIL_PORT` | Puerto SMTP | `587` |
+| `MAIL_USERNAME` | Usuario SMTP | *(vacío)* |
+| `MAIL_PASSWORD` | Contraseña SMTP (con Gmail, una [contraseña de aplicación](https://myaccount.google.com/apppasswords), no la contraseña normal de la cuenta) | *(vacío)* |
+| `MAIL_FROM` | Remitente que verá el usuario | `no-reply@huertohogar.cl` |
+| `FRONTEND_URL` | URL del frontend, para construir el enlace dentro del correo de recuperación | `http://localhost:5173` |
+
+Sin `MAIL_USERNAME`/`MAIL_PASSWORD` el envío de correo falla silenciosamente (se registra en el log del servidor) pero la petición igual responde 200: el resto de la aplicación no depende del correo, y la respuesta nunca revela si el envío falló o si el email simplemente no existía.
 
 ## Base de datos
 
@@ -119,12 +129,13 @@ El esquema se genera y mantiene automáticamente desde las entidades JPA (`ddl-a
 ./mvnw test
 ```
 
-40 pruebas de integración con `@SpringBootTest` + `MockMvc` sobre una base H2 en memoria (no toca la base de datos real), organizadas en:
+47 pruebas de integración con `@SpringBootTest` + `MockMvc` sobre una base H2 en memoria (no toca la base de datos real), organizadas en:
 
 - **`SecurityRulesTest`** — que cada regla de autorización se cumpla atacando el endpoint directamente (sin token, con token de otro usuario, con token alterado, con token de una cuenta ya eliminada).
 - **`RegistrationValidationTest`** — formato de email, fortaleza de contraseña, formato de nombre y teléfono.
 - **`OrderControllerTest`** — creación de pedidos, validación de stock, visibilidad por dueño/admin.
 - **`ReviewControllerTest`** — publicación y listado de reseñas.
+- **`PasswordResetTest`** — generación de token, que nunca revele si un email existe, expiración, y que el token se consuma (no se pueda reusar). El envío de correo apunta a un puerto local sin nada escuchando: falla rápido y controladamente, sin depender de una cuenta SMTP real.
 
 ## Estructura
 

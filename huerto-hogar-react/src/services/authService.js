@@ -54,6 +54,21 @@ class AuthService {
     getCurrentUser() {
         return http.get(`${AUTH_PATH}/me`);
     }
+
+    /**
+     * POST /api/auth/forgot-password
+     * El backend responde 200 con el mismo mensaje exista o no ese email
+     * (no revela si una cuenta está registrada), así que aquí no hay nada
+     * especial que manejar más que dejar pasar la respuesta.
+     */
+    forgotPassword(email) {
+        return http.post(`${AUTH_PATH}/forgot-password`, { email });
+    }
+
+    /** POST /api/auth/reset-password */
+    resetPassword(token, newPassword) {
+        return http.post(`${AUTH_PATH}/reset-password`, { token, newPassword });
+    }
 }
 
 export default new AuthService();

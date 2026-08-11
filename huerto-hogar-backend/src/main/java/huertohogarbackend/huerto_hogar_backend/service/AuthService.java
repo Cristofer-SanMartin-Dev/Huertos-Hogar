@@ -3,14 +3,21 @@ package huertohogarbackend.huerto_hogar_backend.service;
 
 import huertohogarbackend.huerto_hogar_backend.dto.RegisterRequest;
 import huertohogarbackend.huerto_hogar_backend.dto.UpdateUserRequest;
+import huertohogarbackend.huerto_hogar_backend.model.PasswordResetToken;
 import huertohogarbackend.huerto_hogar_backend.model.User;
+import huertohogarbackend.huerto_hogar_backend.repository.PasswordResetTokenRepository;
 import huertohogarbackend.huerto_hogar_backend.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 // FIX: Importa la excepción que se usará en 'updateUser'
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,14 +25,27 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @Service
 public class AuthService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
+    private EmailService emailService;
+
     @Value("${app.admin.email}")
     private String adminEmail;
+
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
+
+    private static final long RESET_TOKEN_VALIDEZ_MINUTOS = 60;
 
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
@@ -185,5 +205,65 @@ public class AuthService {
         userToUpdate.setTelefono(updateUserRequest.getTelefono());
 
         return userRepository.save(userToUpdate);
+    }
+
+    /**
+     * Genera un token de recuperación y envía el correo con el enlace.
+     *
+     * Si el email no está registrado, no hace nada y no lanza error: el
+     * llamador (el controller) siempre responde el mismo mensaje genérico,
+     * para no revelar si una cuenta existe o no (mismo criterio que el login).
+     */
+    public void solicitarRecuperacion(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            return;
+        }
+        User user = userOptional.get();
+
+        // Solo un token vigente por usuario: pedir uno nuevo invalida el anterior.
+        passwordResetTokenRepository.deleteByUser(user);
+
+        PasswordResetToken resetToken = new PasswordResetToken();
+        resetToken.setToken(UUID.randomUUID().toString());
+        resetToken.setUser(user);
+        resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(RESET_TOKEN_VALIDEZ_MINUTOS));
+        passwordResetTokenRepository.save(resetToken);
+
+        String resetLink = frontendUrl + "/restablecer-contrasena?token=" + resetToken.getToken();
+        try {
+            emailService.enviarCorreoRecuperacion(user.getEmail(), user.getNombre(), resetLink);
+        } catch (MailException e) {
+            // No se propaga: el cliente igual recibe la respuesta genérica de
+            // éxito. Si el correo no llegó (ej. SMTP mal configurado), queda
+            // en el log del servidor para poder depurarlo.
+            logger.error("No se pudo enviar el correo de recuperación a {}: {}", user.getEmail(), e.getMessage());
+        }
+    }
+
+    /**
+     * Aplica una nueva contraseña usando un token de recuperación válido.
+     * El token se consume (se borra) tanto si funciona como si expiró, para
+     * que no quede utilizable una segunda vez ni acumulando basura vencida.
+     */
+    public void restablecerContrasena(String token, String newPassword) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("El enlace de recuperación no es válido."));
+
+        if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            passwordResetTokenRepository.delete(resetToken);
+            throw new RuntimeException("El enlace de recuperación expiró. Solicita uno nuevo.");
+        }
+
+        if (newPassword == null || !PASSWORD_PATTERN.matcher(newPassword).matches()) {
+            throw new RuntimeException(
+                    "La contraseña debe tener al menos 8 caracteres, con mayúscula, minúscula, número y símbolo.");
+        }
+
+        User user = resetToken.getUser();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        passwordResetTokenRepository.delete(resetToken);
     }
 }

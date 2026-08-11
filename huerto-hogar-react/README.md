@@ -38,6 +38,8 @@ Cada llamada a la API pasa por `services/` (un archivo por recurso: `productServ
 | `/carrito` | Carrito de compras |
 | `/pago-exitoso`, `/pago-error` | Resultado del checkout |
 | `/login`, `/register` | Autenticación |
+| `/olvide-password` | Solicitar enlace de recuperación de contraseña |
+| `/restablecer-contrasena?token=...` | Definir una contraseña nueva con el token del correo |
 
 **Protegidas** (requieren sesión — `ProtectedRoute`)
 
@@ -97,7 +99,7 @@ Vite solo expone al cliente las variables que empiezan con `VITE_`; no pongas se
 npm test
 ```
 
-25 pruebas con Vitest + React Testing Library sobre componentes y páginas clave: login, checkout (creación de pedido y qué pasa si falla por stock insuficiente), carrito, header, reseñas, ofertas, calificación por estrellas y el cliente HTTP.
+31 pruebas con Vitest + React Testing Library sobre componentes y páginas clave: login, recuperación/restablecimiento de contraseña, checkout (creación de pedido y qué pasa si falla por stock insuficiente), carrito, header, reseñas, ofertas, calificación por estrellas y el cliente HTTP.
 
 ## Estructura
 
