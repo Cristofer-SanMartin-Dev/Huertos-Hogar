@@ -1,4 +1,5 @@
 // src/App.jsx
+import { lazy, Suspense } from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -25,17 +26,21 @@ import OrderErrorPage from './pages/OrderErrorPage.jsx';
 import OrderDetailPage from './pages/OrderDetailPage.jsx';
 
 // --- Páginas de Administración ---
-import AdminLayout from './pages/admin/AdminLayout.jsx';
-import DashboardPage from './pages/admin/DashboardPage.jsx';
-// --- ¡NUEVOS IMPORTS AÑADIDOS! ---
-import ProductForm from './pages/admin/ProductForm.jsx';
-import AdminProductListPage from './pages/admin/AdminProductListPage.jsx';
-import ContactMessagesPage from './pages/admin/ContactMessagesPage.jsx';
-import AdminOrdersPage from './pages/admin/AdminOrdersPage.jsx';
-import AdminUsersPage from './pages/admin/AdminUsersPage.jsx';
-import AdminCategoriesPage from './pages/admin/AdminCategoriesPage.jsx';
-import AdminReportsPage from './pages/admin/AdminReportsPage.jsx';
+// 'lazy': solo un cliente que además es admin llega a descargar este código,
+// así que no tiene sentido que infle el bundle inicial de la tienda pública.
+const AdminLayout = lazy(() => import('./pages/admin/AdminLayout.jsx'));
+const DashboardPage = lazy(() => import('./pages/admin/DashboardPage.jsx'));
+const ProductForm = lazy(() => import('./pages/admin/ProductForm.jsx'));
+const AdminProductListPage = lazy(() => import('./pages/admin/AdminProductListPage.jsx'));
+const ContactMessagesPage = lazy(() => import('./pages/admin/ContactMessagesPage.jsx'));
+const AdminOrdersPage = lazy(() => import('./pages/admin/AdminOrdersPage.jsx'));
+const AdminUsersPage = lazy(() => import('./pages/admin/AdminUsersPage.jsx'));
+const AdminCategoriesPage = lazy(() => import('./pages/admin/AdminCategoriesPage.jsx'));
+const AdminReportsPage = lazy(() => import('./pages/admin/AdminReportsPage.jsx'));
 
+const AdminLoading = () => (
+  <div className="container py-5 text-center text-muted">Cargando panel de administración...</div>
+);
 
 // --- Layout Público (sin cambios) ---
 const Layout = () => (
@@ -107,12 +112,17 @@ function App() {
         <Route path="*" element={<div className="container text-center py-5"><h2 className="section-title">404: Página no encontrada</h2></div>} />
       </Route>
 
-      {/* --- RUTAS DE ADMINISTRADOR (usan AdminLayout y protegidas) --- */}
-      <Route 
-        path="/admin" 
+      {/* --- RUTAS DE ADMINISTRADOR (usan AdminLayout y protegidas) ---
+          Todo el subárbol (AdminLayout + las páginas que renderiza su Outlet)
+          comparte este único Suspense: alcanza porque el Outlet las monta
+          dentro del mismo árbol de React que ya está envuelto por él. */}
+      <Route
+        path="/admin"
         element={
           <ProtectedRoute role="ADMIN">
-            <AdminLayout />
+            <Suspense fallback={<AdminLoading />}>
+              <AdminLayout />
+            </Suspense>
           </ProtectedRoute>
         }
       >
