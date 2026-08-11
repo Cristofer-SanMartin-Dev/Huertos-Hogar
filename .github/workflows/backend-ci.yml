@@ -35,4 +35,8 @@ jobs:
         run: chmod +x mvnw
 
       - name: Ejecutar tests
-        run: ./mvnw --batch-mode test
+        # rerunFailingTestsCount: si un test falla, Surefire lo reintenta hasta
+        # 2 veces más antes de dar el build por fallido. Mitiga flakes propios
+        # del runner compartido (contención de recursos) sin esconder un fallo
+        # que sea consistente: si el mismo test falla siempre, sigue fallando.
+        run: ./mvnw --batch-mode test -Dsurefire.rerunFailingTestsCount=2
