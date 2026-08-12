@@ -4,13 +4,14 @@ import { useCart } from '../context/CartContext.js';
 import { Link } from 'react-router-dom';
 import ImpactoAmbiental from '../components/ImpactoAmbiental.jsx';
 import ProductService from '../services/productService.js';
+import { getPrecioFinal } from '../utils/pricing.js';
 
 const CartPage = () => {
     // Obtenemos todo lo necesario del contexto del carrito
     const { cart, removeFromCart, incrementQuantity, decrementQuantity, clearCart } = useCart();
-    
-    // Calculamos el total
-    const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+
+    // Calculamos el total (con descuento aplicado, si el producto está en oferta)
+    const cartTotal = cart.reduce((total, item) => total + getPrecioFinal(item) * item.quantity, 0);
 
     // Si el carrito está vacío, muestra el mensaje
     if (cart.length === 0) {
@@ -48,7 +49,16 @@ const CartPage = () => {
                                             <button onClick={() => removeFromCart(item.id)} className="btn-close" aria-label="Close"></button>
                                         </div>
                                         <p className="card-text">
-                                            <strong>Precio: ${item.price.toLocaleString('es-CL')}</strong>
+                                            {item.precioConDescuento != null ? (
+                                                <>
+                                                    <span className="text-decoration-line-through text-muted me-2">
+                                                        ${item.price.toLocaleString('es-CL')}
+                                                    </span>
+                                                    <strong className="text-success">Precio: ${item.precioConDescuento.toLocaleString('es-CL')}</strong>
+                                                </>
+                                            ) : (
+                                                <strong>Precio: ${item.price.toLocaleString('es-CL')}</strong>
+                                            )}
                                         </p>
                                         <div className="d-flex align-items-center">
                                             <p className="card-text mb-0 me-3">Cantidad:</p>

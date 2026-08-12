@@ -41,4 +41,18 @@ public class Product {
     // Unidad en la que se vende el producto: "kilo", "unidad", "bolsa 500g",
     // "frasco 500g", "litro", etc. No todos los productos se venden por unidad.
     private String unidadMedida = "unidad";
+
+    /**
+     * Precio que realmente se cobra: con descuento aplicado si corresponde.
+     * Única fuente de verdad para "cuánto cuesta esto ahora mismo" — la
+     * usan tanto ProductResponse (catálogo) como OrderService (al crear un
+     * pedido), para que nunca queden desincronizados entre sí.
+     */
+    public Double getPrecioFinal() {
+        if (descuento != null && descuento > 0 && price != null) {
+            double descontado = price * (1 - descuento / 100.0);
+            return Math.round(descontado * 100.0) / 100.0;
+        }
+        return price;
+    }
 }

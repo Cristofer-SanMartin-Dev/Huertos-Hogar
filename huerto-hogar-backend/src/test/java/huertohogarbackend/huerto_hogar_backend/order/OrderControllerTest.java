@@ -88,6 +88,23 @@ class OrderControllerTest {
         return objectMapper.readTree(result.getResponse().getContentAsString()).get("id").asLong();
     }
 
+    /** Igual que crearProducto, pero con un porcentaje de descuento en oferta. */
+    private Long crearProductoConDescuento(String adminToken, String nombre, double precio, int stock, int descuento) throws Exception {
+        MockMultipartFile image = new MockMultipartFile("image", "test.png", "image/png", new byte[]{1, 2, 3});
+        MvcResult result = mockMvc.perform(multipart("/api/products")
+                        .file(image)
+                        .param("name", nombre)
+                        .param("description", "Para pruebas de pedidos")
+                        .param("price", String.valueOf(precio))
+                        .param("stock", String.valueOf(stock))
+                        .param("category", "Frutas Frescas")
+                        .param("descuento", String.valueOf(descuento))
+                        .header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isOk())
+                .andReturn();
+        return objectMapper.readTree(result.getResponse().getContentAsString()).get("id").asLong();
+    }
+
     private String crearPedidoBody(Long productId, int cantidad) throws Exception {
         return objectMapper.writeValueAsString(Map.of(
                 "items", List.of(Map.of("productId", productId, "cantidad", cantidad)),
@@ -112,6 +129,24 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.items[0].subtotal").value(3000.0));
 
         assertThat(productRepository.findById(productId).get().getStock()).isEqualTo(7);
+    }
+
+    @Test
+    @DisplayName("Un producto con descuento se cobra al precio rebajado, no al precio de lista")
+    void crearPedidoConProductoEnDescuentoCobraElPrecioRebajado() throws Exception {
+        String adminToken = tokenAdmin();
+        // $1.000 con 15% de descuento -> $850 por unidad.
+        Long productId = crearProductoConDescuento(adminToken, "Naranjas en oferta", 1000.0, 10, 15);
+        JsonNode cliente = registrarCliente("cliente.pedido.descuento@test.cl");
+
+        mockMvc.perform(post("/api/orders")
+                        .header("Authorization", "Bearer " + cliente.get("token").asText())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(crearPedidoBody(productId, 2)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total").value(1700.0))
+                .andExpect(jsonPath("$.items[0].unitPrice").value(850.0))
+                .andExpect(jsonPath("$.items[0].subtotal").value(1700.0));
     }
 
     @Test

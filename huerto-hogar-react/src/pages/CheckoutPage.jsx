@@ -4,6 +4,7 @@ import { useCart } from '../context/CartContext.js';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import orderService from '../services/orderService.js';
+import { getPrecioFinal } from '../utils/pricing.js';
 
 const manana = () => {
     const fecha = new Date();
@@ -16,8 +17,8 @@ const CheckoutPage = () => {
     const navigate = useNavigate();
     const { user, refreshUser } = useAuth(); // Obtén el usuario del contexto
 
-    // Calcula el total del carrito
-    const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    // Calcula el total del carrito (con descuento aplicado, si corresponde)
+    const cartTotal = cart.reduce((total, item) => total + getPrecioFinal(item) * item.quantity, 0);
 
     // Estados para el formulario
     const [nombre, setNombre] = useState('');
@@ -90,7 +91,7 @@ const CheckoutPage = () => {
                                     <h6 className="my-0">{item.name}</h6>
                                     <small className="text-muted">Cantidad: {item.quantity}</small>
                                 </div>
-                                <span className="text-muted">${(item.price * item.quantity).toLocaleString('es-CL')}</span>
+                                <span className="text-muted">${(getPrecioFinal(item) * item.quantity).toLocaleString('es-CL')}</span>
                             </li>
                         ))}
                         <li className="list-group-item d-flex justify-content-between">

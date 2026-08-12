@@ -45,8 +45,7 @@ public class ProductResponse {
         response.setUnidadMedida(product.getUnidadMedida());
 
         if (product.getDescuento() != null && product.getDescuento() > 0 && product.getPrice() != null) {
-            double descontado = product.getPrice() * (1 - product.getDescuento() / 100.0);
-            response.setPrecioConDescuento(Math.round(descontado * 100.0) / 100.0);
+            response.setPrecioConDescuento(product.getPrecioFinal());
         }
 
         response.setAverageRating(averageRating);

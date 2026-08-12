@@ -70,15 +70,20 @@ public class OrderService {
             product.setStock(product.getStock() - itemRequest.getCantidad());
             productRepository.save(product);
 
+            // getPrecioFinal() aplica el descuento si el producto está en oferta:
+            // sin esto se cobraba el precio de lista completo aunque el
+            // catálogo mostrara un precio rebajado.
+            double precioUnitario = product.getPrecioFinal();
+
             OrderItem item = new OrderItem();
             item.setOrder(order);
             item.setProduct(product);
             item.setProductName(product.getName());
-            item.setUnitPrice(product.getPrice());
+            item.setUnitPrice(precioUnitario);
             item.setQuantity(itemRequest.getCantidad());
             order.getItems().add(item);
 
-            total += product.getPrice() * itemRequest.getCantidad();
+            total += precioUnitario * itemRequest.getCantidad();
         }
 
         order.setTotal(total);

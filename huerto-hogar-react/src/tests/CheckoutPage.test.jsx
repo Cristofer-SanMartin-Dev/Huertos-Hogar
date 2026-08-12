@@ -55,6 +55,17 @@ describe('Página CheckoutPage', () => {
     expect(clearCart).toHaveBeenCalled();
   });
 
+  test('con un producto en oferta, muestra y cobra el precio con descuento, no el de lista', () => {
+    const cartConDescuento = [
+      { id: 1, name: 'Naranjas', price: 1000, precioConDescuento: 850, quantity: 2 },
+    ];
+
+    renderCheckout(cartConDescuento);
+
+    // Total real: 850 * 2 = 1700 (no 1000 * 2 = 2000, el precio de lista)
+    expect(screen.getByRole('button', { name: /Pagar ahora \$1\.700/i })).toBeInTheDocument();
+  });
+
   test('si el pedido falla (ej. stock insuficiente), no limpia el carrito', async () => {
     orderService.create.mockRejectedValue({ response: { data: 'Stock insuficiente para Manzanas.' } });
     const clearCart = vi.fn();
