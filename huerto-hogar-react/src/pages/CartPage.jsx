@@ -10,8 +10,11 @@ const CartPage = () => {
     // Obtenemos todo lo necesario del contexto del carrito
     const { cart, removeFromCart, incrementQuantity, decrementQuantity, clearCart } = useCart();
 
-    // Calculamos el total (con descuento aplicado, si el producto está en oferta)
+    // Subtotal a precio de lista, total ya con descuento aplicado, y la
+    // diferencia entre ambos (cuánto se está ahorrando en total).
+    const cartSubtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
     const cartTotal = cart.reduce((total, item) => total + getPrecioFinal(item) * item.quantity, 0);
+    const totalDescuento = cartSubtotal - cartTotal;
 
     // Si el carrito está vacío, muestra el mensaje
     if (cart.length === 0) {
@@ -83,8 +86,14 @@ const CartPage = () => {
                             <ul className="list-group list-group-flush">
                                 <li className="list-group-item d-flex justify-content-between align-items-center">
                                   Subtotal
-                                  <span>${cartTotal.toLocaleString('es-CL')}</span>
+                                  <span>${cartSubtotal.toLocaleString('es-CL')}</span>
                                 </li>
+                                {totalDescuento > 0 && (
+                                    <li className="list-group-item d-flex justify-content-between align-items-center text-success">
+                                      Descuento
+                                      <span>-${totalDescuento.toLocaleString('es-CL')}</span>
+                                    </li>
+                                )}
                                 <li className="list-group-item d-flex justify-content-between align-items-center fw-bold">
                                   Total a Pagar
                                   <span>${cartTotal.toLocaleString('es-CL')}</span>
