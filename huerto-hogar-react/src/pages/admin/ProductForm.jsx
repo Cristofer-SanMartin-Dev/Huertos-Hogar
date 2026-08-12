@@ -84,7 +84,7 @@ const ProductForm = () => {
             ProductService.updateProduct(id, productData, image)
                 .then(() => {
                     toast.success(`Producto "${name}" actualizado con éxito.`);
-                    navigate('/admin');
+                    navigate('/admin/productos');
                 })
                 .catch(err => {
                     console.error('Error al actualizar el producto:', err);
@@ -94,7 +94,7 @@ const ProductForm = () => {
             ProductService.createProduct(productData, image)
                 .then(() => {
                     toast.success(`Producto "${name}" creado con éxito.`);
-                    navigate('/admin');
+                    navigate('/admin/productos');
                 })
                 .catch(err => {
                     console.error('Error al crear el producto:', err);
@@ -189,7 +189,7 @@ const ProductForm = () => {
                 </div>
 
                 <button type="submit" className="btn btn-success">Guardar</button>
-                <button type="button" className="btn btn-secondary ms-2" onClick={() => navigate('/admin')}>Cancelar</button>
+                <button type="button" className="btn btn-secondary ms-2" onClick={() => navigate('/admin/productos')}>Cancelar</button>
             </form>
         </div>
     );

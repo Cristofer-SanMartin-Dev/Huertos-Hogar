@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ProductService from '../../services/productService';
+import ConfirmModal from '../../components/ConfirmModal.jsx';
 
 const AdminProductListPage = () => {
     const [products, setProducts] = useState([]);
+    const [productToDelete, setProductToDelete] = useState(null);
 
     const loadProducts = () => {
         ProductService.getAllProducts()
@@ -16,21 +18,18 @@ const AdminProductListPage = () => {
         loadProducts();
     }, []);
 
-    const handleDelete = (id) => {
-        const producto = products.find(p => p.id === id);
-        const nombre = producto ? producto.name : 'Producto';
-
-        if (window.confirm(`¿Estás seguro de eliminar "${nombre}"? Esta acción no se puede deshacer.`)) {
-            ProductService.deleteProduct(id)
-                .then(() => {
-                    loadProducts(); // Recargar lista
-                    toast.success(`"${nombre}" se eliminó del catálogo.`);
-                })
-                .catch(err => {
-                    console.error('Error al eliminar el producto:', err);
-                    toast.error(err.response?.data || `No se pudo eliminar "${nombre}". Inténtalo de nuevo.`);
-                });
-        }
+    const confirmDelete = () => {
+        const { id, name } = productToDelete;
+        ProductService.deleteProduct(id)
+            .then(() => {
+                loadProducts(); // Recargar lista
+                toast.success(`"${name}" se eliminó del catálogo.`);
+            })
+            .catch(err => {
+                console.error('Error al eliminar el producto:', err);
+                toast.error(err.response?.data || `No se pudo eliminar "${name}". Inténtalo de nuevo.`);
+            })
+            .finally(() => setProductToDelete(null));
     };
 
     return (
@@ -58,9 +57,9 @@ const AdminProductListPage = () => {
                     {products.map(product => (
                         <tr key={product.id}>
                             <td>
-                                <img 
-                                    src={ProductService.getImageUrl(product.imageName)} 
-                                    alt={product.name} 
+                                <img
+                                    src={ProductService.getImageUrl(product.imageName)}
+                                    alt={product.name}
                                     style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '5px' }}
                                 />
                             </td>
@@ -72,7 +71,7 @@ const AdminProductListPage = () => {
                                 <Link to={`/admin/productos/editar/${product.id}`} className="btn btn-sm btn-warning me-2">
                                     Editar
                                 </Link>
-                                <button onClick={() => handleDelete(product.id)} className="btn btn-sm btn-danger">
+                                <button onClick={() => setProductToDelete(product)} className="btn btn-sm btn-danger">
                                     Eliminar
                                 </button>
                             </td>
@@ -81,6 +80,16 @@ const AdminProductListPage = () => {
                 </tbody>
             </table>
             </div>
+
+            <ConfirmModal
+                show={!!productToDelete}
+                title="Eliminar producto"
+                message={`¿Estás seguro de eliminar "${productToDelete?.name}"? Esta acción no se puede deshacer.`}
+                confirmLabel="Eliminar"
+                variant="danger"
+                onConfirm={confirmDelete}
+                onCancel={() => setProductToDelete(null)}
+            />
         </div>
     );
 };
