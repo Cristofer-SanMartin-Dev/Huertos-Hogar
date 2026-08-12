@@ -7,11 +7,8 @@ import huertohogarbackend.huerto_hogar_backend.model.PasswordResetToken;
 import huertohogarbackend.huerto_hogar_backend.model.User;
 import huertohogarbackend.huerto_hogar_backend.repository.PasswordResetTokenRepository;
 import huertohogarbackend.huerto_hogar_backend.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,8 +21,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Service
 public class AuthService {
-
-    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -231,14 +226,9 @@ public class AuthService {
         passwordResetTokenRepository.save(resetToken);
 
         String resetLink = frontendUrl + "/restablecer-contrasena?token=" + resetToken.getToken();
-        try {
-            emailService.enviarCorreoRecuperacion(user.getEmail(), user.getNombre(), resetLink);
-        } catch (MailException e) {
-            // No se propaga: el cliente igual recibe la respuesta genérica de
-            // éxito. Si el correo no llegó (ej. SMTP mal configurado), queda
-            // en el log del servidor para poder depurarlo.
-            logger.error("No se pudo enviar el correo de recuperación a {}: {}", user.getEmail(), e.getMessage());
-        }
+        // EmailService ya atrapa y loguea sus propios errores de envío: nunca
+        // debe impedir la respuesta genérica de éxito que da el controller.
+        emailService.enviarCorreoRecuperacion(user.getEmail(), user.getNombre(), resetLink);
     }
 
     /**

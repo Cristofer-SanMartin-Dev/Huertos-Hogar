@@ -119,14 +119,11 @@ cp .env.example .env
 | `JWT_EXPIRATION_MS` | Vigencia del token en ms | `28800000` (8 horas) |
 | `CORS_ORIGINS` | Orígenes autorizados a llamar la API, separados por coma | `http://localhost:5173` |
 | `ADMIN_EMAIL` | Email que obtiene rol `ADMIN` al registrarse (solo una vez, el email es único) | `admin@huertohogar.cl` |
-| `MAIL_HOST` | Servidor SMTP para el correo de recuperación de contraseña | `smtp.gmail.com` |
-| `MAIL_PORT` | Puerto SMTP | `587` |
-| `MAIL_USERNAME` | Usuario SMTP | *(vacío)* |
-| `MAIL_PASSWORD` | Contraseña SMTP (con Gmail, una [contraseña de aplicación](https://myaccount.google.com/apppasswords), no la contraseña normal de la cuenta) | *(vacío)* |
-| `MAIL_FROM` | Remitente que verá el usuario | `no-reply@huertohogar.cl` |
+| `RESEND_API_KEY` | API key de [Resend](https://resend.com) para el correo de recuperación de contraseña (gratis, hasta 3.000/mes) | *(vacío)* |
+| `MAIL_FROM` | Remitente que verá el usuario. `onboarding@resend.dev` funciona sin verificar dominio propio, pero en modo prueba Resend solo entrega a la casilla con la que te registraste — para enviarle a cualquier usuario real hace falta verificar un dominio propio en Resend | `onboarding@resend.dev` |
 | `FRONTEND_URL` | URL del frontend, para construir el enlace dentro del correo de recuperación | `http://localhost:5173` |
 
-Sin `MAIL_USERNAME`/`MAIL_PASSWORD` el envío de correo falla silenciosamente (se registra en el log del servidor) pero la petición igual responde 200: el resto de la aplicación no depende del correo, y la respuesta nunca revela si el envío falló o si el email simplemente no existía.
+Sin `RESEND_API_KEY` el envío de correo se omite silenciosamente (se registra en el log del servidor) pero la petición igual responde 200: el resto de la aplicación no depende del correo, y la respuesta nunca revela si el envío falló o si el email simplemente no existía.
 
 ## Base de datos
 
@@ -144,7 +141,7 @@ El esquema se genera y mantiene automáticamente desde las entidades JPA (`ddl-a
 - **`RegistrationValidationTest`** — formato de email, fortaleza de contraseña, formato de nombre y teléfono.
 - **`OrderControllerTest`** — creación de pedidos, validación de stock, visibilidad por dueño/admin.
 - **`ReviewControllerTest`** — publicación y listado de reseñas.
-- **`PasswordResetTest`** — generación de token, que nunca revele si un email existe, expiración, y que el token se consuma (no se pueda reusar). El envío de correo apunta a un puerto local sin nada escuchando: falla rápido y controladamente, sin depender de una cuenta SMTP real.
+- **`PasswordResetTest`** — generación de token, que nunca revele si un email existe, expiración, y que el token se consuma (no se pueda reusar). Sin `RESEND_API_KEY` configurada, el envío de correo se omite sin red, sin depender de credenciales reales.
 
 ## Estructura
 
