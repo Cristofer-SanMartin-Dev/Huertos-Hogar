@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -65,8 +66,11 @@ public class AdminStatsController {
 
     @GetMapping("/reports")
     public AdminReportsResponse getReports() {
-        List<OrderItem> items = orderRepository.findAll().stream()
+        List<Order> ordersValidas = orderRepository.findAll().stream()
                 .filter(order -> order.getEstado() != EstadoPedido.CANCELADO)
+                .toList();
+
+        List<OrderItem> items = ordersValidas.stream()
                 .flatMap(order -> order.getItems().stream())
                 .toList();
 
@@ -80,9 +84,30 @@ public class AdminStatsController {
                         OrderItem::getProductName,
                         Collectors.summingDouble(i -> i.getUnitPrice() * i.getQuantity())));
 
+        // Solo cuenta los ítems cuyo producto sigue existiendo: si se borró,
+        // no hay categoría a la que atribuirle el ingreso.
+        Map<String, Double> ingresoPorCategoria = items.stream()
+                .filter(i -> i.getProduct() != null && i.getProduct().getCategory() != null)
+                .collect(Collectors.groupingBy(
+                        i -> i.getProduct().getCategory(),
+                        Collectors.summingDouble(i -> i.getUnitPrice() * i.getQuantity())));
+
+        Map<String, Double> ventasPorFecha = ordersValidas.stream()
+                .collect(Collectors.groupingBy(
+                        order -> order.getFecha().toLocalDate().toString(),
+                        TreeMap::new,
+                        Collectors.summingDouble(Order::getTotal)));
+
         AdminReportsResponse response = new AdminReportsResponse();
         response.setTopProductsByQuantity(top5(cantidadPorProducto));
         response.setTopProductsByRevenue(top5(ingresoPorProducto));
+        response.setRevenueByCategory(ingresoPorCategoria.entrySet().stream()
+                .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+                .map(e -> new AdminReportsResponse.CategoryStat(e.getKey(), e.getValue()))
+                .collect(Collectors.toList()));
+        response.setSalesByDate(ventasPorFecha.entrySet().stream()
+                .map(e -> new AdminReportsResponse.DateStat(e.getKey(), e.getValue()))
+                .collect(Collectors.toList()));
         return response;
     }
 

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import adminStatsService from '../../services/adminStatsService.js';
+
+const COLOR_PRIMARIO = '#2e7d32';
 
 const AdminReportsPage = () => {
     const [reports, setReports] = useState(null);
@@ -14,22 +17,25 @@ const AdminReportsPage = () => {
             });
     }, []);
 
-    const renderTabla = (titulo, items, formatoValor) => (
+    const renderGrafico = (titulo, items, formatoValor) => (
         <div className="col-md-6 mb-3">
             <div className="card h-100">
                 <div className="card-header">{titulo}</div>
-                <ul className="list-group list-group-flush">
+                <div className="card-body">
                     {items && items.length > 0 ? (
-                        items.map((item, i) => (
-                            <li key={i} className="list-group-item d-flex justify-content-between">
-                                <span>{item.productName}</span>
-                                <strong>{formatoValor(item.value)}</strong>
-                            </li>
-                        ))
+                        <ResponsiveContainer width="100%" height={260}>
+                            <BarChart data={items} layout="vertical" margin={{ left: 20 }}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis type="number" tick={{ fontSize: 12 }} />
+                                <YAxis type="category" dataKey="productName" width={140} tick={{ fontSize: 11 }} />
+                                <Tooltip formatter={formatoValor} />
+                                <Bar dataKey="value" fill={COLOR_PRIMARIO} />
+                            </BarChart>
+                        </ResponsiveContainer>
                     ) : (
-                        <li className="list-group-item text-muted">Aún no hay datos de pedidos.</li>
+                        <p className="text-muted mb-0">Aún no hay datos de pedidos.</p>
                     )}
-                </ul>
+                </div>
             </div>
         </div>
     );
@@ -40,8 +46,8 @@ const AdminReportsPage = () => {
             {error && <div className="alert alert-danger">{error}</div>}
             {reports && (
                 <div className="row">
-                    {renderTabla('Productos Más Vendidos (por cantidad)', reports.topProductsByQuantity, v => `${v} unid.`)}
-                    {renderTabla('Productos con Más Ingresos', reports.topProductsByRevenue, v => `$${v.toLocaleString('es-CL')}`)}
+                    {renderGrafico('Productos Más Vendidos (por cantidad)', reports.topProductsByQuantity, v => `${v} unid.`)}
+                    {renderGrafico('Productos con Más Ingresos', reports.topProductsByRevenue, v => `$${v.toLocaleString('es-CL')}`)}
                 </div>
             )}
         </div>
