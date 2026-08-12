@@ -68,7 +68,7 @@ const AdminOrdersPage = () => {
                                         </select>
                                     </td>
                                     <td>
-                                        <Link to={`/pedidos/${order.id}`} className="btn btn-sm btn-outline-secondary">
+                                        <Link to={`/admin/ordenes/${order.id}`} className="btn btn-sm btn-outline-secondary">
                                             Ver
                                         </Link>
                                     </td>

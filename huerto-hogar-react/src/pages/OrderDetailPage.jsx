@@ -1,12 +1,17 @@
 // src/pages/OrderDetailPage.jsx
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import orderService from '../services/orderService.js';
 
 const ESTADOS = ['PENDIENTE', 'PREPARANDO', 'ENVIADO', 'ENTREGADO'];
 
 const OrderDetailPage = () => {
     const { id } = useParams();
+    // Este componente se monta tanto en /pedidos/:id (cliente viendo su
+    // propio pedido) como en /admin/ordenes/:id (admin viendo cualquier
+    // pedido, dentro del panel): el botón de volver depende de cuál es.
+    const { pathname } = useLocation();
+    const esVistaAdmin = pathname.startsWith('/admin');
     const [order, setOrder] = useState(null);
     const [error, setError] = useState('');
 
@@ -120,7 +125,11 @@ const OrderDetailPage = () => {
             </div>
 
             <div className="mt-4 no-print">
-                <Link to="/perfil" className="btn btn-outline-secondary">Volver a Mi Perfil</Link>
+                {esVistaAdmin ? (
+                    <Link to="/admin/ordenes" className="btn btn-outline-secondary">Volver a Órdenes</Link>
+                ) : (
+                    <Link to="/perfil" className="btn btn-outline-secondary">Volver a Mi Perfil</Link>
+                )}
             </div>
         </div>
     );

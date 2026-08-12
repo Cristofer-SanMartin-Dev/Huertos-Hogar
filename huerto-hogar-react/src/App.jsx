@@ -140,8 +140,11 @@ function App() {
         {/* Mensajes de contacto */}
         <Route path="mensajes" element={<ContactMessagesPage />} />
 
-        {/* Pedidos */}
+        {/* Pedidos: el detalle reusa el mismo componente que ve un cliente en
+            /pedidos/:id (la boleta es igual), pero montado acá para que quede
+            dentro del panel de admin en vez del menú público. */}
         <Route path="ordenes" element={<AdminOrdersPage />} />
+        <Route path="ordenes/:id" element={<OrderDetailPage />} />
 
         {/* Usuarios, Categorías y Reportes */}
         <Route path="usuarios" element={<AdminUsersPage />} />
