@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -208,7 +209,14 @@ public class AuthService {
      * Si el email no está registrado, no hace nada y no lanza error: el
      * llamador (el controller) siempre responde el mismo mensaje genérico,
      * para no revelar si una cuenta existe o no (mismo criterio que el login).
+     *
+     * @Transactional: sin esto, deleteByUser (que borra el token anterior antes
+     * de crear uno nuevo) falla con "No EntityManager with actual transaction
+     * available" en cuanto hay una fila real que borrar — un método de borrado
+     * derivado de Spring Data JPA necesita una transacción activa incluso
+     * cuando lo llama un método de servicio "normal" como este.
      */
+    @Transactional
     public void solicitarRecuperacion(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {

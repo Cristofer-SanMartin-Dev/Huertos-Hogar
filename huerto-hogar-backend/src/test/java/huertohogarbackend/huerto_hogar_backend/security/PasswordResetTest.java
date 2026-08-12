@@ -93,6 +93,26 @@ class PasswordResetTest {
     }
 
     @Test
+    @DisplayName("Pedir recuperación dos veces seguidas no rompe (el segundo pedido borra el token anterior)")
+    void pedirRecuperacionDosVecesSeguidasNoRompe() throws Exception {
+        // Regresión: deleteByUser (borra el token anterior antes de crear uno
+        // nuevo) es un método de borrado derivado de Spring Data JPA y
+        // necesita una transacción activa en cuanto hay una fila real que
+        // borrar. Sin @Transactional en el service, este segundo pedido
+        // fallaba con 500 (TransactionRequiredException) en producción,
+        // aunque nunca en tests: cada otro test usa un email distinto, así
+        // que nunca había un token previo que borrar.
+        String email = registrar("recuperacion.dos.veces@test.cl");
+
+        pedirRecuperacionYObtenerToken(email);
+
+        mockMvc.perform(post("/api/auth/forgot-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of("email", email))))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     @DisplayName("Restablecer con un token válido cambia la contraseña y permite loguearse con la nueva")
     void restablecerConTokenValidoCambiaLaContrasena() throws Exception {
         String email = registrar("restablecer.valido@test.cl");
