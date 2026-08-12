@@ -5,10 +5,14 @@ package huertohogarbackend.huerto_hogar_backend.repository;
 import huertohogarbackend.huerto_hogar_backend.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * Extiende JpaRepository y le indicamos que manejará
  * entidades de tipo "Product" cuyo ID es de tipo "Long".
  * Spring Data JPA creará automáticamente todos los métodos CRUD (save, findById, etc.).
  */
 public interface ProductRepository extends JpaRepository<Product, Long> {
+    List<Product> findByCategory(String category);
+    List<Product> findByCategoryAndCodeIsNullOrderByIdAsc(String category);
 }

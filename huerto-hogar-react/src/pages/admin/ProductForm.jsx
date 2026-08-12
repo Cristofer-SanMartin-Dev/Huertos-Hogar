@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ProductService from '../../services/productService';
+import CategoryService from '../../services/categoryService';
 
 // No todo se vende por unidad: algunos productos se venden por peso o envase.
 const UNIDADES_PREDEFINIDAS = ['unidad', 'kilo', 'gramo (100g)', 'bolsa 500g', 'frasco 500g', 'litro', 'paquete', 'docena'];
@@ -21,9 +22,16 @@ const ProductForm = () => {
     const [image, setImage] = useState(null); // Para el archivo nuevo
     const [preview, setPreview] = useState(null); // Para previsualizar
     const [formError, setFormError] = useState('');
+    const [categories, setCategories] = useState([]);
 
     const navigate = useNavigate();
     const { id } = useParams(); // Si hay ID, estamos editando
+
+    useEffect(() => {
+        CategoryService.getAllCategories()
+            .then(response => setCategories(response.data))
+            .catch(err => console.error('Error al cargar las categorías:', err));
+    }, []);
 
     useEffect(() => {
         if (id) {
@@ -147,10 +155,9 @@ const ProductForm = () => {
                         <label className="form-label">Categoría</label>
                         <select className="form-select" value={category} onChange={e => setCategory(e.target.value)} required>
                             <option value="">Seleccione...</option>
-                            <option value="Frutas Frescas">Frutas Frescas</option>
-                            <option value="Verduras Orgánicas">Verduras Orgánicas</option>
-                            <option value="Productos Orgánicos">Productos Orgánicos</option>
-                            <option value="Productos Lácteos">Productos Lácteos</option>
+                            {categories.map(cat => (
+                                <option key={cat.id} value={cat.name}>{cat.name}</option>
+                            ))}
                         </select>
                     </div>
                 </div>

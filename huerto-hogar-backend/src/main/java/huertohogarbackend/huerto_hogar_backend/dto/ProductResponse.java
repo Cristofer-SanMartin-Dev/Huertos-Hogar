@@ -14,6 +14,7 @@ import lombok.Data;
 public class ProductResponse {
 
     private Long id;
+    private String code;
     private String name;
     private String description;
     private Double price;
@@ -32,6 +33,7 @@ public class ProductResponse {
     public static ProductResponse from(Product product, Double averageRating, Integer reviewCount) {
         ProductResponse response = new ProductResponse();
         response.setId(product.getId());
+        response.setCode(product.getCode());
         response.setName(product.getName());
         response.setDescription(product.getDescription());
         response.setPrice(product.getPrice());

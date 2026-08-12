@@ -36,9 +36,14 @@ const AdminProductListPage = () => {
         <div className="container mt-4">
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2>Gestión de Productos</h2>
-                <Link to="/admin/productos/nuevo" className="btn btn-primary">
-                    + Nuevo Producto
-                </Link>
+                <div>
+                    <Link to="/admin/productos/reponer-stock" className="btn btn-outline-success me-2">
+                        Reponer stock
+                    </Link>
+                    <Link to="/admin/productos/nuevo" className="btn btn-primary">
+                        + Nuevo Producto
+                    </Link>
+                </div>
             </div>
 
             <div className="table-responsive">
@@ -46,6 +51,7 @@ const AdminProductListPage = () => {
                 <thead>
                     <tr>
                         <th>Imagen</th>
+                        <th>Código</th>
                         <th>Nombre</th>
                         <th>Precio</th>
                         <th>Stock</th>
@@ -63,6 +69,7 @@ const AdminProductListPage = () => {
                                     style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '5px' }}
                                 />
                             </td>
+                            <td>{product.code || '—'}</td>
                             <td>{product.name}</td>
                             <td>${product.price}</td>
                             <td>{product.stock}</td>

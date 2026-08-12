@@ -23,6 +23,13 @@ public class Product {
     
     private String category; // Ej: "Frutas", "Verduras"
 
+    // Código legible por categoría, ej. "FR001". Se autogenera al crear el
+    // producto según el prefijo de su categoría (ver CategoryService). Puede
+    // ser nulo en productos creados antes de que existiera este campo, hasta
+    // que CategorySeeder los migre en el próximo arranque del backend.
+    @Column(unique = true)
+    private String code;
+
     // Aquí guardaremos solo el nombre del archivo (ej: "manzana-123.jpg")
     private String imageName;
 

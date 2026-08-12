@@ -34,6 +34,7 @@ const AdminLayout = lazy(() => import('./pages/admin/AdminLayout.jsx'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage.jsx'));
 const ProductForm = lazy(() => import('./pages/admin/ProductForm.jsx'));
 const AdminProductListPage = lazy(() => import('./pages/admin/AdminProductListPage.jsx'));
+const AdminRestockPage = lazy(() => import('./pages/admin/AdminRestockPage.jsx'));
 const ContactMessagesPage = lazy(() => import('./pages/admin/ContactMessagesPage.jsx'));
 const AdminOrdersPage = lazy(() => import('./pages/admin/AdminOrdersPage.jsx'));
 const AdminUsersPage = lazy(() => import('./pages/admin/AdminUsersPage.jsx'));
@@ -136,6 +137,7 @@ function App() {
         <Route path="productos" element={<AdminProductListPage />} />
         <Route path="productos/nuevo" element={<ProductForm />} />
         <Route path="productos/editar/:id" element={<ProductForm />} />
+        <Route path="productos/reponer-stock" element={<AdminRestockPage />} />
 
         {/* Mensajes de contacto */}
         <Route path="mensajes" element={<ContactMessagesPage />} />

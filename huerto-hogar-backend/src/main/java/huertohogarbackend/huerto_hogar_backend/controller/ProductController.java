@@ -1,5 +1,6 @@
 package huertohogarbackend.huerto_hogar_backend.controller;
 
+import huertohogarbackend.huerto_hogar_backend.dto.AddStockRequest;
 import huertohogarbackend.huerto_hogar_backend.dto.ProductResponse;
 import huertohogarbackend.huerto_hogar_backend.model.Product;
 import huertohogarbackend.huerto_hogar_backend.service.ProductService;
@@ -124,6 +125,20 @@ public class ProductController {
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(409).body(e.getMessage());
+        }
+    }
+
+    // REPONER STOCK: suma "cantidad" al stock actual (no lo reemplaza).
+    @PostMapping("/{id}/stock")
+    public ResponseEntity<?> addStock(@PathVariable Long id, @RequestBody AddStockRequest request) {
+        try {
+            int cantidad = request.getCantidad() == null ? 0 : request.getCantidad();
+            Product updated = productService.addStock(id, cantidad);
+            return ResponseEntity.ok(toResponse(updated));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 }

@@ -5,6 +5,7 @@ import huertohogarbackend.huerto_hogar_backend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -20,6 +21,9 @@ public class ProductService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
@@ -30,6 +34,9 @@ public class ProductService {
 
     // Guardar producto CON imagen
     public Product saveProduct(Product product, MultipartFile imageFile) throws IOException {
+        categoryService.findByName(product.getCategory())
+                .ifPresent(category -> product.setCode(categoryService.generarSiguienteCodigo(category)));
+
         if (imageFile != null && !imageFile.isEmpty()) {
             String url = cloudinaryService.upload(imageFile);
             if (url != null) {
@@ -74,5 +81,21 @@ public class ProductService {
             // El producto tiene pedidos asociados (OrderItem lo referencia por FK).
             throw new RuntimeException("No se puede eliminar un producto con pedidos asociados.");
         }
+    }
+
+    /**
+     * Repone stock sumando una cantidad al total actual, en vez de reemplazarlo.
+     * Evita el error de mandar el valor final "a ojo" y pisar el stock real
+     * (por ejemplo, el ya descontado por pedidos hechos mientras tanto).
+     */
+    @Transactional
+    public Product addStock(Long id, int cantidad) {
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad a reponer debe ser mayor a 0.");
+        }
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        product.setStock(product.getStock() + cantidad);
+        return productRepository.save(product);
     }
 }

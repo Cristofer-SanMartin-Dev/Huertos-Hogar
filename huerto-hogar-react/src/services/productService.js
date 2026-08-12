@@ -65,6 +65,11 @@ class ProductService {
         return http.delete(`${PRODUCTS_PATH}/${id}`);
     }
 
+    // REPONER STOCK: suma "cantidad" al stock actual (no lo reemplaza). Solo ADMIN.
+    addStock(id, cantidad) {
+        return http.post(`${PRODUCTS_PATH}/${id}/stock`, { cantidad });
+    }
+
     /**
      * Helper para obtener la URL completa de la imagen de un producto.
      *
