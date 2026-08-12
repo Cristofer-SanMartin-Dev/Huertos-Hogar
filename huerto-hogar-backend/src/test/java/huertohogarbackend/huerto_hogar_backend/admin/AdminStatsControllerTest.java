@@ -99,7 +99,10 @@ class AdminStatsControllerTest {
                 .andExpect(jsonPath("$[0].email").exists())
                 .andReturn();
 
-        assertThat(result.getResponse().getContentAsString()).doesNotContain("password");
+        // Busca la clave del campo, no la palabra suelta: un email de prueba de
+        // otra clase (ej. "password.debil.reset@test.cl") puede contener la
+        // palabra "password" de forma legítima sin que se esté filtrando nada.
+        assertThat(result.getResponse().getContentAsString()).doesNotContain("\"password\"");
     }
 
     @Test
