@@ -17,15 +17,18 @@ const AdminProductListPage = () => {
     }, []);
 
     const handleDelete = (id) => {
-        if (window.confirm('¿Estás seguro de eliminar este producto?')) {
+        const producto = products.find(p => p.id === id);
+        const nombre = producto ? producto.name : 'Producto';
+
+        if (window.confirm(`¿Estás seguro de eliminar "${nombre}"? Esta acción no se puede deshacer.`)) {
             ProductService.deleteProduct(id)
                 .then(() => {
                     loadProducts(); // Recargar lista
-                    toast.success('Producto eliminado.');
+                    toast.success(`"${nombre}" se eliminó del catálogo.`);
                 })
                 .catch(err => {
                     console.error('Error al eliminar el producto:', err);
-                    toast.error(err.response?.data || 'Error al eliminar el producto.');
+                    toast.error(err.response?.data || `No se pudo eliminar "${nombre}". Inténtalo de nuevo.`);
                 });
         }
     };

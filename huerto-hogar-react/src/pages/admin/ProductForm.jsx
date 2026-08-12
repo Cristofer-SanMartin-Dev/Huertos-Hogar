@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import ProductService from '../../services/productService';
 
 // No todo se vende por unidad: algunos productos se venden por peso o envase.
@@ -81,14 +82,20 @@ const ProductForm = () => {
 
         if (id) {
             ProductService.updateProduct(id, productData, image)
-                .then(() => navigate('/admin'))
+                .then(() => {
+                    toast.success(`Producto "${name}" actualizado con éxito.`);
+                    navigate('/admin');
+                })
                 .catch(err => {
                     console.error('Error al actualizar el producto:', err);
                     setFormError(err.response?.data || 'Error al actualizar el producto.');
                 });
         } else {
             ProductService.createProduct(productData, image)
-                .then(() => navigate('/admin'))
+                .then(() => {
+                    toast.success(`Producto "${name}" creado con éxito.`);
+                    navigate('/admin');
+                })
                 .catch(err => {
                     console.error('Error al crear el producto:', err);
                     setFormError(err.response?.data || 'Error al crear el producto.');
