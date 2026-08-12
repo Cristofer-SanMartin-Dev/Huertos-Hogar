@@ -30,7 +30,8 @@ import java.util.List;
  *
  * Reglas de acceso:
  *  - Públicas: login, registro, recuperación de contraseña, catálogo (solo
- *    lectura), imágenes y Swagger.
+ *    lectura) y Swagger. Las imágenes de producto ya no las sirve este
+ *    backend: viven en Cloudinary (ver CloudinaryService).
  *  - Autenticadas: edición del perfil propio.
  *  - Solo ADMIN: crear, editar y eliminar productos.
  */
@@ -66,7 +67,6 @@ public class SecurityConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", configuration);
-        source.registerCorsConfiguration("/images/**", configuration);
         return source;
     }
 
@@ -88,7 +88,6 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/forgot-password", "/api/auth/reset-password").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 // Sin esto, cualquier error de un endpoint protegido (ej. falta un campo
                 // requerido) se reenvía a /error, Security lo bloquea por no estar

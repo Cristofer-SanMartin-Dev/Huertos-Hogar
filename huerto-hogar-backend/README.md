@@ -122,12 +122,13 @@ cp .env.example .env
 | `RESEND_API_KEY` | API key de [Resend](https://resend.com) para el correo de recuperación de contraseña (gratis, hasta 3.000/mes) | *(vacío)* |
 | `MAIL_FROM` | Remitente que verá el usuario. `onboarding@resend.dev` funciona sin verificar dominio propio, pero en modo prueba Resend solo entrega a la casilla con la que te registraste — para enviarle a cualquier usuario real hace falta verificar un dominio propio en Resend | `onboarding@resend.dev` |
 | `FRONTEND_URL` | URL del frontend, para construir el enlace dentro del correo de recuperación | `http://localhost:5173` |
+| `CLOUDINARY_URL` | URL de [Cloudinary](https://cloudinary.com) para subir imágenes de producto (gratis, hasta 25GB). Formato `cloudinary://api_key:api_secret@cloud_name`, tal cual la da su dashboard | *(vacío)* |
 
-Sin `RESEND_API_KEY` el envío de correo se omite silenciosamente (se registra en el log del servidor) pero la petición igual responde 200: el resto de la aplicación no depende del correo, y la respuesta nunca revela si el envío falló o si el email simplemente no existía.
+Sin `RESEND_API_KEY` el envío de correo se omite silenciosamente (se registra en el log del servidor) pero la petición igual responde 200: el resto de la aplicación no depende del correo, y la respuesta nunca revela si el envío falló o si el email simplemente no existía. Sin `CLOUDINARY_URL` pasa lo mismo con las imágenes: el producto se crea/actualiza igual, solo que sin imagen.
 
 ## Base de datos
 
-El esquema se genera y mantiene automáticamente desde las entidades JPA (`ddl-auto=update`): no hay migraciones ni scripts `.sql` que ejecutar a mano, solo crear la base vacía (`huertohogar_db`) antes del primer arranque. Las imágenes de producto se guardan en disco (carpeta `uploads/`, servida en `/images/**`) y se referencian por nombre de archivo en la tabla `products`.
+El esquema se genera y mantiene automáticamente desde las entidades JPA (`ddl-auto=update`): no hay migraciones ni scripts `.sql` que ejecutar a mano, solo crear la base vacía (`huertohogar_db`) antes del primer arranque. Las imágenes de producto se suben a Cloudinary (ver más abajo) y se guarda la URL completa en la tabla `products` — no en disco local: Render (y la mayoría de los hosts free) no tiene disco persistente, así que un archivo guardado ahí desaparece en el próximo reinicio del contenedor.
 
 ## Tests
 

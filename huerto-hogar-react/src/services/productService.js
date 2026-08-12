@@ -65,9 +65,19 @@ class ProductService {
         return http.delete(`${PRODUCTS_PATH}/${id}`);
     }
 
-    /** Helper para obtener la URL completa de la imagen de un producto. */
+    /**
+     * Helper para obtener la URL completa de la imagen de un producto.
+     *
+     * Las imágenes se suben a Cloudinary, así que el backend ya devuelve una
+     * URL absoluta (empieza con "http"): se usa tal cual. El prefijo
+     * IMAGE_BASE_URL solo queda como respaldo para productos viejos que
+     * todavía tengan el nombre de archivo local de antes de la migración
+     * (esos archivos ya no existen porque Render no tiene disco persistente,
+     * pero al menos no rompe si algún registro quedó así).
+     */
     getImageUrl(imageName) {
         if (!imageName) return 'https://via.placeholder.com/150';
+        if (imageName.startsWith('http')) return imageName;
         return IMAGE_BASE_URL + imageName;
     }
 }

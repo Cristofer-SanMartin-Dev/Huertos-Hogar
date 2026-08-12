@@ -44,6 +44,16 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Almacena las imágenes de producto en Cloudinary en vez del disco
+             local: Render (y la mayoría de los hosts free) no tiene disco
+             persistente, así que un archivo local desaparece en cuanto el
+             contenedor se reinicia. -->
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.36.0</version>
+        </dependency>
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

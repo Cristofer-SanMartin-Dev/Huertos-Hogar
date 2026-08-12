@@ -8,12 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -21,16 +17,8 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    // Carpeta donde se guardarán las imágenes (en la raíz del proyecto)
-    private final Path rootLocation = Paths.get("uploads");
-
-    public ProductService() {
-        try {
-            Files.createDirectories(rootLocation); // Crea la carpeta si no existe
-        } catch (IOException e) {
-            throw new RuntimeException("No se pudo inicializar la carpeta de uploads", e);
-        }
-    }
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -43,14 +31,10 @@ public class ProductService {
     // Guardar producto CON imagen
     public Product saveProduct(Product product, MultipartFile imageFile) throws IOException {
         if (imageFile != null && !imageFile.isEmpty()) {
-            // Generar nombre único para evitar colisiones (ej: uuid_manzana.jpg)
-            String uniqueFilename = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-            
-            // Guardar el archivo físico
-            Files.copy(imageFile.getInputStream(), this.rootLocation.resolve(uniqueFilename));
-            
-            // Guardar el nombre en el objeto
-            product.setImageName(uniqueFilename);
+            String url = cloudinaryService.upload(imageFile);
+            if (url != null) {
+                product.setImageName(url);
+            }
         }
         return productRepository.save(product);
     }
@@ -71,12 +55,13 @@ public class ProductService {
         product.setDescuento(productDetails.getDescuento());
         product.setUnidadMedida(productDetails.getUnidadMedida());
 
-        // Si viene una nueva imagen, la guardamos y actualizamos
+        // Si viene una nueva imagen, se sube y se reemplaza; si no, se
+        // conserva la que ya tenía el producto.
         if (imageFile != null && !imageFile.isEmpty()) {
-            // (Opcional: Aquí podrías borrar la imagen antigua del disco)
-            String uniqueFilename = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-            Files.copy(imageFile.getInputStream(), this.rootLocation.resolve(uniqueFilename));
-            product.setImageName(uniqueFilename);
+            String url = cloudinaryService.upload(imageFile);
+            if (url != null) {
+                product.setImageName(url);
+            }
         }
 
         return productRepository.save(product);
