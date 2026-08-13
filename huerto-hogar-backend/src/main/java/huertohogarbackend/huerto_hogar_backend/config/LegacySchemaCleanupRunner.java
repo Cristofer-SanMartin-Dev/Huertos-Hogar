@@ -16,6 +16,11 @@ import org.springframework.stereotype.Component;
  * recuperación nuevo (el insert dejaba esa columna en null).
  * DROP COLUMN IF EXISTS es seguro de correr en cada arranque: no hace nada
  * una vez que ya se borró.
+ *
+ * También purga las filas que quedaron de antes de este cambio: son
+ * pedidos de recuperación con el mecanismo viejo (token largo), ya
+ * completamente inútiles ahora que el flujo es por código, así que no
+ * tiene sentido conservarlas ocupando espacio.
  */
 @Component
 public class LegacySchemaCleanupRunner implements CommandLineRunner {
@@ -28,6 +33,7 @@ public class LegacySchemaCleanupRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        jdbcTemplate.execute("DELETE FROM password_reset_tokens WHERE code IS NULL");
         jdbcTemplate.execute("ALTER TABLE password_reset_tokens DROP COLUMN IF EXISTS token");
     }
 }

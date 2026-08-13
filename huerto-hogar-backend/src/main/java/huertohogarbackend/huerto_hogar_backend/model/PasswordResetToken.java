@@ -27,7 +27,12 @@ public class PasswordResetToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    // Nullable a nivel de base de datos a propósito, aunque la app siempre lo
+    // asigna al crear un registro: Hibernate con ddl-auto=update agrega esta
+    // columna con ALTER TABLE ADD COLUMN, y si fuera NOT NULL esa sentencia
+    // falla en cuanto la tabla ya tiene filas (no hay valor para las
+    // existentes) — pasó en producción, donde ya había pedidos de
+    // recuperación viejos; en local nunca se vio porque la tabla estaba vacía.
     private String code;
 
     @ManyToOne
