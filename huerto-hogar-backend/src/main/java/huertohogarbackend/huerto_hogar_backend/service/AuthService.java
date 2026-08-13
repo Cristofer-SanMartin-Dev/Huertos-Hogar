@@ -54,8 +54,10 @@ public class AuthService {
     private static final Pattern NOMBRE_PATTERN =
             Pattern.compile("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,}$");
 
-    // Solo dígitos, con un '+' opcional al inicio (formato internacional).
-    private static final Pattern TELEFONO_PATTERN = Pattern.compile("^\\+?\\d{8,15}$");
+    // Solo se aceptan dos formatos: 9 dígitos (celular chileno sin código de
+    // país, ej. 912345678) o 12 caracteres con el "+56" incluido
+    // (ej. +56912345678). Nada intermedio.
+    private static final Pattern TELEFONO_PATTERN = Pattern.compile("^\\d{9}$|^\\+\\d{11}$");
 
     // --- Validadores de campo, reutilizados por el registro y la edición de perfil ---
 
@@ -79,7 +81,7 @@ public class AuthService {
 
     private void validarTelefono(String valor) {
         if (valor == null || !TELEFONO_PATTERN.matcher(valor.trim()).matches()) {
-            throw new RuntimeException("El número de contacto debe tener entre 8 y 15 dígitos.");
+            throw new RuntimeException("El número de contacto debe tener 9 dígitos (ej: 912345678) o incluir el +56 (ej: +56912345678).");
         }
     }
 
@@ -125,14 +127,18 @@ public class AuthService {
 
         validarRegistro(registerRequest);
 
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+        // El email se guarda en minúsculas: da lo mismo cómo lo escriba el
+        // usuario, dos cuentas no pueden diferir solo en mayúsculas.
+        String emailNormalizado = registerRequest.getEmail().trim().toLowerCase();
+
+        if (userRepository.existsByEmailIgnoreCase(emailNormalizado)) {
             throw new RuntimeException("Error: El email ya está en uso.");
         }
 
         User newUser = new User();
         newUser.setNombre(registerRequest.getNombre());
         newUser.setApellidos(registerRequest.getApellidos());
-        newUser.setEmail(registerRequest.getEmail());
+        newUser.setEmail(emailNormalizado);
 
         // FIX: Usamos el passwordEncoder (Arregla la advertencia "is not used")
         newUser.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
@@ -144,7 +150,7 @@ public class AuthService {
 
         // La cuenta de administración se define por configuración, no hardcodeada.
         // Solo puede reclamarse una vez, porque el email es único en la tabla.
-        if (adminEmail.equalsIgnoreCase(registerRequest.getEmail())) {
+        if (adminEmail.equalsIgnoreCase(emailNormalizado)) {
             newUser.setRole("ADMIN");
         } else {
             newUser.setRole("CUSTOMER");
@@ -154,13 +160,13 @@ public class AuthService {
     }
 
     public User getByEmail(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + email));
     }
 
     // FIX: El método DEBE devolver 'Optional<User>' (Arregla el error de la línea 30)
     public Optional<User> loginUser(String email, String rawPassword) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
+        Optional<User> userOptional = userRepository.findByEmailIgnoreCase(email);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -218,7 +224,7 @@ public class AuthService {
      */
     @Transactional
     public void solicitarRecuperacion(String email) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
+        Optional<User> userOptional = userRepository.findByEmailIgnoreCase(email);
         if (userOptional.isEmpty()) {
             return;
         }

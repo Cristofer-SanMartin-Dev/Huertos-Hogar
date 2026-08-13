@@ -4,6 +4,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext.js';
 import PasswordInput from '../components/PasswordInput.jsx';
+import PasswordRequirements from '../components/PasswordRequirements.jsx';
+import RegionComunaSelect from '../components/RegionComunaSelect.jsx';
 
 const RegisterPage = () => {
   // --- ESTADOS MODIFICADOS ---
@@ -27,7 +29,8 @@ const RegisterPage = () => {
   // inmediato sin esperar el viaje de ida y vuelta a la API.
   const NOMBRE_REGEX = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,}$/;
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const TELEFONO_REGEX = /^\+?\d{8,15}$/;
+  // Solo 9 dígitos (celular sin código de país) o 12 caracteres con el +56 incluido.
+  const TELEFONO_REGEX = /^\d{9}$|^\+\d{11}$/;
   const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
   const validateForm = () => {
@@ -58,7 +61,7 @@ const RegisterPage = () => {
     if (!telefono.trim()) {
       newErrors.telefono = 'El número de contacto es obligatorio.';
     } else if (!TELEFONO_REGEX.test(telefono.trim())) {
-      newErrors.telefono = 'El teléfono debe tener entre 8 y 15 dígitos (puede empezar con +).';
+      newErrors.telefono = 'El teléfono debe tener 9 dígitos (ej: 912345678) o incluir el +56 (ej: +56912345678).';
     }
 
     if (!email.trim()) {
@@ -141,17 +144,14 @@ const RegisterPage = () => {
               {errors.calle && <div className="invalid-feedback">{errors.calle}</div>}
             </div>
 
-            <div className="col-md-6 form-group">
-              <label htmlFor="region">Región:</label>
-              <input type="text" id="region" className={`form-control ${errors.region ? 'is-invalid' : ''}`} value={region} onChange={(e) => setRegion(e.target.value)} required />
-              {errors.region && <div className="invalid-feedback">{errors.region}</div>}
-            </div>
-
-            <div className="col-md-6 form-group">
-              <label htmlFor="comuna">Comuna:</label>
-              <input type="text" id="comuna" className={`form-control ${errors.comuna ? 'is-invalid' : ''}`} value={comuna} onChange={(e) => setComuna(e.target.value)} required />
-              {errors.comuna && <div className="invalid-feedback">{errors.comuna}</div>}
-            </div>
+            <RegionComunaSelect
+              region={region}
+              comuna={comuna}
+              onRegionChange={setRegion}
+              onComunaChange={setComuna}
+              regionError={errors.region}
+              comunaError={errors.comuna}
+            />
 
             <div className="col-12 form-group">
               <label htmlFor="telefono">Número de Contacto:</label>
@@ -159,7 +159,7 @@ const RegisterPage = () => {
               {errors.telefono && <div className="invalid-feedback">{errors.telefono}</div>}
             </div>
 
-            <div className="col-sm-6">
+            <div className="col-12">
               <PasswordInput
                 id="password"
                 label="Contraseña:"
@@ -168,11 +168,11 @@ const RegisterPage = () => {
                 error={errors.password}
                 required
                 autoComplete="new-password"
-                helpText="Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo (ej: !@#$%)."
               />
+              <PasswordRequirements password={password} />
             </div>
 
-            <div className="col-sm-6">
+            <div className="col-12">
               <PasswordInput
                 id="confirmPassword"
                 label="Confirmar contraseña:"

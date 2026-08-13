@@ -51,7 +51,7 @@ class PasswordResetTest {
                 "calle", "Calle 123",
                 "region", "Metropolitana",
                 "comuna", "Santiago",
-                "telefono", "12345678"
+                "telefono", "912345678"
         );
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -65,7 +65,7 @@ class PasswordResetTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("email", email))));
 
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow();
         return passwordResetTokenRepository.findAll().stream()
                 .filter(t -> t.getUser().getId().equals(user.getId()))
                 .findFirst()

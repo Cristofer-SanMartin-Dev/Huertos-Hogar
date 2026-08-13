@@ -66,7 +66,7 @@ public class ProductService {
         Map<Long, Long> unidadesVendidas = unidadesVendidasPorProducto();
         List<Product> todos = productRepository.findAll();
 
-        User user = userRepository.findByEmail(email).orElse(null);
+        User user = userRepository.findByEmailIgnoreCase(email).orElse(null);
         Set<String> categoriasCompradas = new HashSet<>();
         Set<Long> productosComprados = new HashSet<>();
 

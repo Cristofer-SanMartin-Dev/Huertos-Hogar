@@ -33,7 +33,7 @@ public class ReviewService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + productId));
 
-        User user = userRepository.findByEmail(requesterEmail)
+        User user = userRepository.findByEmailIgnoreCase(requesterEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + requesterEmail));
 
         Review review = new Review();

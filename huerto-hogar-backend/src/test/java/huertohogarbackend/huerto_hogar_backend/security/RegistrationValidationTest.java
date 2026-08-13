@@ -11,9 +11,11 @@ import org.springframework.http.MediaType;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 /**
  * El registro se valida en el servidor, no solo en el formulario: cualquiera
@@ -39,7 +41,7 @@ class RegistrationValidationTest {
         body.put("calle", "Calle 123");
         body.put("region", "Metropolitana");
         body.put("comuna", "Santiago");
-        body.put("telefono", "12345678");
+        body.put("telefono", "912345678");
         return body;
     }
 
@@ -98,11 +100,52 @@ class RegistrationValidationTest {
     }
 
     @Test
+    @DisplayName("Un teléfono que no tiene 9 ni 12 caracteres se rechaza")
+    void telefonoConLargoInvalidoSeRechaza() throws Exception {
+        Map<String, String> body = cuerpoValido("telefono.largo@test.cl");
+        body.put("telefono", "1234567890"); // 10 dígitos: ni 9 ni +56 con 11 dígitos
+        esperarRechazo(body);
+    }
+
+    @Test
+    @DisplayName("Un teléfono con +56 y 9 dígitos (12 caracteres en total) se acepta")
+    void telefonoConCodigoDePaisSeAcepta() throws Exception {
+        Map<String, String> body = cuerpoValido("telefono.codigopais@test.cl");
+        body.put("telefono", "+56912345678");
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     @DisplayName("Un registro con todos los campos válidos se acepta")
     void registroValidoSeAcepta() throws Exception {
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(cuerpoValido("valido@test.cl"))))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("El email se guarda en minúsculas y sirve para loguearse sin importar cómo se haya escrito")
+    void emailSeNormalizaAMinusculasYPermiteLoginConCualquierCapitalizacion() throws Exception {
+        Map<String, String> body = cuerpoValido("Mayus.Minus@Test.CL");
+
+        MvcResult registro = mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String emailGuardado = objectMapper.readTree(registro.getResponse().getContentAsString()).get("email").asText();
+        assertThat(emailGuardado).isEqualTo("mayus.minus@test.cl");
+
+        // Inicia sesión con una capitalización totalmente distinta a la usada al registrarse.
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of(
+                                "email", "MAYUS.MINUS@TEST.CL", "password", "Password123!"))))
                 .andExpect(status().isOk());
     }
 }

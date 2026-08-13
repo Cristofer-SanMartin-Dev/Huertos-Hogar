@@ -43,7 +43,7 @@ public class OrderService {
      */
     @Transactional
     public Order createOrder(CreateOrderRequest dto, String requesterEmail) {
-        User user = userRepository.findByEmail(requesterEmail)
+        User user = userRepository.findByEmailIgnoreCase(requesterEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + requesterEmail));
 
         if (dto.getItems() == null || dto.getItems().isEmpty()) {
@@ -101,7 +101,7 @@ public class OrderService {
     }
 
     public List<Order> listByUser(String requesterEmail) {
-        User user = userRepository.findByEmail(requesterEmail)
+        User user = userRepository.findByEmailIgnoreCase(requesterEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + requesterEmail));
         return orderRepository.findByUserIdOrderByFechaDesc(user.getId());
     }

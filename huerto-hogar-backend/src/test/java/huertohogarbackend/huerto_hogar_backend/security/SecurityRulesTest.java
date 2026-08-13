@@ -49,7 +49,7 @@ class SecurityRulesTest {
                 "calle", "Calle 123",
                 "region", "Metropolitana",
                 "comuna", "Santiago",
-                "telefono", "12345678"
+                "telefono", "912345678"
         );
 
         MvcResult result = mockMvc.perform(post("/api/auth/register")
@@ -68,7 +68,7 @@ class SecurityRulesTest {
                 "calle", "Otra calle 456",
                 "region", "Valparaíso",
                 "comuna", "Viña del Mar",
-                "telefono", "87654321"
+                "telefono", "987654321"
         ));
     }
 
@@ -170,7 +170,7 @@ class SecurityRulesTest {
                 "calle", "Calle 123",
                 "region", "Metropolitana",
                 "comuna", "Santiago",
-                "telefono", "87654321"
+                "telefono", "987654321"
         ));
 
         mockMvc.perform(put("/api/auth/profile/" + usuario.get("id").asLong())

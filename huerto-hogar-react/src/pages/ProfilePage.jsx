@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext.js';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import orderService from '../services/orderService.js';
+import RegionComunaSelect from '../components/RegionComunaSelect.jsx';
 
 const ProfilePage = () => {
   // 2. Obtén 'updateUser' del contexto
@@ -33,7 +34,8 @@ const ProfilePage = () => {
 
   // Mismas reglas que valida el backend (AuthService.validarActualizacionPerfil).
   const NOMBRE_REGEX = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,}$/;
-  const TELEFONO_REGEX = /^\+?\d{8,15}$/;
+  // Solo 9 dígitos (celular sin código de país) o 12 caracteres con el +56 incluido.
+  const TELEFONO_REGEX = /^\d{9}$|^\+\d{11}$/;
 
   const validateForm = () => {
     const newErrors = {};
@@ -61,7 +63,7 @@ const ProfilePage = () => {
     if (!formData.telefono.trim()) {
       newErrors.telefono = 'El número de contacto es obligatorio.';
     } else if (!TELEFONO_REGEX.test(formData.telefono.trim())) {
-      newErrors.telefono = 'El teléfono debe tener entre 8 y 15 dígitos (puede empezar con +).';
+      newErrors.telefono = 'El teléfono debe tener 9 dígitos (ej: 912345678) o incluir el +56 (ej: +56912345678).';
     }
 
     setFieldErrors(newErrors);
@@ -95,6 +97,9 @@ const ProfilePage = () => {
       [name]: value
     }));
   };
+
+  const setRegion = (value) => setFormData(prevData => ({ ...prevData, region: value }));
+  const setComuna = (value) => setFormData(prevData => ({ ...prevData, comuna: value }));
 
   // 6. Manejador para guardar el formulario
   const handleSubmit = (e) => {
@@ -177,15 +182,15 @@ const ProfilePage = () => {
                     <input type="text" id="calle" name="calle" className={`form-control ${fieldErrors.calle ? 'is-invalid' : ''}`} value={formData.calle} onChange={handleChange} />
                     {fieldErrors.calle && <div className="invalid-feedback">{fieldErrors.calle}</div>}
                   </div>
-                  <div className="form-group mb-2">
-                    <label htmlFor="comuna" className="form-label">Comuna:</label>
-                    <input type="text" id="comuna" name="comuna" className={`form-control ${fieldErrors.comuna ? 'is-invalid' : ''}`} value={formData.comuna} onChange={handleChange} />
-                    {fieldErrors.comuna && <div className="invalid-feedback">{fieldErrors.comuna}</div>}
-                  </div>
-                  <div className="form-group mb-3">
-                    <label htmlFor="region" className="form-label">Región:</label>
-                    <input type="text" id="region" name="region" className={`form-control ${fieldErrors.region ? 'is-invalid' : ''}`} value={formData.region} onChange={handleChange} />
-                    {fieldErrors.region && <div className="invalid-feedback">{fieldErrors.region}</div>}
+                  <div className="row mb-3">
+                    <RegionComunaSelect
+                      region={formData.region}
+                      comuna={formData.comuna}
+                      onRegionChange={setRegion}
+                      onComunaChange={setComuna}
+                      regionError={fieldErrors.region}
+                      comunaError={fieldErrors.comuna}
+                    />
                   </div>
                   <button type="submit" className="btn btn-primary" disabled={isLoading}>
                     {isLoading ? 'Guardando...' : 'Guardar Cambios'}

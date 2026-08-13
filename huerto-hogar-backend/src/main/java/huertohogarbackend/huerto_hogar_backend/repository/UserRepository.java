@@ -8,16 +8,16 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     /**
-     * Busca un usuario por su email.
-     * Usado para el Login.
+     * Busca un usuario por su email, sin distinguir mayúsculas/minúsculas.
+     * Usado para el Login. IgnoreCase es necesario aunque el registro
+     * normalice a minúsculas, porque hay cuentas creadas antes de ese cambio
+     * que pueden tener el email guardado con otra capitalización.
      */
-    Optional<User> findByEmail(String email);
-    
+    Optional<User> findByEmailIgnoreCase(String email);
+
     /**
-     * --- MÉTODO AÑADIDO ---
-     * Verifica de forma eficiente si ya existe un usuario con ese email.
-     * Spring Data JPA entiende "existsByEmail" y crea la consulta.
-     * Lo usaremos en AuthService para evitar registros duplicados.
+     * Verifica de forma eficiente si ya existe un usuario con ese email,
+     * sin distinguir mayúsculas/minúsculas (mismo motivo que arriba).
      */
-    Boolean existsByEmail(String email);
+    Boolean existsByEmailIgnoreCase(String email);
 }

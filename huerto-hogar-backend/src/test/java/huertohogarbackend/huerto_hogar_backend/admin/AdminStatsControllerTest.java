@@ -31,7 +31,7 @@ class AdminStatsControllerTest {
         Map<String, String> registerBody = Map.of(
                 "nombre", "Admin", "apellidos", "Test", "email", adminEmail,
                 "password", "Password123!", "calle", "Calle Admin",
-                "region", "Metropolitana", "comuna", "Santiago", "telefono", "12345678"
+                "region", "Metropolitana", "comuna", "Santiago", "telefono", "912345678"
         );
         MvcResult result = mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -57,7 +57,7 @@ class AdminStatsControllerTest {
         Map<String, String> body = Map.of(
                 "nombre", "Cliente", "apellidos", "Test", "email", "cliente.stats@test.cl",
                 "password", "Password123!", "calle", "Calle 1",
-                "region", "Metropolitana", "comuna", "Santiago", "telefono", "12345678"
+                "region", "Metropolitana", "comuna", "Santiago", "telefono", "912345678"
         );
         MvcResult result = mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +111,7 @@ class AdminStatsControllerTest {
         Map<String, String> body = Map.of(
                 "nombre", "Cliente", "apellidos", "Test", "email", "cliente.users@test.cl",
                 "password", "Password123!", "calle", "Calle 1",
-                "region", "Metropolitana", "comuna", "Santiago", "telefono", "12345678"
+                "region", "Metropolitana", "comuna", "Santiago", "telefono", "912345678"
         );
         MvcResult result = mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)

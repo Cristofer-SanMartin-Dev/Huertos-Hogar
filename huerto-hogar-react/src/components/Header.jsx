@@ -28,16 +28,37 @@ return (
     />
      </NavLink>
 
-    {/* Botón hamburguesa: solo visible en pantallas angostas (por debajo de lg) */}
-    <button
-      className="navbar-toggler"
-      type="button"
-      onClick={() => setIsMenuOpen(!isMenuOpen)}
-      aria-expanded={isMenuOpen}
-      aria-label="Abrir menú de navegación"
-    >
-      <span className="navbar-toggler-icon"></span>
-    </button>
+    {/* Carrito + hamburguesa agrupados: en celular el carrito debe verse
+        siempre, aunque el menú esté colapsado (en escritorio ya se ve en la
+        lista de abajo, así que este grupo entero se oculta con d-lg-none). */}
+    <div className="d-flex align-items-center d-lg-none">
+      <NavLink
+        to="/carrito"
+        className="nav-link position-relative me-2"
+        onClick={() => setIsMenuOpen(false)}
+        aria-label={`Carrito de compras, ${cartCount} producto${cartCount === 1 ? '' : 's'}`}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="9" cy="21" r="1" />
+          <circle cx="20" cy="21" r="1" />
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+        </svg>
+        {cartCount > 0 && (
+          <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {cartCount}
+          </span>
+        )}
+      </NavLink>
+      <button
+        className="navbar-toggler"
+        type="button"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        aria-expanded={isMenuOpen}
+        aria-label="Abrir menú de navegación"
+      >
+        <span className="navbar-toggler-icon"></span>
+      </button>
+    </div>
 
     <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`} onClick={() => setIsMenuOpen(false)}>
       {/* Lista de enlaces de navegación pública */}
