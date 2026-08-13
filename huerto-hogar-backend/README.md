@@ -119,12 +119,13 @@ cp .env.example .env
 | `JWT_EXPIRATION_MS` | Vigencia del token en ms | `28800000` (8 horas) |
 | `CORS_ORIGINS` | Orígenes autorizados a llamar la API, separados por coma | `http://localhost:5173` |
 | `ADMIN_EMAIL` | Email que obtiene rol `ADMIN` al registrarse (solo una vez, el email es único) | `admin@huertohogar.cl` |
-| `RESEND_API_KEY` | API key de [Resend](https://resend.com) para el correo de recuperación de contraseña (gratis, hasta 3.000/mes) | *(vacío)* |
-| `MAIL_FROM` | Remitente que verá el usuario. `onboarding@resend.dev` funciona sin verificar dominio propio, pero en modo prueba Resend solo entrega a la casilla con la que te registraste — para enviarle a cualquier usuario real hace falta verificar un dominio propio en Resend | `onboarding@resend.dev` |
+| `BREVO_API_KEY` | API key de [Brevo](https://brevo.com) para el correo de recuperación de contraseña y de cambio de estado de pedido (gratis, hasta 300/día) | *(vacío)* |
+| `MAIL_FROM` | Remitente que verá el usuario. Tiene que ser exactamente la dirección que verificaste como "Single Sender" en Brevo — a diferencia de Resend, no exige verificar un dominio propio, y una vez verificado el remitente deja enviar a cualquier destinatario | *(vacío)* |
+| `MAIL_FROM_NAME` | Nombre del remitente que verá el usuario | `HuertoHogar` |
 | `FRONTEND_URL` | URL del frontend, para construir el enlace dentro del correo de recuperación | `http://localhost:5173` |
 | `CLOUDINARY_URL` | URL de [Cloudinary](https://cloudinary.com) para subir imágenes de producto (gratis, hasta 25GB). Formato `cloudinary://api_key:api_secret@cloud_name`, tal cual la da su dashboard | *(vacío)* |
 
-Sin `RESEND_API_KEY` el envío de correo se omite silenciosamente (se registra en el log del servidor) pero la petición igual responde 200: el resto de la aplicación no depende del correo, y la respuesta nunca revela si el envío falló o si el email simplemente no existía. Sin `CLOUDINARY_URL` pasa lo mismo con las imágenes: el producto se crea/actualiza igual, solo que sin imagen.
+Sin `BREVO_API_KEY` el envío de correo se omite silenciosamente (se registra en el log del servidor) pero la petición igual responde 200: el resto de la aplicación no depende del correo, y la respuesta nunca revela si el envío falló o si el email simplemente no existía. Sin `CLOUDINARY_URL` pasa lo mismo con las imágenes: el producto se crea/actualiza igual, solo que sin imagen.
 
 ## Base de datos
 
@@ -142,7 +143,7 @@ El esquema se genera y mantiene automáticamente desde las entidades JPA (`ddl-a
 - **`RegistrationValidationTest`** — formato de email, fortaleza de contraseña, formato de nombre y teléfono.
 - **`OrderControllerTest`** — creación de pedidos, validación de stock, visibilidad por dueño/admin.
 - **`ReviewControllerTest`** — publicación y listado de reseñas.
-- **`PasswordResetTest`** — generación de token, que nunca revele si un email existe, expiración, y que el token se consuma (no se pueda reusar). Sin `RESEND_API_KEY` configurada, el envío de correo se omite sin red, sin depender de credenciales reales.
+- **`PasswordResetTest`** — generación de token, que nunca revele si un email existe, expiración, y que el token se consuma (no se pueda reusar). Sin `BREVO_API_KEY` configurada, el envío de correo se omite sin red, sin depender de credenciales reales.
 
 ## Estructura
 
