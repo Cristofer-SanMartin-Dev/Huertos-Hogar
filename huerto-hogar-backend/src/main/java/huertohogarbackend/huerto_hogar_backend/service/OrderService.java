@@ -30,6 +30,9 @@ public class OrderService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     /**
      * Crea un pedido a partir del carrito.
      *
@@ -122,12 +125,24 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Pedido no encontrado con id: " + orderId));
 
+        EstadoPedido estadoAnterior = order.getEstado();
+        EstadoPedido estadoNuevo;
         try {
-            order.setEstado(EstadoPedido.valueOf(nuevoEstado.toUpperCase()));
+            estadoNuevo = EstadoPedido.valueOf(nuevoEstado.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Estado inválido: " + nuevoEstado);
         }
+        order.setEstado(estadoNuevo);
 
-        return orderRepository.save(order);
+        Order actualizado = orderRepository.save(order);
+
+        // Solo si el estado realmente cambió: evita mandar un correo cuando el
+        // admin reenvía el mismo estado que ya tenía el pedido.
+        if (estadoAnterior != estadoNuevo) {
+            User cliente = order.getUser();
+            emailService.enviarCorreoCambioEstado(cliente.getEmail(), cliente.getNombre(), actualizado);
+        }
+
+        return actualizado;
     }
 }

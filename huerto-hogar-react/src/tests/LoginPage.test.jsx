@@ -39,8 +39,10 @@ describe('Página LoginPage', () => {
       </MemoryRouter>
     );
 
+    // Match exacto (no regex) porque el botón de mostrar/ocultar contraseña
+    // también tiene un aria-label que contiene la palabra "contraseña".
     fireEvent.change(screen.getByLabelText(/Correo Electrónico/i), { target: { value: 'test@example.com' } });
-    fireEvent.change(screen.getByLabelText(/Contraseña/i), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByLabelText('Contraseña:'), { target: { value: 'password123' } });
     fireEvent.click(screen.getByRole('button', { name: /Ingresar/i }));
 
     expect(mockLogin).toHaveBeenCalledWith('test@example.com', 'password123');

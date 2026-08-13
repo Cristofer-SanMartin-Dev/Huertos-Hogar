@@ -7,28 +7,40 @@ import BranchesMap from '../components/BranchesMap.jsx';
 
 // 1. Importa el servicio completo (instancia por defecto)
 import ProductService from '../services/productService.js';
+import { useAuth } from '../context/AuthContext.js';
 
 const HomePage = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
-    // 2. Llama a la API real para obtener productos
-    ProductService.getAllProducts()
-      .then(response => {
-        // Filtramos o tomamos los primeros 3 productos para "Destacados"
-        // Si tu backend tuviera un endpoint /featured, lo usaríamos aquí.
-        const allProducts = response.data;
-        const top3 = allProducts.slice(0, 3); 
-        setFeaturedProducts(top3);
-      })
+    // Los destacados los elige el backend: los 3 más vendidos, desempatando
+    // por mejor calificación promedio (ver ProductController#getFeaturedProducts).
+    ProductService.getFeaturedProducts()
+      .then(response => setFeaturedProducts(response.data))
       .catch(error => {
         console.error("Error al cargar productos destacados:", error);
-        // Opcional: Poner productos vacíos o mostrar un mensaje
         setFeaturedProducts([]);
       });
   }, []);
+
+  // "Recomendado para ti": solo tiene sentido con sesión de cliente (depende
+  // de SU historial de pedidos). Los admins no compran, así que se omite.
+  useEffect(() => {
+    if (isAuthenticated && user?.role === 'CUSTOMER') {
+      ProductService.getRecommendedProducts()
+        .then(response => setRecommendedProducts(response.data))
+        .catch(error => {
+          console.error("Error al cargar recomendaciones:", error);
+          setRecommendedProducts([]);
+        });
+    } else {
+      setRecommendedProducts([]);
+    }
+  }, [isAuthenticated, user]);
 
   const handleViewReviews = (product) => {
     setSelectedProduct(product);
@@ -90,6 +102,25 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+
+      {/* --- RECOMENDADO PARA TI: solo con sesión de cliente y si hay algo que recomendar --- */}
+      {recommendedProducts.length > 0 && (
+        <div className="album py-5">
+          <div className="container">
+            <h2 className="text-center mb-4 section-title">Recomendado para Ti</h2>
+            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+              {recommendedProducts.map(product => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onViewReviews={handleViewReviews}
+                  onDelete={handleDeleteProduct}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* TEASER QUIÉNES SOMOS: el detalle de misión y visión vive en /nosotros,
           para no duplicar ese texto en dos páginas. */}

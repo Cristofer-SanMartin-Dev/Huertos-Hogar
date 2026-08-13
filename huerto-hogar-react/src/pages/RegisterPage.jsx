@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext.js';
+import PasswordInput from '../components/PasswordInput.jsx';
 
 const RegisterPage = () => {
   // --- ESTADOS MODIFICADOS ---
@@ -10,6 +11,7 @@ const RegisterPage = () => {
   const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [calle, setCalle] = useState('');
   const [region, setRegion] = useState('');
   const [comuna, setComuna] = useState('');
@@ -69,6 +71,12 @@ const RegisterPage = () => {
       newErrors.password = 'La contraseña es obligatoria.';
     } else if (!PASSWORD_REGEX.test(password)) {
       newErrors.password = 'Debe tener 8+ caracteres, con mayúscula, minúscula, número y símbolo.';
+    }
+
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Confirma la contraseña.';
+    } else if (password !== confirmPassword) {
+      newErrors.confirmPassword = 'Las contraseñas no coinciden.';
     }
     // --- FIN VALIDACIÓN ---
 
@@ -151,11 +159,29 @@ const RegisterPage = () => {
               {errors.telefono && <div className="invalid-feedback">{errors.telefono}</div>}
             </div>
 
-            <div className="col-12 form-group">
-              <label htmlFor="password">Contraseña:</label>
-              <input type="password" id="password" className={`form-control ${errors.password ? 'is-invalid' : ''}`} value={password} onChange={(e) => setPassword(e.target.value)} required />
-              <div className="form-text">Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo (ej: !@#$%).</div>
-              {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+            <div className="col-sm-6">
+              <PasswordInput
+                id="password"
+                label="Contraseña:"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                error={errors.password}
+                required
+                autoComplete="new-password"
+                helpText="Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo (ej: !@#$%)."
+              />
+            </div>
+
+            <div className="col-sm-6">
+              <PasswordInput
+                id="confirmPassword"
+                label="Confirmar contraseña:"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                error={errors.confirmPassword}
+                required
+                autoComplete="new-password"
+              />
             </div>
           </div>
           {/* --- FIN FORMULARIO MODIFICADO --- */}

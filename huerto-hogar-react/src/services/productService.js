@@ -17,6 +17,16 @@ class ProductService {
         return http.get(PRODUCTS_PATH);
     }
 
+    // Los 3 productos destacados de la portada: más vendidos, desempatados por mejor calificación.
+    getFeaturedProducts() {
+        return http.get(`${PRODUCTS_PATH}/destacados`);
+    }
+
+    // Recomendaciones personalizadas para el usuario logueado. Requiere sesión.
+    getRecommendedProducts() {
+        return http.get(`${PRODUCTS_PATH}/recomendados`);
+    }
+
     getProductById(id) {
         return http.get(`${PRODUCTS_PATH}/${id}`);
     }

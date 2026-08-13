@@ -37,6 +37,10 @@ public class OrderResponse {
 
     @Data
     public static class ItemResponse {
+        // Nulo si el producto fue eliminado después de la compra (ver
+        // OrderItem.product): el frontend usa esto para "Repetir pedido" y
+        // debe poder omitir lo que ya no existe.
+        private Long productId;
         private String productName;
         private Double unitPrice;
         private Integer quantity;
@@ -44,6 +48,7 @@ public class OrderResponse {
 
         public static ItemResponse from(OrderItem item) {
             ItemResponse response = new ItemResponse();
+            response.setProductId(item.getProduct() != null ? item.getProduct().getId() : null);
             response.setProductName(item.getProductName());
             response.setUnitPrice(item.getUnitPrice());
             response.setQuantity(item.getQuantity());

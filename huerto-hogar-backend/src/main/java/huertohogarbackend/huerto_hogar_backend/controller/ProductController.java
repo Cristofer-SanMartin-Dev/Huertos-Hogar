@@ -7,11 +7,15 @@ import huertohogarbackend.huerto_hogar_backend.service.ProductService;
 import huertohogarbackend.huerto_hogar_backend.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile; // Importante
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/products")
@@ -32,6 +36,32 @@ public class ProductController {
     @GetMapping
     public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts().stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    // Productos destacados de la portada: los 3 con más unidades vendidas,
+    // desempatando por mejor calificación promedio. Sin ventas ni reseñas
+    // todavía, el orden queda arbitrario (no hay suficiente dato para rankear).
+    @GetMapping("/destacados")
+    public List<ProductResponse> getFeaturedProducts() {
+        Map<Long, Long> unidadesVendidas = productService.unidadesVendidasPorProducto();
+        return productService.getAllProducts().stream()
+                .map(this::toResponse)
+                .sorted(Comparator
+                        .comparingLong((ProductResponse r) -> unidadesVendidas.getOrDefault(r.getId(), 0L))
+                        .thenComparingDouble(r -> r.getAverageRating() == null ? 0.0 : r.getAverageRating())
+                        .reversed())
+                .limit(3)
+                .toList();
+    }
+
+    // Recomendaciones personalizadas: productos de las categorías que el
+    // usuario ya compró, priorizando los más vendidos. Requiere sesión
+    // porque depende de SU historial de pedidos.
+    @GetMapping("/recomendados")
+    public List<ProductResponse> getRecommendedProducts(@AuthenticationPrincipal UserDetails currentUser) {
+        return productService.getRecommendations(currentUser.getUsername()).stream()
                 .map(this::toResponse)
                 .toList();
     }

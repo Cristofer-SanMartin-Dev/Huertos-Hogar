@@ -87,6 +87,10 @@ public class SecurityConfig {
                 // --- Público ---
                 .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/forgot-password", "/api/auth/reset-password").permitAll()
+                // Antes que la regla pública de abajo: recomendaciones
+                // depende de la sesión de cada usuario, así que no puede ser
+                // pública aunque coincida con el mismo patrón /api/products/**.
+                .requestMatchers(HttpMethod.GET, "/api/products/recomendados").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/categories", "/api/categories/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()

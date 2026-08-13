@@ -31,6 +31,17 @@ const cartReducer = (state, action) => {
       }
       return [...state, { ...product, quantity: 1 }];
     }
+    case 'ADD_TO_CART_QUANTITY': {
+      const { product, quantity } = action.payload;
+      const existingItem = state.find(item => item.id === product.id);
+      const cantidadActual = existingItem ? existingItem.quantity : 0;
+      const cantidadFinal = Math.min(cantidadActual + quantity, product.stock);
+      if (cantidadFinal <= cantidadActual) return state;
+      if (existingItem) {
+        return state.map(item => item.id === product.id ? { ...item, quantity: cantidadFinal } : item);
+      }
+      return [...state, { ...product, quantity: cantidadFinal }];
+    }
     case 'INCREMENT_QUANTITY': {
       return state.map(item => {
         if (item.id === action.payload && item.quantity < item.stock) {
@@ -77,6 +88,12 @@ export const CartProvider = ({ children }) => {
     dispatch({ type: 'ADD_TO_CART', payload: product });
     toast.success(`${product.name} se agregó al carrito.`);
   };
+  // Igual que addToCart, pero suma una cantidad exacta de una vez y sin
+  // toast propio: lo usa "Repetir pedido" para no mostrar un aviso por
+  // cada unidad agregada.
+  const addToCartQuantity = (product, quantity) => {
+    dispatch({ type: 'ADD_TO_CART_QUANTITY', payload: { product, quantity } });
+  };
   const incrementQuantity = (productId) => dispatch({ type: 'INCREMENT_QUANTITY', payload: productId });
   const decrementQuantity = (productId) => dispatch({ type: 'DECREMENT_QUANTITY', payload: productId });
   const removeFromCart = (productId) => dispatch({ type: 'REMOVE_FROM_CART', payload: productId });
@@ -85,6 +102,7 @@ export const CartProvider = ({ children }) => {
   const value = {
     cart,
     addToCart,
+    addToCartQuantity,
     incrementQuantity,
     decrementQuantity,
     removeFromCart,

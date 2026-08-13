@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext.js';
 import { useNavigate, Link } from 'react-router-dom';
+import PasswordInput from '../components/PasswordInput.jsx';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -43,11 +44,15 @@ const LoginPage = () => {
             <label htmlFor="email">Correo Electrónico:</label>
             <input type="email" id="email" className={`form-control ${error ? 'is-invalid' : ''}`} value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
-          <div className="form-group">
-            <label htmlFor="password">Contraseña:</label>
-            <input type="password" id="password" className={`form-control ${error ? 'is-invalid' : ''}`} value={password} onChange={(e) => setPassword(e.target.value)} required />
-            {error && <div className="invalid-feedback d-block mt-1">{error}</div>}
-          </div>
+          <PasswordInput
+            id="password"
+            label="Contraseña:"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={error}
+            required
+            autoComplete="current-password"
+          />
           <p className="text-end mt-2 mb-0">
             <Link to="/olvide-password" className="small">¿Olvidaste tu contraseña?</Link>
           </p>

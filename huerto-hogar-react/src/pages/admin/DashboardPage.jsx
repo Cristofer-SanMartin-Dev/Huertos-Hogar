@@ -107,10 +107,17 @@ const DashboardPage = () => {
                         <div className="card-header">Ingresos por categoría</div>
                         <div className="card-body">
                             {reports && reports.revenueByCategory.length > 0 ? (
-                                <ResponsiveContainer width="100%" height={280}>
-                                    <BarChart data={reports.revenueByCategory}>
+                                <ResponsiveContainer width="100%" height={320}>
+                                    <BarChart data={reports.revenueByCategory} margin={{ bottom: 55 }}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis dataKey="category" tick={{ fontSize: 11 }} />
+                                        <XAxis
+                                            dataKey="category"
+                                            tick={{ fontSize: 11 }}
+                                            interval={0}
+                                            angle={-30}
+                                            textAnchor="end"
+                                            height={70}
+                                        />
                                         <YAxis tick={{ fontSize: 12 }} />
                                         <Tooltip formatter={(value) => `$${Number(value).toLocaleString('es-CL')}`} />
                                         <Bar dataKey="value" name="Ingresos" fill={COLOR_PRIMARIO} />

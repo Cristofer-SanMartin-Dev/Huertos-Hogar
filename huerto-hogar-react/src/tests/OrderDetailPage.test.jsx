@@ -7,6 +7,7 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 
 import OrderDetailPage from '../pages/OrderDetailPage.jsx';
 import orderService from '../services/orderService.js';
+import { CartProvider } from '../context/CartProvider.jsx';
 
 vi.mock('../services/orderService.js', () => ({
   default: { getById: vi.fn() },
@@ -23,11 +24,13 @@ const mockOrder = {
 };
 
 const renderOrderDetail = () => render(
-  <MemoryRouter initialEntries={['/pedidos/42']}>
-    <Routes>
-      <Route path="/pedidos/:id" element={<OrderDetailPage />} />
-    </Routes>
-  </MemoryRouter>
+  <CartProvider>
+    <MemoryRouter initialEntries={['/pedidos/42']}>
+      <Routes>
+        <Route path="/pedidos/:id" element={<OrderDetailPage />} />
+      </Routes>
+    </MemoryRouter>
+  </CartProvider>
 );
 
 describe('Página OrderDetailPage', () => {

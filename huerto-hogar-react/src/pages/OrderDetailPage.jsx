@@ -1,7 +1,10 @@
 // src/pages/OrderDetailPage.jsx
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation, Link } from 'react-router-dom';
+import { useParams, useLocation, useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import orderService from '../services/orderService.js';
+import productService from '../services/productService.js';
+import { useCart } from '../context/CartContext.js';
 
 const ESTADOS = ['PENDIENTE', 'PREPARANDO', 'ENVIADO', 'ENTREGADO'];
 
@@ -12,8 +15,11 @@ const OrderDetailPage = () => {
     // pedido, dentro del panel): el botón de volver depende de cuál es.
     const { pathname } = useLocation();
     const esVistaAdmin = pathname.startsWith('/admin');
+    const navigate = useNavigate();
+    const { addToCartQuantity } = useCart();
     const [order, setOrder] = useState(null);
     const [error, setError] = useState('');
+    const [repitiendo, setRepitiendo] = useState(false);
 
     useEffect(() => {
         orderService.getById(id)
@@ -34,6 +40,46 @@ const OrderDetailPage = () => {
 
     const pasoActual = ESTADOS.indexOf(order.estado);
     const esCancelado = order.estado === 'CANCELADO';
+
+    // Vuelve a agregar al carrito los productos de este pedido, usando el
+    // stock y precio ACTUALES (no los que tenía el producto en ese momento).
+    // Los que ya no existen o no tienen stock se omiten y se avisa.
+    const handleRepetirPedido = async () => {
+        setRepitiendo(true);
+        let algunoOmitido = false;
+        let algunoAgregado = false;
+
+        for (const item of order.items) {
+            if (!item.productId) {
+                algunoOmitido = true;
+                continue;
+            }
+            try {
+                const { data: producto } = await productService.getProductById(item.productId);
+                if (!producto.stock || producto.stock <= 0) {
+                    algunoOmitido = true;
+                    continue;
+                }
+                addToCartQuantity(producto, item.quantity);
+                algunoAgregado = true;
+            } catch {
+                algunoOmitido = true;
+            }
+        }
+
+        setRepitiendo(false);
+
+        if (algunoAgregado) {
+            toast.success(
+                algunoOmitido
+                    ? 'Se agregaron al carrito los productos disponibles de este pedido.'
+                    : 'Se agregaron todos los productos de este pedido al carrito.'
+            );
+            navigate('/carrito');
+        } else {
+            toast.error('Ninguno de los productos de este pedido está disponible actualmente.');
+        }
+    };
 
     return (
         <div className="container py-5">
@@ -124,11 +170,18 @@ const OrderDetailPage = () => {
                 </div>
             </div>
 
-            <div className="mt-4 no-print">
+            <div className="mt-4 no-print d-flex gap-2">
                 {esVistaAdmin ? (
                     <Link to="/admin/ordenes" className="btn btn-outline-secondary">Volver a Órdenes</Link>
                 ) : (
-                    <Link to="/perfil" className="btn btn-outline-secondary">Volver a Mi Perfil</Link>
+                    <>
+                        <Link to="/perfil" className="btn btn-outline-secondary">Volver a Mi Perfil</Link>
+                        {!esCancelado && (
+                            <button className="btn btn-success" onClick={handleRepetirPedido} disabled={repitiendo}>
+                                {repitiendo ? 'Agregando...' : 'Repetir pedido'}
+                            </button>
+                        )}
+                    </>
                 )}
             </div>
         </div>

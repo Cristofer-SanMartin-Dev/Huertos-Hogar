@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import authService from '../services/authService.js';
+import PasswordInput from '../components/PasswordInput.jsx';
 
 // Misma regla que valida el backend (AuthService.PASSWORD_PATTERN).
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
@@ -75,31 +76,27 @@ const ResetPasswordPage = () => {
       <div className="login-container">
         <h2 className="text-center section-title">Nueva Contraseña</h2>
         <form onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
-            <label htmlFor="password">Contraseña nueva:</label>
-            <input
-              type="password"
-              id="password"
-              className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <div className="form-text">Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo (ej: !@#$%).</div>
-            {errors.password && <div className="invalid-feedback">{errors.password}</div>}
-          </div>
+          <PasswordInput
+            id="password"
+            label="Contraseña nueva:"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={errors.password}
+            required
+            autoComplete="new-password"
+            helpText="Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo (ej: !@#$%)."
+          />
 
-          <div className="form-group mt-3">
-            <label htmlFor="confirmPassword">Confirmar contraseña:</label>
-            <input
-              type="password"
+          <div className="mt-3">
+            <PasswordInput
               id="confirmPassword"
-              className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
+              label="Confirmar contraseña:"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              error={errors.confirmPassword}
               required
+              autoComplete="new-password"
             />
-            {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
           </div>
 
           {errors.api && <div className="alert alert-danger mt-3">{errors.api}</div>}

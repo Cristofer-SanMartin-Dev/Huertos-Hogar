@@ -1,6 +1,8 @@
 // Ruta: src/main/java/huertohogarbackend/huerto_hogar_backend/service/EmailService.java
 package huertohogarbackend.huerto_hogar_backend.service;
 
+import huertohogarbackend.huerto_hogar_backend.model.EstadoPedido;
+import huertohogarbackend.huerto_hogar_backend.model.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,6 +65,47 @@ public class EmailService {
             // No se propaga: el cliente igual recibe la respuesta genérica de
             // éxito. Si el correo no llegó, queda en el log del servidor.
             logger.error("No se pudo enviar el correo de recuperación a {}: {}", destinatario, e.getMessage());
+        }
+    }
+
+    private static String textoEstado(EstadoPedido estado) {
+        return switch (estado) {
+            case PENDIENTE -> "Pendiente";
+            case PREPARANDO -> "En preparación";
+            case ENVIADO -> "Enviado";
+            case ENTREGADO -> "Entregado";
+            case CANCELADO -> "Cancelado";
+        };
+    }
+
+    public void enviarCorreoCambioEstado(String destinatario, String nombre, Order order) {
+        if (resendApiKey == null || resendApiKey.isBlank()) {
+            logger.warn("RESEND_API_KEY no configurada: se omite el correo de cambio de estado a {}.", destinatario);
+            return;
+        }
+
+        String estadoTexto = textoEstado(order.getEstado());
+        String texto =
+                "Hola " + nombre + ",\n\n" +
+                "El estado de tu pedido #" + order.getId() + " cambió a: " + estadoTexto + ".\n\n" +
+                "Podés ver el detalle completo en tu cuenta de HuertoHogar.\n\n" +
+                "— El equipo de HuertoHogar";
+
+        try {
+            restClient.post()
+                    .uri("/emails")
+                    .header("Authorization", "Bearer " + resendApiKey)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of(
+                            "from", from,
+                            "to", List.of(destinatario),
+                            "subject", "Tu pedido #" + order.getId() + " está " + estadoTexto.toLowerCase(),
+                            "text", texto
+                    ))
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (Exception e) {
+            logger.error("No se pudo enviar el correo de cambio de estado a {}: {}", destinatario, e.getMessage());
         }
     }
 }
