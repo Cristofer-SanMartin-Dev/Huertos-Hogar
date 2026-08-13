@@ -49,8 +49,8 @@ Documentación interactiva completa (Swagger UI) con el backend corriendo: `http
 | POST | `/login` | Público | Autentica y devuelve un JWT |
 | GET | `/me` | Autenticado | Datos vigentes del usuario del token |
 | PUT | `/profile/{userId}` | Autenticado (solo el dueño) | Edita nombre, dirección y teléfono |
-| POST | `/forgot-password` | Público | Genera un token de recuperación y envía el correo (responde igual exista o no el email) |
-| POST | `/reset-password` | Público | Cambia la contraseña usando el token del correo |
+| POST | `/forgot-password` | Público | Genera un código de recuperación de 6 dígitos y envía el correo (responde igual exista o no el email) |
+| POST | `/reset-password` | Público | Cambia la contraseña usando el email y el código del correo (máximo 5 intentos antes de invalidarlo) |
 
 **Catálogo** — `/api/products`
 
@@ -143,7 +143,7 @@ El esquema se genera y mantiene automáticamente desde las entidades JPA (`ddl-a
 - **`RegistrationValidationTest`** — formato de email, fortaleza de contraseña, formato de nombre y teléfono.
 - **`OrderControllerTest`** — creación de pedidos, validación de stock, visibilidad por dueño/admin.
 - **`ReviewControllerTest`** — publicación y listado de reseñas.
-- **`PasswordResetTest`** — generación de token, que nunca revele si un email existe, expiración, y que el token se consuma (no se pueda reusar). Sin `BREVO_API_KEY` configurada, el envío de correo se omite sin red, sin depender de credenciales reales.
+- **`PasswordResetTest`** — generación del código de 6 dígitos, que nunca revele si un email existe, expiración, límite de intentos fallidos, y que el código se consuma (no se pueda reusar). Sin `BREVO_API_KEY` configurada, el envío de correo se omite sin red, sin depender de credenciales reales.
 
 ## Estructura
 

@@ -13,9 +13,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.regex.Pattern;
 // FIX: Importa la excepción que se usará en 'updateUser'
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -38,10 +38,9 @@ public class AuthService {
     @Value("${app.admin.email}")
     private String adminEmail;
 
-    @Value("${app.frontend.url}")
-    private String frontendUrl;
-
-    private static final long RESET_TOKEN_VALIDEZ_MINUTOS = 60;
+    private static final long RESET_CODE_VALIDEZ_MINUTOS = 15;
+    private static final int RESET_CODE_MAX_INTENTOS = 5;
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
@@ -209,14 +208,19 @@ public class AuthService {
         return userRepository.save(userToUpdate);
     }
 
+    /** Código numérico de 6 dígitos, con ceros a la izquierda si hace falta (ej. "004821"). */
+    private String generarCodigo() {
+        return String.format("%06d", RANDOM.nextInt(1_000_000));
+    }
+
     /**
-     * Genera un token de recuperación y envía el correo con el enlace.
+     * Genera un código de recuperación y envía el correo con él.
      *
      * Si el email no está registrado, no hace nada y no lanza error: el
      * llamador (el controller) siempre responde el mismo mensaje genérico,
      * para no revelar si una cuenta existe o no (mismo criterio que el login).
      *
-     * @Transactional: sin esto, deleteByUser (que borra el token anterior antes
+     * @Transactional: sin esto, deleteByUser (que borra el código anterior antes
      * de crear uno nuevo) falla con "No EntityManager with actual transaction
      * available" en cuanto hay una fila real que borrar — un método de borrado
      * derivado de Spring Data JPA necesita una transacción activa incluso
@@ -230,33 +234,62 @@ public class AuthService {
         }
         User user = userOptional.get();
 
-        // Solo un token vigente por usuario: pedir uno nuevo invalida el anterior.
+        // Solo un código vigente por usuario: pedir uno nuevo invalida el anterior.
         passwordResetTokenRepository.deleteByUser(user);
 
+        String codigo = generarCodigo();
+
         PasswordResetToken resetToken = new PasswordResetToken();
-        resetToken.setToken(UUID.randomUUID().toString());
+        resetToken.setCode(codigo);
         resetToken.setUser(user);
-        resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(RESET_TOKEN_VALIDEZ_MINUTOS));
+        resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(RESET_CODE_VALIDEZ_MINUTOS));
+        resetToken.setIntentos(0);
         passwordResetTokenRepository.save(resetToken);
 
-        String resetLink = frontendUrl + "/restablecer-contrasena?token=" + resetToken.getToken();
         // EmailService ya atrapa y loguea sus propios errores de envío: nunca
         // debe impedir la respuesta genérica de éxito que da el controller.
-        emailService.enviarCorreoRecuperacion(user.getEmail(), user.getNombre(), resetLink);
+        emailService.enviarCorreoRecuperacion(user.getEmail(), user.getNombre(), codigo);
     }
 
     /**
-     * Aplica una nueva contraseña usando un token de recuperación válido.
-     * El token se consume (se borra) tanto si funciona como si expiró, para
-     * que no quede utilizable una segunda vez ni acumulando basura vencida.
+     * Aplica una nueva contraseña usando el código de recuperación enviado por
+     * correo. Se identifica junto con el email (el código por sí solo, de
+     * solo 6 dígitos, no es necesariamente único entre usuarios).
+     *
+     * El mismo mensaje genérico cubre "no existe ese email", "no hay código
+     * pedido" y "el código no coincide": así tampoco se revela por este
+     * camino si una cuenta existe. Tras demasiados intentos fallidos el
+     * código se invalida, para frenar el fuerza bruta sobre 6 dígitos.
+     *
+     * Sin @Transactional a propósito: cada rama lanza una RuntimeException
+     * como parte normal del flujo (código incorrecto, expirado, etc.), y por
+     * defecto Spring revierte toda la transacción ante cualquier
+     * RuntimeException — eso deshacía el guardado del contador de intentos
+     * justo antes de lanzar el error, así que el límite de intentos nunca
+     * se cumplía. Cada .save()/.delete() ya confirma por sí solo sin una
+     * transacción explícita alrededor.
      */
-    public void restablecerContrasena(String token, String newPassword) {
-        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
-                .orElseThrow(() -> new RuntimeException("El enlace de recuperación no es válido."));
+    public void restablecerContrasena(String email, String code, String newPassword) {
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new RuntimeException("Código inválido o expirado."));
+
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Código inválido o expirado."));
 
         if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             passwordResetTokenRepository.delete(resetToken);
-            throw new RuntimeException("El enlace de recuperación expiró. Solicita uno nuevo.");
+            throw new RuntimeException("El código expiró. Solicita uno nuevo.");
+        }
+
+        if (code == null || !resetToken.getCode().equals(code.trim())) {
+            int intentos = resetToken.getIntentos() + 1;
+            if (intentos >= RESET_CODE_MAX_INTENTOS) {
+                passwordResetTokenRepository.delete(resetToken);
+                throw new RuntimeException("Demasiados intentos fallidos. Solicita un código nuevo.");
+            }
+            resetToken.setIntentos(intentos);
+            passwordResetTokenRepository.save(resetToken);
+            throw new RuntimeException("Código incorrecto.");
         }
 
         if (newPassword == null || !PASSWORD_PATTERN.matcher(newPassword).matches()) {
@@ -264,7 +297,6 @@ public class AuthService {
                     "La contraseña debe tener al menos 8 caracteres, con mayúscula, minúscula, número y símbolo.");
         }
 
-        User user = resetToken.getUser();
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
 

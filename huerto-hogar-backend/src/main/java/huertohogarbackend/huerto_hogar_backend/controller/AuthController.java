@@ -118,24 +118,24 @@ public class AuthController {
     }
 
     /**
-     * Solicita un enlace de recuperación de contraseña.
+     * Solicita un código de recuperación de contraseña por correo.
      *
      * Responde siempre el mismo mensaje genérico, exista o no ese email: así
      * nadie puede usar este endpoint para averiguar qué correos están
      * registrados (mismo criterio que el login).
      */
     @PostMapping("/forgot-password")
-    @Operation(summary = "Solicitar un enlace de recuperación de contraseña por correo")
+    @Operation(summary = "Solicitar un código de recuperación de contraseña por correo")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         authService.solicitarRecuperacion(request.getEmail());
-        return ResponseEntity.ok("Si el correo está registrado, te enviamos un enlace de recuperación.");
+        return ResponseEntity.ok("Si el correo está registrado, te enviamos un código de recuperación.");
     }
 
     @PostMapping("/reset-password")
-    @Operation(summary = "Restablecer la contraseña usando el token del correo de recuperación")
+    @Operation(summary = "Restablecer la contraseña usando el código enviado por correo")
     public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
         try {
-            authService.restablecerContrasena(request.getToken(), request.getNewPassword());
+            authService.restablecerContrasena(request.getEmail(), request.getCode(), request.getNewPassword());
             return ResponseEntity.ok("Contraseña actualizada con éxito.");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

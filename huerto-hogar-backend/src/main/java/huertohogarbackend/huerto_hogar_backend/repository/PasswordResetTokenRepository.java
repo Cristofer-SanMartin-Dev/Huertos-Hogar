@@ -9,8 +9,9 @@ import java.util.Optional;
 
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
 
-    Optional<PasswordResetToken> findByToken(String token);
+    /** Solo puede haber un código vigente por usuario a la vez. */
+    Optional<PasswordResetToken> findByUser(User user);
 
-    /** Invalida cualquier token anterior al pedir uno nuevo: solo uno vigente por usuario. */
+    /** Invalida cualquier código anterior al pedir uno nuevo: solo uno vigente por usuario. */
     void deleteByUser(User user);
 }

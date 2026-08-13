@@ -65,9 +65,9 @@ class AuthService {
         return http.post(`${AUTH_PATH}/forgot-password`, { email });
     }
 
-    /** POST /api/auth/reset-password */
-    resetPassword(token, newPassword) {
-        return http.post(`${AUTH_PATH}/reset-password`, { token, newPassword });
+    /** POST /api/auth/reset-password — código de 6 dígitos enviado por correo, junto con el email. */
+    resetPassword(email, code, newPassword) {
+        return http.post(`${AUTH_PATH}/reset-password`, { email, code, newPassword });
     }
 }
 
