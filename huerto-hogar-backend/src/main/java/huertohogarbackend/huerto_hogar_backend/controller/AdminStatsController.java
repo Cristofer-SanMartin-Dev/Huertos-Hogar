@@ -1,5 +1,6 @@
 package huertohogarbackend.huerto_hogar_backend.controller;
 
+import huertohogarbackend.huerto_hogar_backend.config.OpenApiConfig;
 import huertohogarbackend.huerto_hogar_backend.dto.AdminReportsResponse;
 import huertohogarbackend.huerto_hogar_backend.dto.AdminStatsResponse;
 import huertohogarbackend.huerto_hogar_backend.dto.UserSummaryResponse;
@@ -9,6 +10,10 @@ import huertohogarbackend.huerto_hogar_backend.model.OrderItem;
 import huertohogarbackend.huerto_hogar_backend.repository.OrderRepository;
 import huertohogarbackend.huerto_hogar_backend.repository.ProductRepository;
 import huertohogarbackend.huerto_hogar_backend.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +33,9 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/admin")
+@Tag(name = "Administración", description = "Estadísticas, usuarios y reportes del panel admin. Todo exclusivo de rol ADMIN.")
+@SecurityRequirement(name = OpenApiConfig.SECURITY_SCHEME)
+@ApiResponse(responseCode = "403", description = "El usuario no tiene rol ADMIN")
 public class AdminStatsController {
 
     @Autowired
@@ -40,6 +48,7 @@ public class AdminStatsController {
     private UserRepository userRepository;
 
     @GetMapping("/stats")
+    @Operation(summary = "Totales para las tarjetas del dashboard", description = "Cantidad de productos, usuarios y pedidos, más los ingresos totales (suma de pedidos no cancelados).")
     public AdminStatsResponse getStats() {
         AdminStatsResponse stats = new AdminStatsResponse();
         stats.setTotalProducts(productRepository.count());
@@ -58,6 +67,7 @@ public class AdminStatsController {
     }
 
     @GetMapping("/users")
+    @Operation(summary = "Listar todos los usuarios registrados", description = "No incluye la contraseña (ni siquiera el hash) en la respuesta.")
     public List<UserSummaryResponse> getUsers() {
         return userRepository.findAll().stream()
                 .map(UserSummaryResponse::from)
@@ -65,6 +75,10 @@ public class AdminStatsController {
     }
 
     @GetMapping("/reports")
+    @Operation(
+            summary = "Métricas para los gráficos del dashboard y la página de reportes",
+            description = "Top 5 productos más vendidos y con más ingresos, ingresos por categoría y ventas por día (todo calculado sobre pedidos no cancelados)."
+    )
     public AdminReportsResponse getReports() {
         List<Order> ordersValidas = orderRepository.findAll().stream()
                 .filter(order -> order.getEstado() != EstadoPedido.CANCELADO)

@@ -93,7 +93,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/products/recomendados").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/categories", "/api/categories/**").permitAll()
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                // "/swagger-ui.html" (sin /index.html) es la URL corta clásica: springdoc
+                // la redirige a /swagger-ui/index.html, pero esa redirección nunca llega
+                // a ocurrir si Security la bloquea antes con 401.
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
                 // Sin esto, cualquier error de un endpoint protegido (ej. falta un campo
                 // requerido) se reenvía a /error, Security lo bloquea por no estar
                 // autenticado ahí, y el cliente recibe un 401 falso en vez del error real.
