@@ -14,7 +14,7 @@
   <img alt="React 18" src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white" />
   <img alt="Vite 5" src="https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white" />
   <img alt="PostgreSQL 15" src="https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white" />
-  <img alt="Tests: 78 passing" src="https://img.shields.io/badge/tests-78_passing-brightgreen" />
+  <img alt="Tests: 96 passing" src="https://img.shields.io/badge/tests-96_passing-brightgreen" />
 </p>
 
 <p align="center">
@@ -22,9 +22,14 @@
   <a href="https://github.com/Cristofer-SanMartin-Dev/Huertos-Hogar/actions/workflows/frontend-ci.yml"><img alt="Frontend CI" src="https://github.com/Cristofer-SanMartin-Dev/Huertos-Hogar/actions/workflows/frontend-ci.yml/badge.svg" /></a>
 </p>
 
+**Demo en vivo:** [huertos-hogar.vercel.app](https://huertos-hogar.vercel.app) — API en [huertohogar-backend.onrender.com](https://huertohogar-backend.onrender.com/swagger-ui/index.html)
+
+> El backend está en el plan free de Render: si nadie lo usó en los últimos 15 minutos, la primera carga puede tardar ~50 segundos en "despertar".
+
 ## Tabla de contenidos
 
 - [Sobre el proyecto](#sobre-el-proyecto)
+- [Capturas](#capturas)
 - [Funcionalidades](#funcionalidades)
 - [Arquitectura](#arquitectura)
 - [Stack tecnológico](#stack-tecnológico)
@@ -33,6 +38,7 @@
 - [Roles y permisos](#roles-y-permisos)
 - [Estructura del repositorio](#estructura-del-repositorio)
 - [Documentación de cada módulo](#documentación-de-cada-módulo)
+- [Licencia](#licencia)
 
 ## Sobre el proyecto
 
@@ -40,28 +46,48 @@ HuertoHogar es una tienda online de productos frescos (frutas, verduras, product
 
 El objetivo del proyecto, más allá de cumplir la rúbrica académica, fue construirlo con las mismas prácticas que se esperarían en un entorno profesional: validación de datos en ambos extremos (nunca solo en el cliente), autorización verificada en el servidor en cada endpoint sensible, cobertura de pruebas automatizadas y un flujo de trabajo con ramas (`desarrollo` → `main`).
 
+## Capturas
+
+<!--
+  TODO: agregar capturas reales. Sugerencia de páginas a mostrar:
+  Home / catálogo (/productos) / ofertas (/ofertas) / dashboard admin (/admin).
+  Guardar los archivos en docs/screenshots/ con estos nombres y descomentar:
+
+  <p align="center">
+    <img src="docs/screenshots/home.png" width="49%" alt="Página de inicio" />
+    <img src="docs/screenshots/productos.png" width="49%" alt="Catálogo de productos" />
+  </p>
+  <p align="center">
+    <img src="docs/screenshots/ofertas.png" width="49%" alt="Ofertas con descuento" />
+    <img src="docs/screenshots/admin-dashboard.png" width="49%" alt="Dashboard del panel admin" />
+  </p>
+-->
+
 ## Funcionalidades
 
 **Cuenta de usuario**
-- Registro e inicio de sesión con JWT (autenticación *stateless*, sin sesiones en el servidor).
-- Recuperación de contraseña por correo (token de un solo uso, expira en 1 hora).
-- Edición de perfil con validación de nombre, teléfono y dirección — mismas reglas en el formulario (feedback inmediato) y en el servidor (fuente de verdad).
+- Registro e inicio de sesión con JWT (autenticación *stateless*, sin sesiones en el servidor). Email case-insensitive (se guarda en minúsculas).
+- Recuperación de contraseña por código de 6 dígitos enviado por correo (un solo uso, expira en 15 minutos, se invalida tras 5 intentos fallidos). Correos con diseño de marca vía Brevo.
+- Región y comuna en desplegables encadenados (las 16 regiones de Chile), validación de contraseña en vivo (checklist que pasa de rojo a verde) y teléfono con formato chileno (9 dígitos o +56).
+- Edición de perfil con las mismas reglas — feedback inmediato en el formulario, fuente de verdad en el servidor.
 - Rutas protegidas tanto en el frontend (`ProtectedRoute`) como en el backend (Spring Security + verificación de que el recurso pertenece a quien hace la petición).
 
 **Catálogo y compras**
 - Catálogo con búsqueda por nombre, filtro por categoría y unidad de medida por producto (kilo, bolsa, frasco, unidad).
 - Precios con descuento, valoración por estrellas y reseñas de otros usuarios.
-- Carrito de compras con validación de stock en tiempo real, checkout y boleta imprimible con historial de pedidos.
+- "Productos Destacados" (los 3 más vendidos, desempatando por calificación) y "Recomendado para Ti" (según las categorías que cada cliente ya compró).
+- Carrito de compras con validación de stock en tiempo real, checkout y boleta imprimible con historial de pedidos; "Repetir pedido" vuelve a agregar los mismos productos con el stock y precio actuales.
+- El cliente recibe un correo cuando el admin cambia el estado de su pedido.
 
 **Contenido y marca**
 - Blog con artículos educativos y una sección de impacto ambiental.
 - Mapa interactivo (Leaflet) con las 7 sucursales en Chile, cada una con su información al hacer clic.
 
 **Panel de administración** (rol `ADMIN`)
-- CRUD de productos (con carga de imagen) y categorías.
-- Gestión de pedidos: ver todos los pedidos y actualizar su estado.
-- Bandeja de mensajes de contacto y listado de usuarios registrados.
-- Dashboard con estadísticas y reportes.
+- CRUD de productos (con imagen en Cloudinary) y categorías, cada una con su propio prefijo de código (ej. `FR001` para Frutas Frescas, autogenerado por producto).
+- "Reponer stock": busca un producto por código o nombre y suma una cantidad al stock existente, en vez de tener que escribir el total a mano.
+- Gestión de pedidos: ver todos los pedidos y actualizar su estado. Bandeja de mensajes de contacto y listado de usuarios registrados.
+- Dashboard con gráficos (Recharts): ventas por día, ingresos y stock por categoría, productos más vendidos. Menú lateral colapsable en celular.
 
 ## Arquitectura
 
@@ -88,8 +114,8 @@ Separación estricta cliente-servidor: el frontend nunca accede a la base de dat
 
 | Capa | Tecnología |
 |---|---|
-| Backend | Java 21 · Spring Boot 3.5.7 · Spring Security · Spring Data JPA / Hibernate · JWT (jjwt) · PostgreSQL 15 · springdoc-openapi |
-| Frontend | React 18 · Vite 5 · React Router 6 · Bootstrap 5 · Axios · Context API · Leaflet / react-leaflet · react-toastify |
+| Backend | Java 21 · Spring Boot 3.5.7 · Spring Security · Spring Data JPA / Hibernate · JWT (jjwt) · PostgreSQL 15 · springdoc-openapi · Cloudinary (imágenes) · Brevo (correo transaccional) |
+| Frontend | React 18 · Vite 5 · React Router 6 · Bootstrap 5 · Axios · Context API · Leaflet / react-leaflet · Recharts · react-toastify |
 | Testing | JUnit 5 + MockMvc (backend) · Vitest + React Testing Library (frontend) |
 | Herramientas | Git, GitHub, Maven (`./mvnw`), npm |
 
@@ -126,8 +152,8 @@ Queda disponible en `http://localhost:5173` y espera la API en `http://localhost
 
 | Módulo | Comando | Cobertura |
 |---|---|---|
-| Backend | `cd huerto-hogar-backend && ./mvnw test` | 47 pruebas de integración: autenticación, recuperación de contraseña, autorización por rol, validación de datos, reglas de carrito/pedidos |
-| Frontend | `cd huerto-hogar-react && npm test` | 31 pruebas de componentes y páginas clave (login, recuperar/restablecer contraseña, checkout, carrito, reseñas) |
+| Backend | `cd huerto-hogar-backend && ./mvnw test` | 63 pruebas de integración: autenticación, recuperación de contraseña por código, autorización por rol, validación de datos, categorías/stock, reglas de carrito/pedidos |
+| Frontend | `cd huerto-hogar-react && npm test` | 33 pruebas de componentes y páginas clave (login, recuperar/restablecer contraseña, checkout, carrito, reseñas) |
 
 Ambos módulos corren automáticamente en **GitHub Actions** ante cada push o pull request a `main`/`desarrollo` — cada workflow solo se dispara si cambió el módulo correspondiente (`.github/workflows/backend-ci.yml` y `frontend-ci.yml`). El frontend además corre `lint` y `build` en el mismo workflow.
 
@@ -155,3 +181,7 @@ huerto-hogar-react/     SPA — pages / components / context / services
 
 - [huerto-hogar-backend/README.md](huerto-hogar-backend/README.md) — variables de entorno, endpoints, modelo de seguridad, tests.
 - [huerto-hogar-react/README.md](huerto-hogar-react/README.md) — rutas, manejo de estado, estructura de componentes, tests.
+
+## Licencia
+
+Todos los derechos reservados — ver [LICENSE](LICENSE). El código se comparte públicamente con fines de demostración y portafolio; no está autorizado su reúso sin permiso.
