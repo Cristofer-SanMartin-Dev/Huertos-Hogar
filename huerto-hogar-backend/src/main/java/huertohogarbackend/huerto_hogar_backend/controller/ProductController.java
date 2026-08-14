@@ -2,6 +2,7 @@ package huertohogarbackend.huerto_hogar_backend.controller;
 
 import huertohogarbackend.huerto_hogar_backend.config.OpenApiConfig;
 import huertohogarbackend.huerto_hogar_backend.dto.AddStockRequest;
+import huertohogarbackend.huerto_hogar_backend.dto.ErrorResponse;
 import huertohogarbackend.huerto_hogar_backend.dto.ProductResponse;
 import huertohogarbackend.huerto_hogar_backend.model.Product;
 import huertohogarbackend.huerto_hogar_backend.service.ProductService;
@@ -150,7 +151,7 @@ public class ProductController {
             Product savedProduct = productService.saveProduct(newProduct, image);
             return ResponseEntity.ok(savedProduct);
         } catch (IOException e) {
-            return ResponseEntity.internalServerError().body("Error al subir la imagen");
+            return ResponseEntity.internalServerError().body(new ErrorResponse("Error al subir la imagen"));
         }
     }
 
@@ -197,7 +198,7 @@ public class ProductController {
             Product updatedProduct = productService.updateProduct(id, productDetails, image);
             return ResponseEntity.ok(updatedProduct);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error al actualizar: " + e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse("Error al actualizar: " + e.getMessage()));
         }
     }
 
@@ -215,7 +216,7 @@ public class ProductController {
             productService.deleteProduct(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(409).body(e.getMessage());
+            return ResponseEntity.status(409).body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -239,9 +240,9 @@ public class ProductController {
             Product updated = productService.addStock(id, cantidad);
             return ResponseEntity.ok(toResponse(updated));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(404).body(new ErrorResponse(e.getMessage()));
         }
     }
 }

@@ -2,6 +2,7 @@ package huertohogarbackend.huerto_hogar_backend.controller;
 
 import huertohogarbackend.huerto_hogar_backend.config.OpenApiConfig;
 import huertohogarbackend.huerto_hogar_backend.dto.CreateOrderRequest;
+import huertohogarbackend.huerto_hogar_backend.dto.ErrorResponse;
 import huertohogarbackend.huerto_hogar_backend.dto.OrderResponse;
 import huertohogarbackend.huerto_hogar_backend.dto.UpdateOrderStatusRequest;
 import huertohogarbackend.huerto_hogar_backend.model.Order;
@@ -58,7 +59,7 @@ public class OrderController {
             Order order = orderService.createOrder(request, currentUser.getUsername());
             return ResponseEntity.ok(OrderResponse.from(order));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -93,9 +94,9 @@ public class OrderController {
             Order order = orderService.getByIdForRequester(id, currentUser.getUsername(), isAdmin(currentUser));
             return ResponseEntity.ok(OrderResponse.from(order));
         } catch (AccessDeniedException e) {
-            return ResponseEntity.status(403).body(e.getMessage());
+            return ResponseEntity.status(403).body(new ErrorResponse(e.getMessage()));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(404).body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -116,7 +117,7 @@ public class OrderController {
             Order order = orderService.updateStatus(id, request.getEstado());
             return ResponseEntity.ok(OrderResponse.from(order));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 }

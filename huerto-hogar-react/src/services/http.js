@@ -13,6 +13,12 @@ const TOKEN_KEY = 'token';
  * "Authorization: Bearer <token>" a cada petición, de modo que ningún servicio
  * tiene que acordarse de hacerlo. Otro interceptor cierra la sesión local si
  * el backend responde 401 (token vencido o inválido).
+ *
+ * El backend devuelve los errores como JSON {"message": "..."}, pero todo el
+ * código de la app (formularios, toasts) espera error.response.data como
+ * string directo — así era antes, cuando el backend mandaba texto plano. En
+ * vez de tocar cada pantalla, el interceptor de abajo "desempaqueta" el
+ * mensaje acá, en un solo lugar.
  */
 const http = axios.create({
     baseURL: API_BASE_URL,
@@ -42,6 +48,11 @@ http.interceptors.request.use((config) => {
 http.interceptors.response.use(
     (response) => response,
     (error) => {
+        const data = error.response?.data;
+        if (data && typeof data === 'object' && typeof data.message === 'string') {
+            error.response.data = data.message;
+        }
+
         if (error.response?.status === 401) {
             clearSession();
             // Evita quedar en una pantalla privada con la sesión ya vencida.

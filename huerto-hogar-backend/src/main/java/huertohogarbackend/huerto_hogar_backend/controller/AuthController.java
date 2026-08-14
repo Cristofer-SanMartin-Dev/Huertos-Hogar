@@ -3,6 +3,7 @@ package huertohogarbackend.huerto_hogar_backend.controller;
 
 import huertohogarbackend.huerto_hogar_backend.config.OpenApiConfig;
 import huertohogarbackend.huerto_hogar_backend.dto.AuthResponse;
+import huertohogarbackend.huerto_hogar_backend.dto.ErrorResponse;
 import huertohogarbackend.huerto_hogar_backend.dto.ForgotPasswordRequest;
 import huertohogarbackend.huerto_hogar_backend.dto.LoginRequest;
 import huertohogarbackend.huerto_hogar_backend.dto.RegisterRequest;
@@ -49,7 +50,7 @@ public class AuthController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Cuenta creada; el body incluye el usuario y su token"),
-            @ApiResponse(responseCode = "400", description = "Datos inválidos (email mal formado, contraseña débil, teléfono con formato incorrecto, email ya registrado, etc.), mensaje como texto plano")
+            @ApiResponse(responseCode = "400", description = "Datos inválidos (email mal formado, contraseña débil, teléfono con formato incorrecto, email ya registrado, etc.)")
     })
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
         try {
@@ -57,7 +58,7 @@ public class AuthController {
             String token = jwtService.generateToken(registeredUser);
             return ResponseEntity.ok(AuthResponse.from(registeredUser, token));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -83,7 +84,7 @@ public class AuthController {
         }
 
         // Mensaje genérico a propósito: no revelamos si el email existe o no.
-        return ResponseEntity.status(401).body("Error: Email o contraseña incorrectos.");
+        return ResponseEntity.status(401).body(new ErrorResponse("Error: Email o contraseña incorrectos."));
     }
 
     /**
@@ -107,13 +108,13 @@ public class AuthController {
     })
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails currentUser) {
         if (currentUser == null) {
-            return ResponseEntity.status(401).body("Debes iniciar sesión.");
+            return ResponseEntity.status(401).body(new ErrorResponse("Debes iniciar sesión."));
         }
         try {
             User user = authService.getByEmail(currentUser.getUsername());
             return ResponseEntity.ok(AuthResponse.from(user));
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(404).body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -142,7 +143,7 @@ public class AuthController {
             @AuthenticationPrincipal UserDetails currentUser) {
 
         if (currentUser == null) {
-            return ResponseEntity.status(401).body("Debes iniciar sesión para editar tu perfil.");
+            return ResponseEntity.status(401).body(new ErrorResponse("Debes iniciar sesión para editar tu perfil."));
         }
 
         try {
@@ -150,12 +151,12 @@ public class AuthController {
                     userId, updateUserRequest, currentUser.getUsername());
             return ResponseEntity.ok(AuthResponse.from(updatedUser));
         } catch (AccessDeniedException e) {
-            return ResponseEntity.status(403).body(e.getMessage());
+            return ResponseEntity.status(403).body(new ErrorResponse(e.getMessage()));
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(404).body(new ErrorResponse(e.getMessage()));
         } catch (RuntimeException e) {
             // Incluye los errores de validación (ej. "El nombre debe tener...").
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -177,7 +178,7 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "Mensaje genérico; revisa el correo para ver si llegó el código")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         authService.solicitarRecuperacion(request.getEmail());
-        return ResponseEntity.ok("Si el correo está registrado, te enviamos un código de recuperación.");
+        return ResponseEntity.ok(new ErrorResponse("Si el correo está registrado, te enviamos un código de recuperación."));
     }
 
     @PostMapping("/reset-password")
@@ -187,14 +188,14 @@ public class AuthController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Contraseña actualizada"),
-            @ApiResponse(responseCode = "400", description = "Código inválido/expirado/ya usado, demasiados intentos fallidos, o contraseña nueva débil — mensaje como texto plano")
+            @ApiResponse(responseCode = "400", description = "Código inválido/expirado/ya usado, demasiados intentos fallidos, o contraseña nueva débil")
     })
     public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
         try {
             authService.restablecerContrasena(request.getEmail(), request.getCode(), request.getNewPassword());
-            return ResponseEntity.ok("Contraseña actualizada con éxito.");
+            return ResponseEntity.ok(new ErrorResponse("Contraseña actualizada con éxito."));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 }

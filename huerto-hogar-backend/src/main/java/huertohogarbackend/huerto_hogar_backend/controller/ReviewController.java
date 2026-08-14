@@ -1,6 +1,7 @@
 package huertohogarbackend.huerto_hogar_backend.controller;
 
 import huertohogarbackend.huerto_hogar_backend.config.OpenApiConfig;
+import huertohogarbackend.huerto_hogar_backend.dto.ErrorResponse;
 import huertohogarbackend.huerto_hogar_backend.dto.ReviewRequest;
 import huertohogarbackend.huerto_hogar_backend.dto.ReviewResponse;
 import huertohogarbackend.huerto_hogar_backend.model.Review;
@@ -50,16 +51,16 @@ public class ReviewController {
             @AuthenticationPrincipal UserDetails currentUser) {
 
         if (currentUser == null) {
-            return ResponseEntity.status(401).body("Debes iniciar sesión para dejar una reseña.");
+            return ResponseEntity.status(401).body(new ErrorResponse("Debes iniciar sesión para dejar una reseña."));
         }
 
         try {
             Review review = reviewService.addReview(productId, reviewRequest, currentUser.getUsername());
             return ResponseEntity.ok(ReviewResponse.from(review));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(404).body(new ErrorResponse(e.getMessage()));
         }
     }
 }

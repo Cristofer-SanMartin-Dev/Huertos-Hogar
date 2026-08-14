@@ -44,9 +44,10 @@ public class OpenApiConfig {
                     los pedidos propios solo puede verlos/editarlos su propio dueño; el panel \
                     de administración (/api/admin/**) es exclusivo de ADMIN.
 
-                    Errores: la API no usa un formato de error uniforme — la mayoría de \
-                    respuestas 400/403/404/409 devuelven el mensaje como texto plano en el \
-                    body, no como JSON."""))
+                    Errores: toda respuesta que no sea 2xx (400/401/403/404/409) tiene la \
+                    misma forma uniforme {"message": "..."} , tanto si la genera un \
+                    controlador como si la genera la capa de seguridad (token faltante o \
+                    sin permisos)."""))
 
             .components(new Components()
                 .addSecuritySchemes(SECURITY_SCHEME, new SecurityScheme()

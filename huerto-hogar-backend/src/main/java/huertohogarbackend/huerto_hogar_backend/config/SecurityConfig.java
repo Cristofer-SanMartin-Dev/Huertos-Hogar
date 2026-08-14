@@ -1,6 +1,8 @@
 // Ruta: src/main/java/huertohogarbackend/huerto_hogar_backend/config/SecurityConfig.java
 package huertohogarbackend.huerto_hogar_backend.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import huertohogarbackend.huerto_hogar_backend.dto.ErrorResponse;
 import huertohogarbackend.huerto_hogar_backend.security.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,12 +43,27 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final String allowedOrigins;
+    private final ObjectMapper objectMapper;
 
     public SecurityConfig(
             JwtAuthenticationFilter jwtAuthenticationFilter,
-            @Value("${app.cors.allowed-origins}") String allowedOrigins) {
+            @Value("${app.cors.allowed-origins}") String allowedOrigins,
+            ObjectMapper objectMapper) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.allowedOrigins = allowedOrigins;
+        this.objectMapper = objectMapper;
+    }
+
+    // Antes usábamos response.sendError(status, mensaje): además de reenviar
+    // a /error (BasicErrorController), Spring Boot descarta el mensaje por
+    // defecto (server.error.include-message=never), así que el texto
+    // personalizado nunca llegaba al cliente. Escribimos el JSON nosotros
+    // mismos para que el mensaje sí llegue y con la misma forma
+    // {"message": "..."} que usan los controladores.
+    private void escribirError(HttpServletResponse response, int status, String message) throws java.io.IOException {
+        response.setStatus(status);
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(objectMapper.writeValueAsString(new ErrorResponse(message)));
     }
 
     @Bean
@@ -142,10 +159,10 @@ public class SecurityConfig {
             // 401 = falta sesión o el token no sirve. 403 = hay sesión, pero sin permiso.
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((request, response, authException) ->
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                        escribirError(response, HttpServletResponse.SC_UNAUTHORIZED,
                                 "Se requiere iniciar sesión."))
                 .accessDeniedHandler((request, response, deniedException) ->
-                        response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                        escribirError(response, HttpServletResponse.SC_FORBIDDEN,
                                 "No tienes permisos para esta acción."))
             )
 

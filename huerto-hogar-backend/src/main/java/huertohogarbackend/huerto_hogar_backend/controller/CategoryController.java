@@ -3,6 +3,7 @@ package huertohogarbackend.huerto_hogar_backend.controller;
 import huertohogarbackend.huerto_hogar_backend.config.OpenApiConfig;
 import huertohogarbackend.huerto_hogar_backend.dto.CategoryRequest;
 import huertohogarbackend.huerto_hogar_backend.dto.CategoryResponse;
+import huertohogarbackend.huerto_hogar_backend.dto.ErrorResponse;
 import huertohogarbackend.huerto_hogar_backend.model.Category;
 import huertohogarbackend.huerto_hogar_backend.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,7 +50,7 @@ public class CategoryController {
             Category category = categoryService.createCategory(request.getName(), request.getPrefix());
             return ResponseEntity.ok(CategoryResponse.from(category));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -67,7 +68,7 @@ public class CategoryController {
             categoryService.deleteCategory(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(409).body(e.getMessage());
+            return ResponseEntity.status(409).body(new ErrorResponse(e.getMessage()));
         }
     }
 }
