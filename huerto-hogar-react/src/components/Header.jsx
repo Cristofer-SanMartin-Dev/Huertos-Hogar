@@ -10,7 +10,10 @@ const { isAuthenticated, user, logout } = useAuth();
 const navigate = useNavigate();
 const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+// Cantidad de PRODUCTOS DISTINTOS en el carrito, no la suma de unidades:
+// coincide con lo que ya muestra el checkout ("Tu Carrito 8" son 8 productos
+// distintos, aunque sumen 37 unidades entre todos).
+const cartCount = cart.length;
 const handleLogout = () => {
 logout();
 navigate('/');
