@@ -48,20 +48,56 @@ El objetivo del proyecto, más allá de cumplir la rúbrica académica, fue cons
 
 ## Capturas
 
-<!--
-  TODO: agregar capturas reales. Sugerencia de páginas a mostrar:
-  Home / catálogo (/productos) / ofertas (/ofertas) / dashboard admin (/admin).
-  Guardar los archivos en docs/screenshots/ con estos nombres y descomentar:
+### Tienda (vista de cliente)
 
-  <p align="center">
-    <img src="docs/screenshots/home.png" width="49%" alt="Página de inicio" />
-    <img src="docs/screenshots/productos.png" width="49%" alt="Catálogo de productos" />
-  </p>
-  <p align="center">
-    <img src="docs/screenshots/ofertas.png" width="49%" alt="Ofertas con descuento" />
-    <img src="docs/screenshots/admin-dashboard.png" width="49%" alt="Dashboard del panel admin" />
-  </p>
--->
+<p align="center">
+  <img src="docs/screenshots/home.png" width="49%" alt="Página de inicio" />
+  <img src="docs/screenshots/productos.png" width="49%" alt="Catálogo de productos" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/categorias.png" width="49%" alt="Categorías" />
+  <img src="docs/screenshots/ofertas.png" width="49%" alt="Ofertas con descuento" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/nosotros.png" width="49%" alt="Quiénes somos y mapa de sucursales" />
+  <img src="docs/screenshots/blog.png" width="49%" alt="Blog" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/contacto.png" width="49%" alt="Formulario de contacto" />
+  <img src="docs/screenshots/registro.png" width="49%" alt="Registro con validación de contraseña en vivo" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/login.png" width="49%" alt="Inicio de sesión" />
+  <img src="docs/screenshots/carrito.png" width="49%" alt="Carrito de compras" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/checkout.png" width="49%" alt="Checkout" />
+  <img src="docs/screenshots/perfil.png" width="49%" alt="Perfil de usuario e historial de pedidos" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/pedido-detalle.png" width="70%" alt="Boleta y seguimiento de un pedido" />
+</p>
+
+### Panel de administración (rol `ADMIN`)
+
+<p align="center">
+  <img src="docs/screenshots/admin-dashboard.png" width="90%" alt="Dashboard con gráficos" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/admin-productos.png" width="49%" alt="Gestión de productos" />
+  <img src="docs/screenshots/admin-nuevo-producto.png" width="49%" alt="Formulario de nuevo producto" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/admin-reponer-stock.png" width="49%" alt="Reponer stock" />
+  <img src="docs/screenshots/admin-pedidos.png" width="49%" alt="Gestión de pedidos" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/admin-categorias.png" width="49%" alt="Gestión de categorías" />
+  <img src="docs/screenshots/admin-usuarios.png" width="49%" alt="Usuarios registrados" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/admin-reportes.png" width="90%" alt="Reportes de productos más vendidos" />
+</p>
 
 ## Funcionalidades
 
