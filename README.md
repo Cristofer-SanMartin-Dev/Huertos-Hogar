@@ -72,10 +72,14 @@ El objetivo del proyecto, más allá de cumplir la rúbrica académica, fue cons
 </p>
 <p align="center">
   <img src="docs/screenshots/checkout.png" width="49%" alt="Checkout" />
-  <img src="docs/screenshots/perfil.png" width="49%" alt="Perfil de usuario e historial de pedidos" />
+  <img src="docs/screenshots/pago-exitoso.png" width="49%" alt="Confirmación de pago exitoso" />
 </p>
 <p align="center">
-  <img src="docs/screenshots/pedido-detalle.png" width="70%" alt="Boleta y seguimiento de un pedido" />
+  <img src="docs/screenshots/perfil.png" width="49%" alt="Perfil de usuario e historial de pedidos" />
+  <img src="docs/screenshots/pedido-detalle.png" width="49%" alt="Boleta y seguimiento de un pedido" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/boleta-imprimir.png" width="70%" alt="Boleta lista para imprimir" />
 </p>
 
 ### Panel de administración (rol `ADMIN`)
