@@ -42,12 +42,17 @@ public class CloudinaryService {
      * ni de credenciales reales).
      */
     public String upload(MultipartFile file) throws IOException {
+        return upload(file.getBytes());
+    }
+
+    /** Variante sin MultipartFile, para subir imágenes que no vienen de un request HTTP (ej. ProductSeeder). */
+    public String upload(byte[] bytes) throws IOException {
         if (cloudinary == null) {
             logger.warn("CLOUDINARY_URL no configurada: se omite la subida de la imagen.");
             return null;
         }
         Map<?, ?> result = cloudinary.uploader().upload(
-                file.getBytes(),
+                bytes,
                 ObjectUtils.asMap("folder", "huertohogar/productos"));
         return (String) result.get("secure_url");
     }

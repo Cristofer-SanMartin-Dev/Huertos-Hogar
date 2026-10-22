@@ -6,6 +6,7 @@ import huertohogarbackend.huerto_hogar_backend.model.Product;
 import huertohogarbackend.huerto_hogar_backend.repository.CategoryRepository;
 import huertohogarbackend.huerto_hogar_backend.repository.ProductRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
@@ -23,6 +24,7 @@ import java.util.Map;
  * así que es seguro que corra en cada arranque del backend.
  */
 @Component
+@Order(1) // Antes que ProductSeeder: los productos necesitan que las categorías ya existan.
 public class CategorySeeder implements CommandLineRunner {
 
     private static final Map<String, String> CATEGORIAS_BASE = new LinkedHashMap<>();
